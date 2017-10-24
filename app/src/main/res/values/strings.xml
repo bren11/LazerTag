@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Lazer Tag</string>
+    <string name="welcometext">Welcome to the game</string>
 </resources>
