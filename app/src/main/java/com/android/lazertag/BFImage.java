@@ -25,7 +25,7 @@ import org.opencv.features2d.FeatureDetector;
 import org.opencv.features2d.Features2d;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-import org.yaml.snakeyaml.Yaml;
+//import org.yaml.snakeyaml.Yaml;
 
 import android.location.Location;
 import android.util.Log;
@@ -107,7 +107,7 @@ public class BFImage {
      * Method that adds a new image to the train library
      * @param image_path the path of the image
      * @param tour_item_id the id of the tour item (whom the image belongs to)
-     */
+
     public void addToLibrary(String image_path, long tour_item_id)
     {
         Mat imgDescriptor;
@@ -130,7 +130,7 @@ public class BFImage {
 
         // add image to training_library
         training_library.add(training_img);
-    }
+    }*/
 
     /*
      * Method that identifies the tour item the given image belongs to
@@ -383,7 +383,7 @@ public class BFImage {
 
     /*
      * Loads image descriptors from the given file
-     */
+
     public Mat loadImageDescriptors(File file) {
         try {
             Log.d(TAG, "Attempting to load image descriptors from " + file.getName());
@@ -399,7 +399,7 @@ public class BFImage {
 
     /*
      * Saves the image descriptors to disk so they can be loaded up later (or exported).
-     */
+
     public void saveImageDescriptors() {
         for(TrainingImage image : training_library) {
             Log.d(TAG, "saving " + image.pathID() + " to Map.");
@@ -423,7 +423,7 @@ public class BFImage {
                 Log.e(TAG, e.toString());
             }
         }
-    }
+    }*/
 
     /*
      * Method that finds the best match from a list of matches
