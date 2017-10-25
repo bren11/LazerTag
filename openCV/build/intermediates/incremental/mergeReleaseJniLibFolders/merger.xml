@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="C:\Users\Bren\Documents\school\LazerTag\openCV\src\main\jniLibs"/></dataSet><dataSet config="release"><source path="C:\Users\Bren\Documents\school\LazerTag\openCV\src\release\jniLibs"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="C:\Users\dphip\StudioProjects\LazerTag\opencv\src\main\jniLibs"/></dataSet><dataSet config="release"><source path="C:\Users\dphip\StudioProjects\LazerTag\opencv\src\release\jniLibs"/></dataSet></merger>

@@ -5,7 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/LazerTag.iml" filepath="$PROJECT_DIR$/LazerTag.iml" />
       <module fileurl="file://$PROJECT_DIR$/android-networking/android-networking.iml" filepath="$PROJECT_DIR$/android-networking/android-networking.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/openCV/openCV.iml" filepath="$PROJECT_DIR$/openCV/openCV.iml" />
+      <module fileurl="file://$PROJECT_DIR$/opencv/openCV.iml" filepath="$PROJECT_DIR$/opencv/openCV.iml" />
     </modules>
   </component>
 </project>

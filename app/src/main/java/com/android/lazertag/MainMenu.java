@@ -3,6 +3,7 @@ package com.android.lazertag;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +25,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void goToJoin(View view){
-
+        Intent intent = new Intent(this, Screen.class);
+        startActivity(intent);
     }
 }
