@@ -28,4 +28,14 @@ public class MainMenu extends AppCompatActivity {
         Intent intent = new Intent(this, Screen.class);
         startActivity(intent);
     }
+
+    public void goToCreate(View view){
+        Intent intent = new Intent(this, Screen.class);
+        startActivity(intent);
+    }
+
+    public void goToSettings(View view){
+        Intent intent = new Intent(this, Screen.class);
+        startActivity(intent);
+    }
 }
