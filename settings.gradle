@@ -1,1 +1,2 @@
-include ':app', ':opencv', ':android-networking'
+include ':app', ':android-networking'
+include ':openCV'

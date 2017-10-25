@@ -9,7 +9,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <uses-permission android:name="android.permission.INTERNET" />
-        <activity android:name=".MainMenu">
+
+        <activity android:name=".MainMenu"></activity>
+        <activity android:name=".Screen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
