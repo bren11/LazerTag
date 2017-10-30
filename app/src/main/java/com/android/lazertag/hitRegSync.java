@@ -16,6 +16,7 @@ class hitRegSync /*implements AsyncTask<URL, Integer, Long> */{
 
     public Long doInBackground(URL url){
 
+        return
     }
 
     public void onPostExecute(){
