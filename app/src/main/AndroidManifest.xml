@@ -2,13 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.lazertag">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:label="@string/app_name"
-        android:icon="@drawable/icon"
-        android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
-        android:theme="@style/AppTheme">
-        <uses-permission android:name="android.permission.INTERNET" />
-        <uses-permission android:name="android.permission.CAMERA" />
+        android:icon="@mipmap/ic_launcher"
+        android:theme="@style/AppTheme" >
 
         <activity android:name=".MainMenu">
             <intent-filter>
@@ -22,7 +22,13 @@
         </activity>
 
         <activity android:name=".Screen">
-
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT"
+                    android:label="@string/app_name"
+                    android:screenOrientation="landscape"
+                    android:configChanges="keyboardHidden|orientation"/>
+            </intent-filter>
         </activity>
     </application>
     <supports-screens android:resizeable="true"
