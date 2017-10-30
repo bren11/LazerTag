@@ -8,8 +8,8 @@ import java.net.URL;
  * Created by meme on 10/25/2017.
  */
 
-class hitRegSync implements AsyncTask<URL, Integer, Long> {
-
+class hitRegSync /*implements AsyncTask<URL, Integer, Long> */{
+/*
     public hitRegSync(){
 
     }
@@ -20,5 +20,5 @@ class hitRegSync implements AsyncTask<URL, Integer, Long> {
 
     public void onPostExecute(){
 
-    }
+    }*/
 }

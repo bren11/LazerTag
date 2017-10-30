@@ -10,9 +10,9 @@ import android.view.View;
 
 public class MainMenu extends AppCompatActivity {
 
-    ConnectivityManager connMgr;
-    NetworkInfo netInfo;
-    boolean connection;
+    //ConnectivityManager connMgr;
+    //NetworkInfo netInfo;
+    //boolean connection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
