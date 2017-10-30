@@ -19,9 +19,9 @@ public class MainMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-        connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        netInfo = connMgr.getActiveNetworkInfo();
-        connection = netInfo.isConnected();
+        //connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        //netInfo = connMgr.getActiveNetworkInfo();
+        //connection = netInfo.isConnected();
     }
 
     public void goToJoin(View view){
