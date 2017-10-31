@@ -29,5 +29,4 @@ dependencies {
     compile 'com.amitshekhar.android:android-networking:1.0.0'
     testCompile 'junit:junit:4.12'
     compile project(':openCV')
-    compile project(':android-networking')
 }

@@ -41,6 +41,16 @@ public class Screen extends Activity implements CvCameraViewListener2 {
         }
     };
 
+    private BFImage imageRec = new BFImage();
+
+
+
+
+
+
+
+
+
     public Screen() {
         Log.i(TAG, "Instantiated new " + this.getClass());
     }
