@@ -25,7 +25,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void goToSettings(View view){
-        Intent intent = new Intent(this, Screen.class);
+        Intent intent = new Intent(this, Settings.class);
         startActivity(intent);
     }
 }

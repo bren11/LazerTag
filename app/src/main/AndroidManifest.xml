@@ -29,6 +29,9 @@
                     android:configChanges="keyboardHidden|orientation"/>
             </intent-filter>
         </activity>
+        <activity android:name=".Settings">
+
+        </activity>
     </application>
     <supports-screens android:resizeable="true"
         android:smallScreens="true"
