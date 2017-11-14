@@ -6,4 +6,6 @@
     <string name="setText">Settings</string>
     <string name="namePrompt">Name:</string>
     <string name="playerName">Player</string>
+    <string name="createButton">Create Game</string>
+    <string name="title_activity_create_screen_layout">CreateScreenLayout</string>
 </resources>
