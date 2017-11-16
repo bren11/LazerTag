@@ -5,4 +5,10 @@
     <string name="zelda">zelda</string>
     <string name="pentacle">pentacle</string>
     <string name="tryangle">triangle</string>
+    <string name="backText">Back</string>
+    <string name="setText">Settings</string>
+    <string name="namePrompt">Name:</string>
+    <string name="playerName">Player</string>
+    <string name="createButton">Create Game</string>
+    <string name="title_activity_create_screen_layout">CreateScreenLayout</string>
 </resources>

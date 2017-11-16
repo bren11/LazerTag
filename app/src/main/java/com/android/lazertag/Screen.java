@@ -51,8 +51,8 @@ public class Screen extends Activity implements CvCameraViewListener2 {
 
     private BFImage imageRec = new BFImage(FeatureDetector.ORB, DescriptorExtractor.ORB, DescriptorMatcher.BRUTEFORCE_HAMMINGLUT);
 
-    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
-        @Override
+        //@Override
+        private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         public void onManagerConnected(int status) {
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS:

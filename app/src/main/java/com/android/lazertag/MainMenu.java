@@ -15,7 +15,6 @@ public class MainMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-
     }
 
     public void goToJoin(View view){
@@ -29,7 +28,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void goToSettings(View view){
-        Intent intent = new Intent(this, Screen.class);
+        Intent intent = new Intent(this, Settings.class);
         startActivity(intent);
     }
 }
