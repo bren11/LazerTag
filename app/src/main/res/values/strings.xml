@@ -2,4 +2,7 @@
     <string name="app_name">Lazer Tag</string>
     <string name="welcometext">Welcome to the game</string>
     <string name="jointext">Join Game</string>
+    <string name="zelda">zelda</string>
+    <string name="pentacle">pentacle</string>
+    <string name="tryangle">triangle</string>
 </resources>
