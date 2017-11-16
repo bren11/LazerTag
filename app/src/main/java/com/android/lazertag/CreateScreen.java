@@ -17,4 +17,8 @@ public class CreateScreen extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_screen);
     }
+    public void goToMain(View view){
+        Intent intent = new Intent(this, MainMenu.class);
+        startActivity(intent);
+    }
 }

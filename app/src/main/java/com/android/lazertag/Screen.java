@@ -181,7 +181,7 @@ public class Screen extends Activity implements CvCameraViewListener2 {
             mTextView.setText("none");
         }
         mTextView.setText(match.name());
-        this.onResume();
+        //this.onResume();
     }
 
 
