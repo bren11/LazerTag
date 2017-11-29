@@ -11,4 +11,9 @@
     <string name="playerName">Player</string>
     <string name="createButton">Create Game</string>
     <string name="title_activity_create_screen_layout">CreateScreenLayout</string>
+    <string name="picture">Picture</string>
+    <string name="description_info">Info</string>
+    <string name="request_permission">This sample needs camera permission.</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+    <string name="intro_message">Hello world</string>
 </resources>
