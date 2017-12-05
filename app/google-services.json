@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "62807543979",
+    "firebase_url": "https://lazertag-606bb.firebaseio.com",
+    "project_id": "lazertag-606bb",
+    "storage_bucket": "lazertag-606bb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62807543979:android:6dd2d3aa6a5b92c3",
+        "android_client_info": {
+          "package_name": "com.android.lazertag"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62807543979-j0a4tg6t4toql8trtbi84ltne5gpo7di.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android.lazertag",
+            "certificate_hash": "f71cdd1f19d930c522881f8fd8ce072c6dc39ccc"
+          }
+        },
+        {
+          "client_id": "62807543979-2aiv74vupto0kr084ol2dei70lb9i8ac.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABRH40MKSuSzeidIOvw-FupBd77WCIXNI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62807543979-2aiv74vupto0kr084ol2dei70lb9i8ac.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
