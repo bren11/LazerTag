@@ -47,9 +47,9 @@ public class Screen extends Activity implements CvCameraViewListener2 {
     private boolean              mIsJavaCamera = true;
     private MenuItem             mItemSwitchCamera = null;
 
-    static{ System.loadLibrary("opencv_java3"); }
+    //static{ System.loadLibrary("opencv_java3"); }
 
-    private BFImage imageRec = new BFImage(FeatureDetector.ORB, DescriptorExtractor.ORB, DescriptorMatcher.BRUTEFORCE_HAMMINGLUT);
+    //private BFImage imageRec = new BFImage(FeatureDetector.ORB, DescriptorExtractor.ORB, DescriptorMatcher.BRUTEFORCE_HAMMINGLUT);
 
         //@Override
         private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
@@ -132,9 +132,9 @@ public class Screen extends Activity implements CvCameraViewListener2 {
 
         mOpenCvCameraView.setCvCameraViewListener(this);
 
-        imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/pentacle.jpg", 1);
-        imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/tryangle.jpg", 1);
-        imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/zelda.jpg", 1);
+        //imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/pentacle.jpg", 1);
+        //imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/tryangle.jpg", 1);
+        //imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/zelda.jpg", 1);
         //System.out.println(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
 
         /*InputStream ins = getResources().openRawResource(R.raw.pentacle);
@@ -164,10 +164,11 @@ public class Screen extends Activity implements CvCameraViewListener2 {
             mOpenCvCameraView.disableView();
     }
 
+
     public void TakePic(View view){
-        dispatchTakePictureIntent();
+        //dispatchTakePictureIntent();
         //System.out.println(mCurrentPhotoPath);
-        while (new File(mCurrentPhotoPath).length() < 1000000){}
+        /*while (new File(mCurrentPhotoPath).length() < 1000000){}
         TrainingImage match = imageRec.detectPhoto(mCurrentPhotoPath);
         System.out.println(match.name());
         final Button mTextView = (Button) findViewById(R.id.screenButton);
@@ -181,7 +182,8 @@ public class Screen extends Activity implements CvCameraViewListener2 {
             mTextView.setText("none");
         }
         mTextView.setText(match.name());
-        //this.onResume();
+        //this.onResume();*/
+
     }
 
 

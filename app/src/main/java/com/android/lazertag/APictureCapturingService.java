@@ -1,4 +1,4 @@
-package com.hzitoun.camera2SecretPictureTaker.services;
+package com.android.lazertag;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.hardware.camera2.CameraManager;
 import android.util.SparseIntArray;
 import android.view.Surface;
 
-import com.hzitoun.camera2SecretPictureTaker.listeners.PictureCapturingListener;
 
 /**
  * Abstract Picture Taking Service.

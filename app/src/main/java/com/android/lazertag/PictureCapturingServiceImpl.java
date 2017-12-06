@@ -1,4 +1,4 @@
-package com.hzitoun.camera2SecretPictureTaker.services;
+package com.android.lazertag;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -23,8 +23,6 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
-
-import com.hzitoun.camera2SecretPictureTaker.listeners.PictureCapturingListener;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -136,13 +134,26 @@ public class PictureCapturingServiceImpl extends APictureCapturingService {
     };
 
 
-    private final ImageReader.OnImageAvailableListener onImageAvailableListener = (ImageReader imReader) -> {
-        final Image image = imReader.acquireLatestImage();
-        final ByteBuffer buffer = image.getPlanes()[0].getBuffer();
-        final byte[] bytes = new byte[buffer.capacity()];
-        buffer.get(bytes);
-        saveImageToDisk(bytes);
-        image.close();
+    private final ImageReader.OnImageAvailableListener onImageAvailableListener = new ImageReader.OnImageAvailableListener() {
+        @Override
+        public void onImageAvailable(ImageReader reader) {
+            final Image image = imageReader.acquireLatestImage();
+            final ByteBuffer buffer = image.getPlanes()[0].getBuffer();
+            final byte[] bytes = new byte[buffer.capacity()];
+            buffer.get(bytes);
+            saveImageToDisk(bytes);
+            image.close();
+        }
+    };
+    final Runnable r = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                takePicture();
+            } catch (final CameraAccessException e) {
+                Log.e(TAG, " exception occurred while taking picture from " + currentCameraId, e);
+            }
+        }
     };
 
     private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
@@ -153,13 +164,7 @@ public class PictureCapturingServiceImpl extends APictureCapturingService {
             cameraDevice = camera;
             Log.i(TAG, "Taking picture from camera " + camera.getId());
             //Take the picture after some delay. It may resolve getting a black dark photos.
-            new Handler().postDelayed(() -> {
-                try {
-                    takePicture();
-                } catch (final CameraAccessException e) {
-                    Log.e(TAG, " exception occurred while taking picture from " + currentCameraId, e);
-                }
-            }, 500);
+            new Handler().postDelayed(r, 500);
         }
 
         @Override
