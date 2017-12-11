@@ -13,13 +13,13 @@ import com.android.volley.toolbox.Volley;
 import java.util.HashMap;
 import java.util.Map;
 
-class HitRegSync {
+class OldNetwork {
 
     private Context context;
     RequestQueue queue;
     private String response;
 
-    public HitRegSync(Context context) {
+    public OldNetwork(Context context) {
         this.context = context;
         queue = Volley.newRequestQueue(this.context);
     }
