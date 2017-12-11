@@ -56,7 +56,7 @@ public class PictureCapturingServiceImpl extends APictureCapturingService {
      * camera ids queue.
      */
     private Queue<String> cameraIds;
-    
+
     private String currentCameraId;
     private boolean cameraClosed;
     /**
@@ -137,7 +137,8 @@ public class PictureCapturingServiceImpl extends APictureCapturingService {
     private final ImageReader.OnImageAvailableListener onImageAvailableListener = new ImageReader.OnImageAvailableListener() {
         @Override
         public void onImageAvailable(ImageReader reader) {
-            final Image image = imageReader.acquireLatestImage();
+
+            final Image image = reader.acquireLatestImage();
             final ByteBuffer buffer = image.getPlanes()[0].getBuffer();
             final byte[] bytes = new byte[buffer.capacity()];
             buffer.get(bytes);
@@ -200,7 +201,7 @@ public class PictureCapturingServiceImpl extends APictureCapturingService {
 
 
     private void takePicture() throws CameraAccessException {
-        if (null == cameraDevice) {
+        if (cameraDevice.equals(null)) {
             Log.e(TAG, "cameraDevice is null");
             return;
         }
@@ -241,13 +242,14 @@ public class PictureCapturingServiceImpl extends APictureCapturingService {
 
     private void saveImageToDisk(final byte[] bytes) {
         final String cameraId = this.cameraDevice == null ? UUID.randomUUID().toString() : this.cameraDevice.getId();
-        final File file = new File(Environment.getExternalStorageDirectory() + "/" + cameraId + "_pic.jpg");
+        final File file = new File(Environment.DIRECTORY_PICTURES + "/" + cameraId + "_pic.jpg");
         try (final OutputStream output = new FileOutputStream(file)) {
             output.write(bytes);
             this.picturesTaken.put(file.getPath(), bytes);
         } catch (final IOException e) {
             Log.e(TAG, "Exception occurred while saving picture to external storage ", e);
         }
+        super.mFile = file.getAbsolutePath();
     }
 
     private void takeAnotherPicture() {

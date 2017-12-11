@@ -27,6 +27,8 @@ public abstract class APictureCapturingService {
     final Context context;
     final CameraManager manager;
 
+    public String mFile;
+
     /***
      * constructor.
      *
@@ -53,4 +55,5 @@ public abstract class APictureCapturingService {
      * @param listener picture capturing listener
      */
     public abstract void startCapturing(final PictureCapturingListener listener);
+
 }
