@@ -15,7 +15,7 @@ public class Settings extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         EditText nameSpace;
         nameSpace = (EditText)findViewById(R.id.editText);
-        SharedPreferences prefs = this.getPreferences(MODE_PRIVATE);
+        SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
         nameSpace.setText(prefs.getString("Name", "Player"));
 
     }
@@ -23,10 +23,10 @@ public class Settings extends AppCompatActivity {
     public void goToMain(View view){
         EditText nameSpace;
         nameSpace = (EditText)findViewById(R.id.editText);
-        SharedPreferences prefs = this.getPreferences(MODE_PRIVATE);
+        SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("Name", nameSpace.getText().toString());
-        editor.commit();
+        editor.apply();
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
     }
