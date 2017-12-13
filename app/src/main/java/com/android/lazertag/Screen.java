@@ -10,46 +10,54 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
-import org.yaml.snakeyaml.util.UriEncoder;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Camera;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
 
-public class Screen extends Activity implements CvCameraViewListener2 {
+public class Screen extends Activity implements CvCameraViewListener2,PictureCapturingListener, ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String TAG = "OCVSample::Activity";
 
     private CameraBridgeViewBase mOpenCvCameraView;
     private boolean              mIsJavaCamera = true;
     private MenuItem             mItemSwitchCamera = null;
 
-    //static{ System.loadLibrary("opencv_java3"); }
+    static{ System.loadLibrary("opencv_java3"); }
 
-    //private BFImage imageRec = new BFImage(FeatureDetector.ORB, DescriptorExtractor.ORB, DescriptorMatcher.BRUTEFORCE_HAMMINGLUT);
+    private BFImage imageRec = new BFImage(FeatureDetector.ORB, DescriptorExtractor.ORB, DescriptorMatcher.BRUTEFORCE_HAMMINGLUT);
+
+    public static final int MY_PERMISSIONS_REQUEST_ACCESS_CODE = 1;
+
+    //service
+    private APictureCapturingService pictureService;
 
         //@Override
         private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
@@ -74,7 +82,7 @@ public class Screen extends Activity implements CvCameraViewListener2 {
 
     static final int REQUEST_TAKE_PHOTO = 1;
 
-    String mCurrentPhotoPath;
+    public String mCurrentPhotoPath;
 
     private File createImageFile() throws IOException {
         // Create an image file name
@@ -132,10 +140,14 @@ public class Screen extends Activity implements CvCameraViewListener2 {
 
         mOpenCvCameraView.setCvCameraViewListener(this);
 
-        //imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/pentacle.jpg", 1);
-        //imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/tryangle.jpg", 1);
-        //imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/zelda.jpg", 1);
-        //System.out.println(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
+        checkPermissions();
+
+        pictureService = PictureCapturingServiceImpl.getInstance(this);
+
+        imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/pentacle.jpg", 1);
+        imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/tryangle.jpg", 1);
+        imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/zelda.jpg", 1);
+        System.out.println(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
 
         /*InputStream ins = getResources().openRawResource(R.raw.pentacle);
         BufferedReader br = new BufferedReader(new InputStreamReader(ins));
@@ -184,9 +196,9 @@ public class Screen extends Activity implements CvCameraViewListener2 {
         mTextView.setText(match.name());
         //this.onResume();*/
 
+        showToast("Starting capture!");
+        pictureService.startCapturing(this);
     }
-
-
     @Override
     public void onResume()
     {
@@ -214,5 +226,92 @@ public class Screen extends Activity implements CvCameraViewListener2 {
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         return inputFrame.rgba();
+    }
+
+    /**
+     * Shows a {@link Toast} on the UI thread.
+     *
+     * @param text The message to show
+     */
+    private void showToast(final String text) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * We've finished taking pictures from all phone's cameras
+     */
+    @Override
+    public void onDoneCapturingAllPhotos(TreeMap<String, byte[]> picturesTaken) {
+        if (picturesTaken != null && !picturesTaken.isEmpty()) {
+            showToast("Done capturing all photos!");
+            return;
+        }
+        showToast("No camera detected!");
+        if (pictureService.mFile != null) {
+            System.out.println(pictureService.mFile);
+            TrainingImage match = imageRec.detectPhoto(pictureService.mFile);
+            System.out.println(match.name());
+        }
+
+    }
+
+    /**
+     * Displaying the pictures taken.
+     */
+    @Override
+    public void onCaptureDone(final String pictureUrl, final byte[] pictureData) {
+        if (pictureData != null && pictureUrl != null) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    final Bitmap bitmap = BitmapFactory.decodeByteArray(pictureData, 0, pictureData.length);
+                    final int nh = (int) (bitmap.getHeight() * (512.0 / bitmap.getWidth()));
+                    final Bitmap scaled = Bitmap.createScaledBitmap(bitmap, 512, nh, true);
+                    /*if (pictureUrl.contains("0_pic.jpg")) {
+                        uploadBackPhoto.setImageBitmap(scaled);
+                    } else if (pictureUrl.contains("1_pic.jpg")) {
+                        uploadFrontPhoto.setImageBitmap(scaled);
+                    }*/}});}
+            showToast("Picture saved to " + pictureUrl);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_ACCESS_CODE: {
+                if (!(grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    checkPermissions();
+                }
+            }
+        }
+    }
+
+    /**
+     * checking  permissions at Runtime.
+     */
+    @TargetApi(Build.VERSION_CODES.M)
+    private void checkPermissions() {
+        final String[] requiredPermissions = {
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA,
+        };
+        final List<String> neededPermissions = new ArrayList<>();
+        for (final String permission : requiredPermissions) {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(),
+                    permission) != PackageManager.PERMISSION_GRANTED) {
+                neededPermissions.add(permission);
+            }
+        }
+        if (!neededPermissions.isEmpty()) {
+            requestPermissions(neededPermissions.toArray(new String[]{}),
+                    MY_PERMISSIONS_REQUEST_ACCESS_CODE);
+        }
     }
 }

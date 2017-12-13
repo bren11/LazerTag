@@ -18,7 +18,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void goToJoin(View view){
-        Intent intent = new Intent(this, CameraActivity.class);
+        Intent intent = new Intent(this, Screen.class);
         startActivity(intent);
     }
 
