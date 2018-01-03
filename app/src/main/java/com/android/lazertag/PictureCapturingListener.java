@@ -1,5 +1,8 @@
 package com.android.lazertag;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.TreeMap;
 
 /**
@@ -25,5 +28,7 @@ public interface PictureCapturingListener {
      * @param picturesTaken : a  Map<PictureUrl, PictureData>
      */
     void onDoneCapturingAllPhotos(TreeMap<String, byte[]> picturesTaken);
+
+    File createImageFile();
 
 }

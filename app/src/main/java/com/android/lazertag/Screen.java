@@ -84,23 +84,20 @@ public class Screen extends Activity implements CvCameraViewListener2,PictureCap
 
     public String mCurrentPhotoPath;
 
-    private File createImageFile() throws IOException {
+    @Override
+    public File createImageFile(){
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
+        File image = new File(storageDir + imageFileName + ".jpg");
 
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
-    private void dispatchTakePictureIntent() {
+    /*private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         File photoFile = null;
@@ -120,7 +117,7 @@ public class Screen extends Activity implements CvCameraViewListener2,PictureCap
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
-    }
+    }*/
 
     /** Called when the activity is first created. */
     @Override
@@ -147,7 +144,7 @@ public class Screen extends Activity implements CvCameraViewListener2,PictureCap
         imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/pentacle.jpg", 1);
         imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/tryangle.jpg", 1);
         imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/zelda.jpg", 1);
-        System.out.println(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
+        //System.out.println(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
 
         /*InputStream ins = getResources().openRawResource(R.raw.pentacle);
         BufferedReader br = new BufferedReader(new InputStreamReader(ins));
@@ -248,12 +245,18 @@ public class Screen extends Activity implements CvCameraViewListener2,PictureCap
     @Override
     public void onDoneCapturingAllPhotos(TreeMap<String, byte[]> picturesTaken) {
         if (picturesTaken != null && !picturesTaken.isEmpty()) {
-            showToast("Done capturing all photos!");
+
+            if (pictureService.mFile.length() < 10000) {
+                System.out.println(pictureService.mFile);
+                TrainingImage match = imageRec.detectPhoto(pictureService.mFile);
+                System.out.println(match.name());
+                showToast(match.name());
+            }
             return;
         }
         showToast("No camera detected!");
-        if (pictureService.mFile != null) {
-            System.out.println(pictureService.mFile);
+        if (pictureService.mFile.length() < 10000) {
+            //System.out.println(pictureService.mFile);
             TrainingImage match = imageRec.detectPhoto(pictureService.mFile);
             System.out.println(match.name());
         }
