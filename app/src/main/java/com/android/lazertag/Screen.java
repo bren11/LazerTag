@@ -36,6 +36,10 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -48,6 +52,7 @@ public class Screen extends Activity implements CvCameraViewListener2,PictureCap
     private static final String TAG = "OCVSample::Activity";
 
     private CameraBridgeViewBase mOpenCvCameraView;
+    private Network network;
     private boolean              mIsJavaCamera = true;
     private MenuItem             mItemSwitchCamera = null;
 
@@ -85,23 +90,20 @@ public class Screen extends Activity implements CvCameraViewListener2,PictureCap
 
     public String mCurrentPhotoPath;
 
-    private File createImageFile() throws IOException {
+    @Override
+    public File createImageFile(){
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
+        File image = new File(storageDir + imageFileName + ".jpg");
 
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
-    private void dispatchTakePictureIntent() {
+    /*private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         File photoFile = null;
@@ -121,7 +123,7 @@ public class Screen extends Activity implements CvCameraViewListener2,PictureCap
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
-    }
+    }*/
 
     /** Called when the activity is first created. */
     @Override
@@ -141,6 +143,8 @@ public class Screen extends Activity implements CvCameraViewListener2,PictureCap
 
         //imageRec;
 
+        network = Network.getInstance();
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setContentView(R.layout.activity_screen);
@@ -158,7 +162,7 @@ public class Screen extends Activity implements CvCameraViewListener2,PictureCap
         imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/pentacle.jpg", 1);
         imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/tryangle.jpg", 1);
         imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/zelda.jpg", 1);
-        System.out.println(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
+        //System.out.println(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
 
         /*InputStream ins = getResources().openRawResource(R.raw.pentacle);
         BufferedReader br = new BufferedReader(new InputStreamReader(ins));
@@ -177,6 +181,22 @@ public class Screen extends Activity implements CvCameraViewListener2,PictureCap
         imageRec.addToLibrary(f.getAbsolutePath(), 1);*/
         //imageRec.loadImageDescriptors(new File("R/drawable.tryangle"));
         //imageRec.loadImageDescriptors(new File("R.drawable.zelda"));
+
+        network.getTarget().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                String value = dataSnapshot.getValue(String.class);
+                showToast(value);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
     }
 
     @Override
@@ -259,16 +279,16 @@ public class Screen extends Activity implements CvCameraViewListener2,PictureCap
     @Override
     public void onDoneCapturingAllPhotos(TreeMap<String, byte[]> picturesTaken) {
         if (picturesTaken != null && !picturesTaken.isEmpty()) {
-            showToast("Done capturing all photos!");
+
+            if (pictureService.mFile.length() < 10000) {
+                System.out.println(pictureService.mFile);
+                TrainingImage match = imageRec.detectPhoto(pictureService.mFile);
+                System.out.println(match.name());
+                network.getTarget().setValue(match.name());
+            }
             return;
         }
         showToast("No camera detected!");
-        if (pictureService.mFile != null) {
-            System.out.println(pictureService.mFile);
-            TrainingImage match = imageRec.detectPhoto(pictureService.mFile);
-            System.out.println(match.name());
-        }
-
     }
 
     /**

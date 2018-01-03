@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+
 import static android.content.Context.MODE_PRIVATE;
 
 /**
@@ -33,4 +35,14 @@ class Network {
         gameRef.setValue(new Lobby());
 
     }
+
+    public DatabaseReference getTarget(){
+        return database.getReference("target");
+    }
+
+    /*public ArrayList<Player> getPlayersInLobby(String name) {
+        DatabaseReference remoteLobby = database.getReference(name);
+
+
+    }*/
 }
