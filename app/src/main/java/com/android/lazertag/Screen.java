@@ -19,6 +19,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.SurfaceView;
@@ -127,6 +128,16 @@ public class Screen extends Activity implements CvCameraViewListener2,PictureCap
     public void onCreate(Bundle savedInstanceState){
         Log.i(TAG, "called onCreate");
         super.onCreate(savedInstanceState);
+
+
+        /* I am probably going to take this out later
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        ImageView crosshair = (ImageView) findViewById(R.id.imageview2);
+        int width = displayMetrics.widthPixels;
+        */
 
         //imageRec;
 

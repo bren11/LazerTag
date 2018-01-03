@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Lazer Tag</string>
-    <string name="welcometext">Welcome to the game</string>
+    <string name="welcometext">BLAST GAME: TAGNAROK</string>
     <string name="jointext">Join Game</string>
     <string name="zelda">zelda</string>
     <string name="pentacle">pentacle</string>
@@ -17,4 +17,5 @@
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
     <string name="intro_message">Hello world</string>
     <string name="startButton">StartGame</string>
+    <string name="background">background</string>
 </resources>
