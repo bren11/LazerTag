@@ -35,6 +35,10 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -47,6 +51,7 @@ public class Screen extends Activity implements CvCameraViewListener2,PictureCap
     private static final String TAG = "OCVSample::Activity";
 
     private CameraBridgeViewBase mOpenCvCameraView;
+    private Network network;
     private boolean              mIsJavaCamera = true;
     private MenuItem             mItemSwitchCamera = null;
 
@@ -127,6 +132,8 @@ public class Screen extends Activity implements CvCameraViewListener2,PictureCap
 
         //imageRec;
 
+        network = Network.getInstance();
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setContentView(R.layout.activity_screen);
@@ -163,6 +170,22 @@ public class Screen extends Activity implements CvCameraViewListener2,PictureCap
         imageRec.addToLibrary(f.getAbsolutePath(), 1);*/
         //imageRec.loadImageDescriptors(new File("R/drawable.tryangle"));
         //imageRec.loadImageDescriptors(new File("R.drawable.zelda"));
+
+        network.getTarget().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                String value = dataSnapshot.getValue(String.class);
+                showToast(value);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
     }
 
     @Override
@@ -250,17 +273,11 @@ public class Screen extends Activity implements CvCameraViewListener2,PictureCap
                 System.out.println(pictureService.mFile);
                 TrainingImage match = imageRec.detectPhoto(pictureService.mFile);
                 System.out.println(match.name());
-                showToast(match.name());
+                network.getTarget().setValue(match.name());
             }
             return;
         }
         showToast("No camera detected!");
-        if (pictureService.mFile.length() < 10000) {
-            //System.out.println(pictureService.mFile);
-            TrainingImage match = imageRec.detectPhoto(pictureService.mFile);
-            System.out.println(match.name());
-        }
-
     }
 
     /**
