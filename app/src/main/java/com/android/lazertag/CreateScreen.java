@@ -13,6 +13,8 @@ public class CreateScreen extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Network network = Network.getInstance();
+        network.addGame(this);
         setContentView(R.layout.activity_create_screen);
         final String[] players = new String[]{"player", "", "", "", "", "", "", ""};
         SharedPreferences prefs = this.getPreferences(MODE_PRIVATE);
