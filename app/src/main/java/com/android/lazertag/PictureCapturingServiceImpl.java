@@ -11,6 +11,7 @@ import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
+import android.hardware.camera2.CaptureResult;
 import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
@@ -66,6 +67,27 @@ public class PictureCapturingServiceImpl extends APictureCapturingService {
      */
     private TreeMap<String, byte[]> picturesTaken;
     private PictureCapturingListener capturingListener;
+
+    private static final int STATE_PREVIEW = 0;
+
+    /**
+     * Camera state: Waiting for the focus to be locked.
+     */
+    private static final int STATE_WAITING_LOCK = 1;
+    /**
+     * Camera state: Waiting for the exposure to be precapture state.
+     */
+    private static final int STATE_WAITING_PRECAPTURE = 2;
+    /**
+     * Camera state: Waiting for the exposure state to be something other than precapture.
+     */
+    private static final int STATE_WAITING_NON_PRECAPTURE = 3;
+    /**
+     * Camera state: Picture was taken.
+     */
+    private static final int STATE_PICTURE_TAKEN = 4;
+
+    private int mState = STATE_WAITING_LOCK;
 
     /***
      * private constructor, meant to force the use of {@link #getInstance}  method
@@ -123,15 +145,43 @@ public class PictureCapturingServiceImpl extends APictureCapturingService {
     }
 
     private final CameraCaptureSession.CaptureCallback captureListener = new CameraCaptureSession.CaptureCallback() {
+
+        /*private void process(CaptureResult result) {
+            Log.d(TAG, "process: " + mState);
+            if(result.get(CaptureResult.CONTROL_AE_STATE) == CameraMetadata.CONTROL_AE_STATE_CONVERGED || result.get(CaptureResult.CONTROL_AE_STATE) == CameraMetadata.CONTROL_AE_STATE_LOCKED){
+                mState =
+            }
+        }*/
+
+        private void process(CaptureResult result) {
+            Log.d(TAG, "process: " + result.get(CaptureResult.CONTROL_AE_STATE));
+            while (result.get(CaptureResult.CONTROL_AE_STATE) != null ) {
+                if (result.get(CaptureResult.CONTROL_AE_STATE) == CaptureResult.CONTROL_AE_STATE_CONVERGED || result.get(result.CONTROL_AE_STATE) == CaptureResult.CONTROL_AE_STATE_LOCKED) {
+                    mState = STATE_PICTURE_TAKEN;
+                } else if (result.get(CaptureResult.CONTROL_AE_STATE) == CaptureResult.CONTROL_AE_STATE_SEARCHING) {
+                    mState = STATE_WAITING_LOCK;
+                } else if (result.get(CaptureResult.CONTROL_AE_STATE) == CaptureResult.CONTROL_AE_STATE_INACTIVE) {
+                    mState = STATE_PREVIEW;
+                }
+            }
+        }
         @Override
         public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request,
                                        @NonNull TotalCaptureResult result) {
             super.onCaptureCompleted(session, request, result);
+            process(result);
             if (picturesTaken.lastEntry() != null) {
                 capturingListener.onCaptureDone(picturesTaken.lastEntry().getKey(), picturesTaken.lastEntry().getValue());
                 Log.i(TAG, "done taking picture from camera " + cameraDevice.getId());
             }
             closeCamera();
+        }
+
+        @Override
+        public void onCaptureProgressed(CameraCaptureSession session, CaptureRequest request,
+                                        CaptureResult partialResult) {
+            Log.d(TAG, "onCaptureProgressed");
+            process(partialResult);
         }
     };
 
@@ -203,6 +253,7 @@ public class PictureCapturingServiceImpl extends APictureCapturingService {
 
 
     private void takePicture() throws CameraAccessException {
+        mState = STATE_PREVIEW;
         if (cameraDevice.equals(null)) {
             Log.e(TAG, "cameraDevice is null");
             return;
@@ -223,9 +274,13 @@ public class PictureCapturingServiceImpl extends APictureCapturingService {
         captureBuilder.addTarget(reader.getSurface());
         captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
         captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getOrientation());
-        captureBuilder.set(CaptureRequest.CONTROL_AE_EXPOSURE_COMPENSATION, 120);
+        captureBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
         reader.setOnImageAvailableListener(onImageAvailableListener, null);
-        android.co
+        int x = 100000;
+        while (mState != STATE_PICTURE_TAKEN && x > 0){
+            System.out.println(mState);
+            x--;
+        }
         cameraDevice.createCaptureSession(outputSurfaces, new CameraCaptureSession.StateCallback() {
                     @Override
                     public void onConfigured(@NonNull CameraCaptureSession session) {
@@ -260,6 +315,8 @@ public class PictureCapturingServiceImpl extends APictureCapturingService {
         this.currentCameraId = this.cameraIds.poll();
         openCamera();
     }
+
+
 
     private void closeCamera() {
         Log.d(TAG, "closing camera " + cameraDevice.getId());
