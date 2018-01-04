@@ -6,13 +6,23 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
+import org.opencv.features2d.DescriptorExtractor;
+import org.opencv.features2d.DescriptorMatcher;
+import org.opencv.features2d.FeatureDetector;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -21,12 +31,19 @@ import java.util.Date;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class Screen2 extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
+    static{ System.loadLibrary("opencv_java3"); }
+    private BFImage imageRec = new BFImage(FeatureDetector.ORB, DescriptorExtractor.ORB, DescriptorMatcher.BRUTEFORCE_HAMMINGLUT);
+    private Network network;
+
     CameraControllerV2WithPreview ccv2WithPreview;
 
     AutoFitTextureView textureView;
     Switch startstoppreview;
 
-    String mCurrentPhotoPath = null;
+    public File mCurrentPhotoPath = null;
+    boolean newPic = false;
+
+    public static final int MY_PERMISSIONS_REQUEST_ACCESS_CODE = 1;
 
     public File createImageFile(){
         // Create an image file name
@@ -36,7 +53,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         File image = new File(storageDir + imageFileName + ".jpg");
 
         // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
+        mCurrentPhotoPath = image;
         return image;
     }
 
@@ -54,6 +71,47 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
         ccv2WithPreview = new CameraControllerV2WithPreview(Screen2.this, textureView, createImageFile());
         startstoppreview.setChecked(true);
+
+        final Handler handler = new Handler();
+        class MyRunnable implements Runnable {
+            private Handler handler;
+            private BFImage imageRec;
+            private File file;
+
+            public MyRunnable(Handler handler, BFImage imageRec, File file) {
+                this.handler = handler;
+                this.imageRec = imageRec;
+                this.file = file;
+            }
+            @Override
+            public void run() {
+                this.handler.postDelayed(this, 500);
+
+                if(newPic && file.length() > 1000){
+                    TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
+                    network.getTarget().setValue(match.name());
+                    newPic = false;
+                }
+            }
+        }
+        handler.post(new MyRunnable(handler, imageRec, mCurrentPhotoPath));
+
+        network = Network.getInstance();
+        network.getTarget().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                String value = dataSnapshot.getValue(String.class);
+                showToast(value);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                //Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
 
 
         startstoppreview.setOnClickListener(new View.OnClickListener(){
@@ -77,14 +135,23 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             @Override
             public void onClick(View view) {
                 if(startstoppreview.isChecked() && ccv2WithPreview != null) {
-                    ccv2WithPreview.takePicture();
+                    ccv2WithPreview.takePicture(createImageFile());
+                    newPic = true;
+                    //Toast.makeText(getApplicationContext(), mCurrentPhotoPath.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                    handler.post(new MyRunnable(handler, imageRec, mCurrentPhotoPath));
                 }
 
-                Toast.makeText(getApplicationContext(), "Picture Clicked", Toast.LENGTH_SHORT).show();
+                    //network.getTarget().setValue(match.name());
+                //Toast.makeText(getApplicationContext(), "Picture Clicked", Toast.LENGTH_SHORT).show();
             }
         });
 
         getPermissions();
+
+        imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/pentacle.jpg", 1);
+        imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/tryangle.jpg", 1);
+        imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/zelda.jpg", 1);
+
     }
 
     @Override
@@ -118,5 +185,18 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 return;
             }
         }
+    }
+    /**
+     * Shows a {@link Toast} on the UI thread.
+     *
+     * @param text The message to show
+     */
+    private void showToast(final String text) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

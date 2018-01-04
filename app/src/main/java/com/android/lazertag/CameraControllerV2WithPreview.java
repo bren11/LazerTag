@@ -40,6 +40,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -498,7 +499,8 @@ public class CameraControllerV2WithPreview {
         textureView.setTransform(matrix);
     }
 
-    public void takePicture() {
+    public void takePicture(File newFile) {
+        file = newFile;
         try {
             // This is how to tell the camera to lock focus.
             mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);
@@ -508,7 +510,7 @@ public class CameraControllerV2WithPreview {
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
-        Toast.makeText(activity.getApplicationContext(), file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(activity.getApplicationContext(), file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
     }
 
 
@@ -603,11 +605,24 @@ public class CameraControllerV2WithPreview {
             ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
             byte[] bytes = new byte[buffer.remaining()];
             buffer.get(bytes);
-            try (final OutputStream output = new FileOutputStream(mFile)) {
+            FileOutputStream output = null;
+            try {
+                output = new FileOutputStream(mFile);
                 output.write(bytes);
-            } catch (final IOException e) {
-                Log.e(TAG, "Exception occurred while saving picture to external storage ", e);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                mImage.close();
+                if (null != output) {
+                    try {
+                        output.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
             }
+
         }
 
     }
