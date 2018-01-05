@@ -2,7 +2,9 @@ package com.android.lazertag;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -132,6 +135,23 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/tryangle.jpg", 1);
         imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/zelda.jpg", 1);
 
+
+        //Nick was here. code is bad. sry.
+        ImageView crossHair = (ImageView) findViewById(R.id.CrosshairView);
+        SharedPreferences crossType = this.getSharedPreferences("Hair", MODE_PRIVATE);
+        String Hair = crossType.getString("Hair", "nope");
+        //Toast.makeText(getBaseContext(), Hair ,Toast.LENGTH_SHORT).show();
+        if (Hair.equals("GLogo")) {
+            crossHair.setImageDrawable(getResources().getDrawable(R.drawable.gisforgitgud, getTheme()));
+        } else if (Hair.equals("Pentacle")) {
+            crossHair.setImageDrawable(getResources().getDrawable(R.drawable.pentacle, getTheme()));
+        } else if (Hair.equals("Tryangle")) {
+            crossHair.setImageDrawable(getResources().getDrawable(R.drawable.tryangle, getTheme()));
+        } else if (Hair.equals("Zelda")) {
+            crossHair.setImageDrawable(getResources().getDrawable(R.drawable.zelda, getTheme()));
+        } else if (Hair.equals("nope")) {
+            crossHair.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_info, getTheme()));
+        }
     }
 
     @Override

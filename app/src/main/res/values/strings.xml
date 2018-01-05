@@ -18,4 +18,10 @@
     <string name="intro_message">Hello world</string>
     <string name="startButton">StartGame</string>
     <string name="background">background</string>
+    <string-array name="crosshairarray">
+        <item>GLogo</item>
+        <item>Pentacle</item>
+        <item>Tryangle</item>
+        <item>Zelda</item>
+    </string-array>
 </resources>

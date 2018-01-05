@@ -1,11 +1,16 @@
 package com.android.lazertag;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 public class Settings extends AppCompatActivity {
 
@@ -15,8 +20,30 @@ public class Settings extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         EditText nameSpace;
         nameSpace = (EditText)findViewById(R.id.editText);
-        SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
+        final SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
         nameSpace.setText(prefs.getString("Name", "Player"));
+
+        final SharedPreferences crossType = this.getSharedPreferences("Hair", MODE_PRIVATE);
+        final SharedPreferences.Editor crossEditor = crossType.edit();
+
+        //Spinner Stuff
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.crosshairarray, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                crossEditor.putString("Hair", parent.getItemAtPosition(position) + "");
+                crossEditor.apply();
+                //Toast.makeText(getBaseContext(), crossType.getString("Hair", "nope") ,Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
     }
 
