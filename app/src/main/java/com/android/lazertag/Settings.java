@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ public class Settings extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 crossEditor.putString("Hair", parent.getItemAtPosition(position) + "");
                 crossEditor.apply();
+                setImageView(crossType.getString("Hair", "nope"));
                 //Toast.makeText(getBaseContext(), crossType.getString("Hair", "nope") ,Toast.LENGTH_SHORT).show();
             }
 
@@ -44,7 +46,6 @@ public class Settings extends AppCompatActivity {
 
             }
         });
-
     }
 
     public void goToMain(View view){
@@ -56,5 +57,20 @@ public class Settings extends AppCompatActivity {
         editor.apply();
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
+    }
+
+    public void setImageView(String Hair) {
+        ImageView Preview = (ImageView) findViewById(R.id.hairPreview);
+        if (Hair.equals("GLogo")) {
+            Preview.setImageDrawable(getResources().getDrawable(R.drawable.gisforgitgud, getTheme()));
+        } else if (Hair.equals("Pentacle")) {
+            Preview.setImageDrawable(getResources().getDrawable(R.drawable.pentacle, getTheme()));
+        } else if (Hair.equals("Tryangle")) {
+            Preview.setImageDrawable(getResources().getDrawable(R.drawable.tryangle, getTheme()));
+        } else if (Hair.equals("Zelda")) {
+            Preview.setImageDrawable(getResources().getDrawable(R.drawable.zelda, getTheme()));
+        } else {
+            Preview.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_info, getTheme()));
+        }
     }
 }
