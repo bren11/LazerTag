@@ -38,7 +38,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     CameraControllerV2WithPreview ccv2WithPreview;
 
     AutoFitTextureView textureView;
-    Switch startstoppreview;
 
     public File mCurrentPhotoPath = null;
     boolean newPic = false;
@@ -67,10 +66,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         final Intent intent = getIntent();
 
         textureView = (AutoFitTextureView)findViewById(R.id.textureview);
-        startstoppreview = (Switch) findViewById(R.id.startstoppreview);
 
         ccv2WithPreview = new CameraControllerV2WithPreview(Screen2.this, textureView, createImageFile());
-        startstoppreview.setChecked(true);
 
         final Handler handler = new Handler();
         class MyRunnable implements Runnable {
@@ -114,27 +111,10 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         });
 
 
-        startstoppreview.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-
-                if(startstoppreview.isChecked()) {
-                    intent.putExtra("showpreview", true);
-                    finish();
-                    startActivity(intent);
-
-                } else {
-                    intent.putExtra("showpreview", false);
-                    finish();
-                    startActivity(intent);
-                }
-            }
-        });
-
         findViewById(R.id.getpicture).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                if(startstoppreview.isChecked() && ccv2WithPreview != null) {
+                if(ccv2WithPreview != null) {
                     ccv2WithPreview.takePicture(createImageFile());
                     newPic = true;
                     //Toast.makeText(getApplicationContext(), mCurrentPhotoPath.getAbsolutePath(), Toast.LENGTH_SHORT).show();
