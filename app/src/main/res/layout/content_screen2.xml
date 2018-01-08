@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.android.lazertag.Screen2"
-    tools:showIn="@layout/activity_screen2">
+    tools:showIn="@layout/activity_">
 
     <RelativeLayout
         android:layout_width="0dp"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="5dp">
 
-        <com.android.lazertag.AutoFitTextureView
+        <com.zatackcoder.camera2test.AutoFitTextureView
             android:id="@+id/textureview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
