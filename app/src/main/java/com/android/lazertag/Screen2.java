@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -123,6 +124,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                     //Toast.makeText(getApplicationContext(), mCurrentPhotoPath.getAbsolutePath(), Toast.LENGTH_SHORT).show();
                     handler.post(new MyRunnable(handler, imageRec, mCurrentPhotoPath));
                 }
+
+                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 
                     //network.getTarget().setValue(match.name());
                 //Toast.makeText(getApplicationContext(), "Picture Clicked", Toast.LENGTH_SHORT).show();
