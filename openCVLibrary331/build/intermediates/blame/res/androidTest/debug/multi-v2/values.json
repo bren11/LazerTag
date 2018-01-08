@@ -1,7 +1,15 @@
 {
     "logs": [
         {
+            "outputFile": "C:\\Users\\nicho\\Documents\\LazerTag\\openCVLibrary331\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
+            "map": []
+        },
+        {
             "outputFile": "C:\\Users\\Bren\\Documents\\school\\LazerTag\\openCVLibrary331\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
+            "map": []
+        },
+        {
+            "outputFile": "C:\\Users\\nicho\\Documents\\LazerTag\\openCVLibrary310\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
             "map": []
         }
     ]
