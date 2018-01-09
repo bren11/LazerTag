@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import static android.content.Context.MODE_PRIVATE;
 
 /**
- * Created by meme on 12/11/2017.
+ * Created by Ryan Whiting on 12/11/2017.
  */
 
 class Network {

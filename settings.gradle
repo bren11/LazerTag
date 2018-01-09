@@ -1,2 +1,2 @@
-include ':openCVLibrary331', ':volley-master'
+include ':openCVLibrary331'
 include ':app'
