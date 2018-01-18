@@ -26,6 +26,8 @@ public class Settings extends AppCompatActivity {
 
         final SharedPreferences crossType = this.getSharedPreferences("Hair", MODE_PRIVATE);
         final SharedPreferences.Editor crossEditor = crossType.edit();
+        final SharedPreferences Target = this.getSharedPreferences("Target", MODE_PRIVATE);
+        final SharedPreferences.Editor targetEdit = Target.edit();
 
         //Spinner Stuff
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
@@ -39,6 +41,24 @@ public class Settings extends AppCompatActivity {
                 crossEditor.apply();
                 setImageView(crossType.getString("Hair", "nope"));
                 //Toast.makeText(getBaseContext(), crossType.getString("Hair", "nope") ,Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        Spinner spinner2 = (Spinner) findViewById(R.id.spinner2);
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.targetArray, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner2.setAdapter(adapter2);
+        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                targetEdit.putString("Target", parent.getItemAtPosition(position) + "");
+                targetEdit.apply();
+                setImageView2(Target.getString("Target", "nope"));
             }
 
             @Override
@@ -71,6 +91,17 @@ public class Settings extends AppCompatActivity {
             Preview.setImageDrawable(getResources().getDrawable(R.drawable.zelda, getTheme()));
         } else {
             Preview.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_info, getTheme()));
+        }
+    }
+
+    public void setImageView2(String Target) {
+        ImageView Preview = (ImageView) findViewById(R.id.imageView);
+        if (Target.equals("Pentacle")) {
+            Preview.setImageDrawable(getResources().getDrawable(R.drawable.pentacle, getTheme()));
+        } else if (Target.equals("Tryangle")) {
+            Preview.setImageDrawable(getResources().getDrawable(R.drawable.tryangle, getTheme()));
+        } else if (Target.equals("Zelda")) {
+            Preview.setImageDrawable(getResources().getDrawable(R.drawable.zelda, getTheme()));
         }
     }
 }

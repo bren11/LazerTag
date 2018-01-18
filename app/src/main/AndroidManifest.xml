@@ -29,6 +29,12 @@
     <uses-feature
         android:name="android.hardware.camera.front.autofocus"
         android:required="false" />
+    <uses-feature
+        android:name="android.hardware.sensor.proximity"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.sensor.gyroscope"
+        android:required="true" />
 
 
     <supports-screens
@@ -78,7 +84,8 @@
                     android:screenOrientation="landscape" />
             </intent-filter>
         </activity>
-        <activity android:name=".Screen2">
+        <activity android:name=".Screen2"
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
