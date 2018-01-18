@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import org.opencv.features2d.DescriptorExtractor;
@@ -30,6 +31,7 @@ import org.opencv.features2d.FeatureDetector;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -103,8 +105,13 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-                showToast(value);
+                ArrayList<Hit> value = dataSnapshot.getValue(new GenericTypeIndicator<ArrayList<Hit>>());
+                Hit currentHit = value.get(value.size() - 1);
+                if(currentHit.getReceiver().equals(Player.getLocalPlayer())) {
+                    showToast("You got Blasted!");
+                } else if(currentHit.getSender().equals(Player.getLocalPlayer())) {
+                    showToast("You Blasted " + currentHit.getReceiver().getName() + " !");
+                }
             }
 
             @Override
