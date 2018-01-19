@@ -2,9 +2,9 @@
 *.class
 .gradle
 /local.properties
-/.idea/workspace.xml
+/.idea/*
 /.idea/libraries
-/openCVLibrary331/build
+/openCVLibrary331/build/*
 .DS_Store
 /build
 /captures
