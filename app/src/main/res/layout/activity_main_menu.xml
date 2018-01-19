@@ -10,7 +10,7 @@
         android:id="@+id/Background"
         android:layout_width="461dp"
         android:layout_height="658dp"
-        android:background="@drawable/background"
+        android:background="@drawable/ic_action_info"
         app:layout_constraintBottom_toBottomOf="parent"
 
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/background" />
+        app:srcCompat="@drawable/ic_action_info" />
 
     <ImageView
         android:id="@+id/Logo"
@@ -34,7 +34,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/logo2" />
+        app:srcCompat="@drawable/ic_action_info" />
 
     <ImageButton
         android:id="@+id/Settings"
