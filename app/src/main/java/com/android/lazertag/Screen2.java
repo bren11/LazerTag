@@ -168,7 +168,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         }
 
         crossHair.setRotation(270);
-        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        /*SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         final float[] timestamp = new float[1];
 
@@ -187,7 +187,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             }
         };
 
-        sensorManager.registerListener(gyroscopeSensorListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(gyroscopeSensorListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);*/
 
     }
 
