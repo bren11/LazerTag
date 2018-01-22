@@ -1,6 +1,7 @@
 package com.android.lazertag;
 
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 
 /**
  * Created by dphip on 13/12/2017.
@@ -13,13 +14,15 @@ public class Player {
     private int hitsSent = 0;
     private int hitsRecieved = 0;
     private Drawable image;
+    private Drawable crossHair;
+    private Location location;
 
     private static Player localPlayer;
 
     public static Player getLocalPlayer() {
         if(localPlayer == null) {
             localPlayer = new Player();
-            localPlayer.image = Settings.datPicBro;
+            //localPlayer.image = Settings.datPicBro;
         }
         return  localPlayer;
     }
@@ -59,4 +62,21 @@ public class Player {
     public void setImage(Drawable image) {
         this.image = image;
     }
+
+    public Drawable getCrossHair() {
+        return crossHair;
+    }
+
+    public void setCrossHair(Drawable image) {
+        this.crossHair = image;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location whereareyou) {
+        this.location = whereareyou;
+    }
+
 }

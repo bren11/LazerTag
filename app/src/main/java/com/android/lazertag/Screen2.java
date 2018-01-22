@@ -10,6 +10,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -111,13 +113,13 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                ArrayList<Hit> value = dataSnapshot.getValue(new GenericTypeIndicator<ArrayList<Hit>>());
+                /*ArrayList<Hit> value = dataSnapshot.getValue(new GenericTypeIndicator<ArrayList<Hit>>());
                 Hit currentHit = value.get(value.size() - 1);
                 if(currentHit.getReceiver().equals(Player.getLocalPlayer())) {
                     showToast("You got Blasted!");
                 } else if(currentHit.getSender().equals(Player.getLocalPlayer())) {
                     showToast("You Blasted " + currentHit.getReceiver().getName() + " !");
-                }
+                }*/
             }
 
             @Override
@@ -127,6 +129,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             }
         });
 
+        final MediaPlayer blastNoise = MediaPlayer.create(this, R.raw.blastnoise);
 
         findViewById(R.id.getpicture).setOnClickListener(new View.OnClickListener(){
             @Override
@@ -137,6 +140,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                     //Toast.makeText(getApplicationContext(), mCurrentPhotoPath.getAbsolutePath(), Toast.LENGTH_SHORT).show();
                     handler.post(new MyRunnable(handler, imageRec, mCurrentPhotoPath));
                     view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                    blastNoise.start();
                 }
                 //network.getTarget().setValue(match.name());
                 //Toast.makeText(getApplicationContext(), "Picture Clicked", Toast.LENGTH_SHORT).show();
