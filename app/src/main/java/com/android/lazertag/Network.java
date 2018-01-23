@@ -26,9 +26,7 @@ class Network {
         return ourInstance;
     }
 
-    private Network() {
-        database = FirebaseDatabase.getInstance();
-    }
+    private Network() { database = FirebaseDatabase.getInstance(); }
 
     public void addGame(Activity activity){
         SharedPreferences prefs = activity.getSharedPreferences("nameData", MODE_PRIVATE);
