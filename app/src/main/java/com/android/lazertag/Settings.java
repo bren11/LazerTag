@@ -55,6 +55,8 @@ public class Settings extends AppCompatActivity {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("Name", nameSpace.getText().toString());
         editor.apply();
+        Player self = Player.getOwnPlayer();
+        self.changeName(nameSpace.getText().toString());
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
     }

@@ -1,8 +1,20 @@
 package com.android.lazertag;
 
-/**
- * Created by dphip on 13/12/2017.
- */
 
 public class Player {
+    public static Player ownPlayer;
+    public String name;
+    public Player(){
+        name = "bob";
+    }
+
+    public void changeName(String name){
+        name = this.name;
+    }
+
+    public static Player getOwnPlayer(){
+        if(ownPlayer == null)
+            ownPlayer = new Player();
+        return ownPlayer;
+    }
 }
