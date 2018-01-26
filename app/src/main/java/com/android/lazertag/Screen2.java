@@ -35,14 +35,15 @@ import java.util.Date;
 public class Screen2 extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     static{ System.loadLibrary("opencv_java3"); }
-    private BFImage imageRec = new BFImage(FeatureDetector.ORB, DescriptorExtractor.ORB, DescriptorMatcher.BRUTEFORCE_HAMMINGLUT);
+    //private BFImage imageRec = new BFImage(FeatureDetector.ORB, DescriptorExtractor.ORB, DescriptorMatcher.BRUTEFORCE_HAMMINGLUT);
+    private RectangleFindr recrec;
     private Network network;
 
     CameraControllerV2WithPreview ccv2WithPreview;
 
     AutoFitTextureView textureView;
 
-    public File mCurrentPhotoPath = null;
+    public File mCurrentPhoto = null;
     boolean newPic = false;
 
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_CODE = 1;
@@ -55,7 +56,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         File image = new File(storageDir + imageFileName + ".jpg");
 
         // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image;
+        mCurrentPhoto = image;
         return image;
     }
 
@@ -75,12 +76,12 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         final Handler handler = new Handler();
         class MyRunnable implements Runnable {
             private Handler handler;
-            private BFImage imageRec;
+            //private BFImage imageRec;
             private File file;
 
             public MyRunnable(Handler handler, BFImage imageRec, File file) {
                 this.handler = handler;
-                this.imageRec = imageRec;
+                //this.imageRec = imageRec;
                 this.file = file;
             }
             @Override
@@ -88,13 +89,16 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 this.handler.postDelayed(this, 500);
 
                 if(newPic && file.length() > 1000){
-                    TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
-                    network.getTarget().setValue(match.name());
+                    /*TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
+                    if (match != null) {
+                        network.getTarget().setValue(match.name());
+                    }*/
+
                     newPic = false;
                 }
             }
         }
-        handler.post(new MyRunnable(handler, imageRec, mCurrentPhotoPath));
+        //handler.post(new MyRunnable(handler, imageRec, mCurrentPhoto));
 
         network = Network.getInstance();
         network.getTarget().addValueEventListener(new ValueEventListener() {
@@ -118,10 +122,11 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             @Override
             public void onClick(View view) {
                 if(ccv2WithPreview != null) {
-                    ccv2WithPreview.takePicture(createImageFile());
+                    createImageFile();
+                    ccv2WithPreview.takePicture(mCurrentPhoto);
                     newPic = true;
-                    //Toast.makeText(getApplicationContext(), mCurrentPhotoPath.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-                    handler.post(new MyRunnable(handler, imageRec, mCurrentPhotoPath));
+                    Toast.makeText(getApplicationContext(), mCurrentPhoto.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                    handler.post(new MyRunnable(handler, imageRec, mCurrentPhoto));
                 }
 
                     //network.getTarget().setValue(match.name());
@@ -131,9 +136,9 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
         getPermissions();
 
-        imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/pentacle.jpg", 1);
-        imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/tryangle.jpg", 1);
-        imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/zelda.jpg", 1);
+        //imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/pentacle.jpg", 1);
+        //imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/tryangle.jpg", 1);
+        //imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/zelda.jpg", 1);
 
 
         //Nick was here. code is bad. sry.
