@@ -8,6 +8,6 @@ public class Lobby {
     public Lobby(){
         players = new ArrayList<>();
         isPrivate = false;
-        players.add(Player.getOwnPlayer());
+        players.add(Player.getLocalPlayer());
     }
 }
