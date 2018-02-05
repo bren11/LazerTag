@@ -10,7 +10,7 @@
         android:id="@+id/Background"
         android:layout_width="461dp"
         android:layout_height="658dp"
-        android:background="@drawable/ic_action_info"
+        android:background="@drawable/background"
         app:layout_constraintBottom_toBottomOf="parent"
 
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,23 +18,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/ic_action_info" />
+        app:srcCompat="@drawable/background" />
 
     <ImageView
         android:id="@+id/Logo"
         android:layout_width="333dp"
         android:layout_height="219dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.515"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/ic_action_info" />
+        app:srcCompat="@drawable/logo2" />
 
     <ImageButton
         android:id="@+id/Settings"

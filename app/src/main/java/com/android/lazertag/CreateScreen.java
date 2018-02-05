@@ -44,7 +44,7 @@ public class CreateScreen extends Activity {
         startActivity(intent);
     }
     public void goToScreen(View view){
-        Intent intent = new Intent(this, Screen.class);
+        Intent intent = new Intent(this, Screen2.class);
         startActivity(intent);
     }
 }

@@ -19,6 +19,8 @@ public class Player {
     private Drawable image;
     private Drawable crossHair;
     private Location location;
+    private Drawable[] crossHairs;
+    private Drawable[] images;
 
     private static Player localPlayer;
 
@@ -62,16 +64,16 @@ public class Player {
         return image;
     }
 
-    public void setImage(Drawable image) {
-        this.image = image;
+    public void setImage(int imageLocation) {
+            this.image = this.images[imageLocation];
     }
 
     public Drawable getCrossHair() {
         return crossHair;
     }
 
-    public void setCrossHair(Drawable image) {
-        this.crossHair = image;
+    public void setCrossHair(int hairLocation) {
+        this.crossHair = this.crossHairs[hairLocation];
     }
 
     public Location getLocation() {
@@ -80,6 +82,14 @@ public class Player {
 
     public void setLocation(Location whereareyou) {
         this.location = whereareyou;
+    }
+
+    public void setcrossHairs(Drawable[] crossHairs) {
+        this.crossHairs = crossHairs;
+    }
+
+    public void setimages(Drawable[] images) {
+        this.images = images;
     }
 
 }

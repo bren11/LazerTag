@@ -7,9 +7,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+
 import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
+
+import java.util.ArrayList;
 
 public class MainMenu extends AppCompatActivity {
 
@@ -17,10 +21,17 @@ public class MainMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+        /*Network test = Network.getInstance();
+        DatabaseReference testRef = test.database.getReference("test");
+        ArrayList<String> testList = new ArrayList<String>();
+        testList.add("bob");
+        testList.add("stop");
+        testRef.setValue(testList);
+        */
     }
 
     public void goToJoin(View view){
-        Intent intent = new Intent(this, Screen2.class);
+        Intent intent = new Intent(this, JoinScreen.class);
         startActivity(intent);
     }
 
