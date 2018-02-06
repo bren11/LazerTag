@@ -21,6 +21,7 @@ public class Player {
     private Location location;
     private Drawable[] crossHairs;
     private Drawable[] images;
+    private String currentLobby;
 
     private static Player localPlayer;
 
