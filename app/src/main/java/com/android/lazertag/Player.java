@@ -18,6 +18,7 @@ public class Player {
     private Location location;
     private Drawable[] crossHairs;
     private Drawable[] images;
+    private String currentLobby;
 
     private static Player localPlayer;
 
@@ -30,6 +31,9 @@ public class Player {
     }
 
     public Player(){}
+    public String getCurrentLobby() {return currentLobby;}
+
+    public void setCurrentLobby(String currentLobby) {this.currentLobby = currentLobby;}
 
     public Lobby getLobby() { return lobby; }
 
