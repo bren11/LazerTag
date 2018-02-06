@@ -175,31 +175,36 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             crossHair.setImageDrawable(getResources().getDrawable(R.drawable.tryangle, getTheme()));
         } else if (Hair.equals("Zelda")) {
             crossHair.setImageDrawable(getResources().getDrawable(R.drawable.zelda, getTheme()));
+        } else if (Hair.equals("Spin")) {
+            crossHair.setImageDrawable(getResources().getDrawable(R.drawable.spin, getTheme()));
         } else if (Hair.equals("nope")) {
             crossHair.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_info, getTheme()));
         }
 
         crossHair.setRotation(270);
-        /*SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         final float[] timestamp = new float[1];
 
-        SensorEventListener gyroscopeSensorListener = new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent sensorEvent) {
-                if ((Math.abs(sensorEvent.values[2]) > 0.5f) && (timestamp[0] != 0)) {
-                    float rot = (float) (crossHair.getRotation() + ((Math.toDegrees(sensorEvent.values[2]) * ((sensorEvent.timestamp - timestamp[0]) / 1000000000f))));
-                    crossHair.setRotation(rot);
+        if (Hair.equals("Spin")) {
+            SensorEventListener gyroscopeSensorListener = new SensorEventListener() {
+                @Override
+                public void onSensorChanged(SensorEvent sensorEvent) {
+                    if ((Math.abs(sensorEvent.values[2]) > 0.5f) && (timestamp[0] != 0)) {
+                        float rot = (float) (crossHair.getRotation() + ((Math.toDegrees(sensorEvent.values[2]) * ((sensorEvent.timestamp - timestamp[0]) / 100000000f))));
+                        crossHair.setRotation(rot);
+                    }
+                    timestamp[0] = sensorEvent.timestamp;
                 }
-                timestamp[0] = sensorEvent.timestamp;
-            }
 
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int i) {
-            }
-        };
+                @Override
+                public void onAccuracyChanged(Sensor sensor, int i) {
+                }
+            };
 
-        sensorManager.registerListener(gyroscopeSensorListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);*/
+
+            sensorManager.registerListener(gyroscopeSensorListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
 
     }
 
