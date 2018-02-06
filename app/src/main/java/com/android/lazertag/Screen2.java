@@ -108,6 +108,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         handler.post(new MyRunnable(handler, imageRec, mCurrentPhotoPath));
 
         network = Network.getInstance();
+        Player.getLocalPlayer().getLobby();
         network.getTarget().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
