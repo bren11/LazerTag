@@ -11,7 +11,8 @@ import com.google.firebase.database.ValueEventListener;
 
 public class LobbyFrontend {
     String key;
-    final int numPeople, ID;
+    final int ID;
+    int numPeople;
 
     public LobbyFrontend(String key, int numPeople, int ID){
         this.key = key;
@@ -26,7 +27,7 @@ public class LobbyFrontend {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Lobby lobby  = dataSnapshot.getValue(Lobby.class);
-                //numPeople = lobby.players.size();
+                numPeople = lobby.players.size();
             }
 
             @Override
@@ -35,5 +36,6 @@ public class LobbyFrontend {
             }
         });
     }
+
 
 }
