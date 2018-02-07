@@ -67,7 +67,7 @@ public class JoinScreen extends AppCompatActivity {
     }
     public void joinLobby(int index){
         Network database = Network.getInstance();
-        DatabaseReference ref = database.getLobby(visLobbies[index].key);
+        database.addPlayer(visLobbies[index].key);
 
     }
     public void joinLobby1(View view) {

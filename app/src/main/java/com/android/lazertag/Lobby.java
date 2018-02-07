@@ -1,6 +1,5 @@
 package com.android.lazertag;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Lobby {
