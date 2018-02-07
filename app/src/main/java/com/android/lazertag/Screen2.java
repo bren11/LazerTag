@@ -242,4 +242,9 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             }
         });
     }
+
+    public void goback(View view){
+        Intent intent = new Intent(this, MainMenu.class);
+        startActivity(intent);
+    }
 }
