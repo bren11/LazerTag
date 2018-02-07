@@ -33,6 +33,7 @@ public class Player {
     }
 
     public Player(){
+        name = "player";
     }
 
     public Lobby getLobby() { return lobby; }

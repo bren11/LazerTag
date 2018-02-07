@@ -9,7 +9,9 @@ public class Lobby {
     public Lobby(){
         players = new HashMap<>();
         isPrivate = false;
-        players.put(Player.getLocalPlayer().getName(), Player.getLocalPlayer());
+        String name= Player.getLocalPlayer().getName();
+        Player player = Player.getLocalPlayer();
+        players.put(name, player);
         key = Player.getLocalPlayer().getName();
     }
 }
