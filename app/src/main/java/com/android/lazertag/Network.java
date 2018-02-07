@@ -51,7 +51,7 @@ class Network {
 
     }*/
 
-    public void addPlayer(String key){
+    public void addPlayer(final String key){
         ourInstance.database.getReference(key).child("players").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
