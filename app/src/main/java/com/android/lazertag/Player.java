@@ -1,7 +1,10 @@
 package com.android.lazertag;
 
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by dphip on 13/12/2017.
@@ -25,15 +28,12 @@ public class Player {
     public static Player getLocalPlayer() {
         if(localPlayer == null) {
             localPlayer = new Player();
-            //localPlayer.image = Settings.datPicBro;
         }
         return  localPlayer;
     }
 
-    public Player(){}
-    public String getCurrentLobby() {return currentLobby;}
-
-    public void setCurrentLobby(String currentLobby) {this.currentLobby = currentLobby;}
+    public Player(){
+    }
 
     public Lobby getLobby() { return lobby; }
 

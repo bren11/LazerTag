@@ -108,18 +108,19 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         handler.post(new MyRunnable(handler, imageRec, mCurrentPhotoPath));
 
         network = Network.getInstance();
+        Player.getLocalPlayer().getLobby();
         network.getTarget().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                /*ArrayList<Hit> value = dataSnapshot.getValue(new GenericTypeIndicator<ArrayList<Hit>>());
+                ArrayList<Hit> value = dataSnapshot.getValue(new GenericTypeIndicator<ArrayList<Hit>>());
                 Hit currentHit = value.get(value.size() - 1);
                 if(currentHit.getReceiver().equals(Player.getLocalPlayer())) {
                     showToast("You got Blasted!");
                 } else if(currentHit.getSender().equals(Player.getLocalPlayer())) {
                     showToast("You Blasted " + currentHit.getReceiver().getName() + " !");
-                }*/
+                }
             }
 
             @Override
