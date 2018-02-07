@@ -25,6 +25,7 @@ public class JoinScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        visLobbies = new LobbyFrontend[8];
         visLobbies[0] = new LobbyFrontend("none", 0, R.id.n0);
         visLobbies[1] = new LobbyFrontend("none", 0, R.id.n1);
         visLobbies[2] = new LobbyFrontend("none", 0, R.id.n2);
@@ -37,31 +38,16 @@ public class JoinScreen extends AppCompatActivity {
         database.getLobbies().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                final ArrayList<String> lobbyNames = new ArrayList<String>();
-                final int[] ids = new int[]{R.id.n0, R.id.n1, R.id.n2, R.id.n3, R.id.n4, R.id.n5, R.id.n6, R.id.n7};
+                int j = 0;
                 for (DataSnapshot lobbyName: dataSnapshot.getChildren()){
                     String name = lobbyName.getValue(String.class);
-                    lobbyNames.add(name);
-
+                    visLobbies[j].newAssignment(name);
+                    j++;
                 }
-                Network database = Network.getInstance();
-                for(int i = 0; i < lobbyNames.size() && i < 8; i++){
-                    final Button button = (Button) findViewById(ids[i]);
-                    DatabaseReference lobby = database.getLobby(lobbyNames.get(i));
-                    final String name = lobbyNames.get(i);
-                    lobby.child("players").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            ArrayList<Player> players = dataSnapshot.getValue(ArrayList.class);
-                            String textToDisplay = "" + name + " (" + players.size() + ")";
-                            button.setText(textToDisplay);
-                        }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-
+                for(int i = 0; i < j && i < 8; i++){
+                    final Button button = (Button) findViewById(visLobbies[i].ID);
+                    String text = "" + visLobbies[i].key + " (" + visLobbies[i].numPeople + ")";
+                    button.setText(text);
                 }
             }
 
@@ -81,7 +67,8 @@ public class JoinScreen extends AppCompatActivity {
     }
     public void joinLobby(int index){
         Network database = Network.getInstance();
-        //DatabaseReference ref = database.getLobby(lobbyNames.get(index));
+        database.addPlayer(visLobbies[index].key);
+
     }
     public void joinLobby1(View view) {
         joinLobby(0);
