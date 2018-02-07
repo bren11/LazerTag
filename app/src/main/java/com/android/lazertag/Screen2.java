@@ -55,8 +55,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     public File mCurrentPhotoPath = null;
     boolean newPic = false;
 
-    public static final int MY_PERMISSIONS_REQUEST_ACCESS_CODE = 1;
-
     public File createImageFile(){
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -114,13 +112,13 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                ArrayList<Hit> value = dataSnapshot.getValue(new GenericTypeIndicator<ArrayList<Hit>>());
+                /*ArrayList<Hit> value = dataSnapshot.getValue(new GenericTypeIndicator<ArrayList<Hit>>());
                 Hit currentHit = value.get(value.size() - 1);
                 if(currentHit.getReceiver().equals(Player.getLocalPlayer())) {
                     showToast("You got Blasted!");
                 } else if(currentHit.getSender().equals(Player.getLocalPlayer())) {
                     showToast("You Blasted " + currentHit.getReceiver().getName() + " !");
-                }
+                }*/
             }
 
             @Override
@@ -155,8 +153,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             }
         });
 
-        getPermissions();
-
         imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/pentacle.jpg", 1);
         imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/tryangle.jpg", 1);
         imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/zelda.jpg", 1);
@@ -181,7 +177,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             crossHair.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_info, getTheme()));
         }
 
-        crossHair.setRotation(270);
+        //crossHair.setRotation(270);
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         final float[] timestamp = new float[1];
@@ -233,27 +229,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 //        }
     }
 
-    private void getPermissions(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if(checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-                //Requesting permission.
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            }
-        }
-    }
-
-    @Override //Override from ActivityCompat.OnRequestPermissionsResultCallback Interface
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission granted
-                }
-                return;
-            }
-        }
-    }
     /**
      * Shows a {@link Toast} on the UI thread.
      *
