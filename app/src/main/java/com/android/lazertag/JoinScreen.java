@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -68,7 +69,13 @@ public class JoinScreen extends AppCompatActivity {
     public void joinLobby(int index){
         Network database = Network.getInstance();
         database.addPlayer(visLobbies[index].key);
-
+    }
+    public void goToGame(View view){
+        if (android.os.Build.VERSION.SDK_INT < 23){
+            Toast.makeText(this, "Your operating system is not compatible with our proprietary BLASTING technology", Toast.LENGTH_SHORT).show();
+        } else{
+            Intent intent = new Intent(this, Screen2.class);
+        }
     }
     public void joinLobby1(View view) {
         joinLobby(0);

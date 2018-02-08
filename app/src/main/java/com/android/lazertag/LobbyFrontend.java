@@ -27,7 +27,7 @@ public class LobbyFrontend {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Lobby lobby  = dataSnapshot.getValue(Lobby.class);
-                numPeople = lobby.players.size();
+                //numPeople = lobby.players.size();
             }
 
             @Override
