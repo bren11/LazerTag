@@ -41,6 +41,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static com.android.lazertag.Player.getLocalPlayer;
+
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class Screen2 extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -100,7 +102,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
                 if(newPic && file.length() > 1000){
                     TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
-                    network.getTarget().setValue(match.name());
+                    //network.getTarget().setValue(match.name());
                     newPic = false;
                 }
             }
@@ -108,17 +110,17 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         handler.post(new MyRunnable(handler, imageRec, mCurrentPhotoPath));
 
         network = Network.getInstance();
-        Player.getLocalPlayer().getLobby();
-        network.getTarget().addValueEventListener(new ValueEventListener() {
+        String key = Player.getLocalPlayer().getCurrentLobby();
+        network.getLobby(key).child("hitReg").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                ArrayList<Hit> value = dataSnapshot.getValue(new GenericTypeIndicator<ArrayList<Hit>>());
+                ArrayList<Hit> value = dataSnapshot.getValue(new GenericTypeIndicator<ArrayList<Hit>>(){});
                 Hit currentHit = value.get(value.size() - 1);
-                if(currentHit.getReceiver().equals(Player.getLocalPlayer())) {
+                if(currentHit.getReceiver().equals(getLocalPlayer())) {
                     showToast("You got Blasted!");
-                } else if(currentHit.getSender().equals(Player.getLocalPlayer())) {
+                } else if(currentHit.getSender().equals(getLocalPlayer())) {
                     showToast("You Blasted " + currentHit.getReceiver().getName() + " !");
                 }
             }

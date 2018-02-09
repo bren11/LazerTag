@@ -43,6 +43,7 @@ class Network {
     public DatabaseReference getTarget(){
         return database.getReference("target");
     }
+
     public DatabaseReference getLobbies(){ return database.getReference("Lobby");}
     public DatabaseReference getLobby(String key){return database.getReference(key);}
     /*public ArrayList<Player> getPlayersInLobby(String name) {

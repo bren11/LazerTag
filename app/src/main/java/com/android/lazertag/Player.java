@@ -93,4 +93,6 @@ public class Player {
         this.images = images;
     }
 
+    public String getCurrentLobby() { return currentLobby; }
+
 }
