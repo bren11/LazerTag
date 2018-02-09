@@ -162,7 +162,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         final ImageView crossHair = (ImageView) findViewById(R.id.CrosshairView);
         SharedPreferences crossType = this.getSharedPreferences("Hair", MODE_PRIVATE);
         String Hair = crossType.getString("Hair", "nope");
-        //Toast.makeText(getBaseContext(), Hair ,Toast.LENGTH_SHORT).show();
         if (Hair.equals("GLogo")) {
             crossHair.setImageDrawable(getResources().getDrawable(R.drawable.gisforgitgud, getTheme()));
         } else if (Hair.equals("Pentacle")) {
@@ -177,7 +176,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             crossHair.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_info, getTheme()));
         }
 
-        //crossHair.setRotation(270);
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         final float[] timestamp = new float[1];
