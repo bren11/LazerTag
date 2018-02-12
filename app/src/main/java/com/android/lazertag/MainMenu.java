@@ -28,6 +28,8 @@ public class MainMenu extends AppCompatActivity {
         getPermissions();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+        final SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
+        Player.getLocalPlayer().setName(prefs.getString("Name", "Player"));
         /*Network test = Network.getInstance();
         DatabaseReference testRef = test.database.getReference("test");
         ArrayList<String> testList = new ArrayList<String>();

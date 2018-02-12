@@ -42,6 +42,9 @@ public class CreateScreen extends Activity {
         });
     }
     public void goToMain(View view){
+        Network database = Network.getInstance();
+        database.getLobby(Player.getLocalPlayer().getName()).removeValue();
+        database.getLobbies().child(Player.getLocalPlayer().getName()).removeValue();
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
     }
