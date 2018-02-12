@@ -3,9 +3,12 @@ package com.android.lazertag;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.inputmethodservice.Keyboard;
+import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -28,6 +31,8 @@ public class Settings extends AppCompatActivity {
         final SharedPreferences.Editor crossEditor = crossType.edit();
         final SharedPreferences Target = this.getSharedPreferences("Target", MODE_PRIVATE);
         final SharedPreferences.Editor targetEdit = Target.edit();
+
+
 
         //Spinner Stuff
         Spinner spinner = (Spinner) findViewById(R.id.spinner);

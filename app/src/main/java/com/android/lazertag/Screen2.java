@@ -175,7 +175,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         } else if (Hair.equals("nope")) {
             crossHair.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_info, getTheme()));
         }
-
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         final float[] timestamp = new float[1];
