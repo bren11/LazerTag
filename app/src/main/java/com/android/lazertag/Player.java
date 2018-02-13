@@ -36,6 +36,14 @@ public class Player {
         name = "player";
     }
 
+    public String getCurrentLobby() {
+        return currentLobby;
+    }
+
+    public void setCurrentLobby(String currentLobby) {
+        this.currentLobby = currentLobby;
+    }
+
     public Lobby getLobby() { return lobby; }
 
     public void setLobby(Lobby lobby) { this.lobby = lobby; }

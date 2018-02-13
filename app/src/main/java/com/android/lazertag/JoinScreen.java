@@ -48,7 +48,7 @@ public class JoinScreen extends AppCompatActivity {
                     j++;
                 }
                 for(int i = 0; i < j && i < 8; i++){
-                    final Button button = (Button) findViewById(visLobbies[i].ID);
+                    Button button = (Button) findViewById(visLobbies[i].ID);
                     String text = "" + visLobbies[i].key + " (" + visLobbies[i].numPeople + ")";
                     button.setText(text);
                 }
@@ -69,6 +69,8 @@ public class JoinScreen extends AppCompatActivity {
     public void joinLobby(int index){
         Network database = Network.getInstance();
         database.addPlayer(visLobbies[index].key);
+        Intent intent = new Intent(this, InLobby.class);
+        startActivity(intent);
     }
     public void goToGame(View view){
         if (android.os.Build.VERSION.SDK_INT < 23) {
@@ -80,6 +82,7 @@ public class JoinScreen extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
     public void joinLobby1(View view) {
         joinLobby(0);
     }

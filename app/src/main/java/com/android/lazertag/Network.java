@@ -53,7 +53,8 @@ class Network {
 
     }*/
 
-    public void addPlayer(final String key){
-        ourInstance.database.getReference(key).child("players").child(Player.getLocalPlayer().getName()).setValue(Player.getLocalPlayer().getName());
+    public void addPlayer(String key){
+        ourInstance.database.getReference(key).child("players").child(Player.getLocalPlayer().getName()).setValue(Player.getLocalPlayer());
+        Player.getLocalPlayer().setCurrentLobby(key);
     }
 }

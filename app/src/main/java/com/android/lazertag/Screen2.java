@@ -59,6 +59,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     public File mCurrentPhotoPath = null;
     boolean newPic = false;
 
+    GeneralPreferences genPref = GeneralPreferences.getInstance();
+
     public File createImageFile(){
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -159,30 +161,21 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/tryangle.jpg", 1);
         imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/zelda.jpg", 1);
 
-
-        //Nick was here. code is bad. sry.
         final ImageView crossHair = (ImageView) findViewById(R.id.CrosshairView);
-        SharedPreferences crossType = this.getSharedPreferences("Hair", MODE_PRIVATE);
-        String Hair = crossType.getString("Hair", "nope");
-        if (Hair.equals("GLogo")) {
-            crossHair.setImageDrawable(getResources().getDrawable(R.drawable.gisforgitgud, getTheme()));
-        } else if (Hair.equals("Pentacle")) {
-            crossHair.setImageDrawable(getResources().getDrawable(R.drawable.pentacle, getTheme()));
-        } else if (Hair.equals("Tryangle")) {
-            crossHair.setImageDrawable(getResources().getDrawable(R.drawable.tryangle, getTheme()));
-        } else if (Hair.equals("Zelda")) {
-            crossHair.setImageDrawable(getResources().getDrawable(R.drawable.zelda, getTheme()));
-        } else if (Hair.equals("Spin")) {
-            crossHair.setImageDrawable(getResources().getDrawable(R.drawable.spin, getTheme()));
-        } else if (Hair.equals("nope")) {
-            crossHair.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_info, getTheme()));
-        }
+        int[] crossHairs = genPref.getCrosshairs();
+        int crossHairPosition = genPref.getCrosshair();
+        crossHair.setImageResource(crossHairs[crossHairPosition]);
 
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         final float[] timestamp = new float[1];
-
-        if (Hair.equals("Spin")) {
+        boolean isSpinner;
+        if (genPref.getCrosshair() == 4) {
+            isSpinner = true;
+        } else {
+            isSpinner = false;
+        }
+        if (isSpinner == true) {
             SensorEventListener gyroscopeSensorListener = new SensorEventListener() {
                 @Override
                 public void onSensorChanged(SensorEvent sensorEvent) {

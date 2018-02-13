@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.android.lazertag">
-    <uses-sdk tools:overrideLibrary="org.opencv"/>
+
+    <uses-sdk tools:overrideLibrary="org.opencv" />
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <supports-screens
@@ -109,11 +111,13 @@
             android:name=".JoinScreen"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".GameOver"></activity>
+        <activity android:name=".GameOver" />
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
+        <activity android:name=".InLobby"></activity>
     </application>
 
 </manifest>
