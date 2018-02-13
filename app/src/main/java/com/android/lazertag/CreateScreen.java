@@ -10,6 +10,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+
 public class CreateScreen extends Activity {
 
     @Override
@@ -18,26 +24,27 @@ public class CreateScreen extends Activity {
         Network network = Network.getInstance();
         network.addGame(this);
         setContentView(R.layout.activity_create_screen);
-        final String[] players = new String[]{"player", "", "", "", "", "", "", ""};
-        SharedPreferences prefs = this.getPreferences(MODE_PRIVATE);
-        players[0] = prefs.getString("Name","Player");
         final int[] ids = new int[]{R.id.n0, R.id.n1, R.id.n2, R.id.n3, R.id.n4, R.id.n5, R.id.n6, R.id.n7};
-        final Handler handler=new Handler();
-        handler.post(new Runnable(){
+        Network database = Network.getInstance();
+        database.getLobby(Player.getLocalPlayer().getName()).addValueEventListener(new ValueEventListener() {
             @Override
-            public void run() {
-                for (int i = 0; i < players.length; i++){
-                    Button button;
-                    button = (Button) findViewById(ids[i]);
-                    if(players[i].equals("")){
-                        button.setVisibility(View.GONE);
-                    }
-                    else {
-                        button.setVisibility(View.VISIBLE);
-                    }
-                    button.setText(players[i]);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int i = 0;
+                ArrayList<String> names = new ArrayList<>();
+                for(DataSnapshot data : dataSnapshot.getChildren()){
+                    Player player = data.getValue(Player.class);
+                    names.add(player.getName());
+                    i++;
                 }
-                handler.postDelayed(this,500); // set time here to refresh textView
+                for(int j = 0; j < i && j < 8; j++){
+                    Button button = (Button) findViewById(ids[j]);
+                    button.setText(names.get(j));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }

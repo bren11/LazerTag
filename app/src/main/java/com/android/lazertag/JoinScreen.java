@@ -48,7 +48,7 @@ public class JoinScreen extends AppCompatActivity {
                     j++;
                 }
                 for(int i = 0; i < j && i < 8; i++){
-                    final Button button = (Button) findViewById(visLobbies[i].ID);
+                    Button button = (Button) findViewById(visLobbies[i].ID);
                     String text = "" + visLobbies[i].key + " (" + visLobbies[i].numPeople + ")";
                     button.setText(text);
                 }
