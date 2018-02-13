@@ -167,8 +167,13 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         final float[] timestamp = new float[1];
-
+        boolean isSpinner;
         if (genPref.getCrosshair() == 4) {
+            isSpinner = true;
+        } else {
+            isSpinner = false;
+        }
+        if (isSpinner == true) {
             SensorEventListener gyroscopeSensorListener = new SensorEventListener() {
                 @Override
                 public void onSensorChanged(SensorEvent sensorEvent) {

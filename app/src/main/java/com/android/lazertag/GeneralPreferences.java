@@ -26,8 +26,8 @@ class GeneralPreferences {
     private GeneralPreferences() {
         this.crosshairs = new int[]{R.drawable.gisforgitgud, R.drawable.pentacle, R.drawable.tryangle, R.drawable.zelda, R.drawable.spin};
         this.targets = new int[]{R.drawable.pentacle,R.drawable.tryangle,R.drawable.zelda};
-        this.target = 1;
-        this.crosshair = 1;
+        this.target = 0;
+        this.crosshair = 0;
     }
 
     public String getName() {
