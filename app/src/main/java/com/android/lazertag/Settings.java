@@ -91,6 +91,8 @@ public class Settings extends AppCompatActivity {
             Preview.setImageDrawable(getResources().getDrawable(R.drawable.tryangle, getTheme()));
         } else if (Hair.equals("Zelda")) {
             Preview.setImageDrawable(getResources().getDrawable(R.drawable.zelda, getTheme()));
+        } else if (Hair.equals("Spin")) {
+            Preview.setImageDrawable(getResources().getDrawable(R.drawable.spin, getTheme()));
         } else {
             Preview.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_info, getTheme()));
         }

@@ -1,0 +1,25 @@
+When you run JoinGame.java
+E/AndroidRuntime: FATAL EXCEPTION: main
+                  Process: com.android.lazertag, PID: 21487
+                  com.google.firebase.database.DatabaseException: Can't convert object of type java.lang.String to type com.android.lazertag.Player
+                      at com.google.android.gms.internal.zg.zzb(Unknown Source)
+                      at com.google.android.gms.internal.zg.zza(Unknown Source)
+                      at com.google.android.gms.internal.zg.zza(Unknown Source)
+                      at com.google.android.gms.internal.zg.zzb(Unknown Source)
+                      at com.google.android.gms.internal.zh.zze(Unknown Source)
+                      at com.google.android.gms.internal.zg.zzb(Unknown Source)
+                      at com.google.android.gms.internal.zg.zza(Unknown Source)
+                      at com.google.firebase.database.DataSnapshot.getValue(Unknown Source)
+                      at com.android.lazertag.LobbyFrontend$1.onDataChange(LobbyFrontend.java:29)
+                      at com.google.firebase.database.zzp.onDataChange(Unknown Source)
+                      at com.google.android.gms.internal.to.zza(Unknown Source)
+                      at com.google.android.gms.internal.vj.zzHX(Unknown Source)
+                      at com.google.android.gms.internal.vp.run(Unknown Source)
+                      at android.os.Handler.handleCallback(Handler.java:739)
+                      at android.os.Handler.dispatchMessage(Handler.java:95)
+                      at android.os.Looper.loop(Looper.java:135)
+                      at android.app.ActivityThread.main(ActivityThread.java:5422)
+                      at java.lang.reflect.Method.invoke(Native Method)
+                      at java.lang.reflect.Method.invoke(Method.java:372)
+                      at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:914)
+                      at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:707)

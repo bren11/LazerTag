@@ -22,6 +22,7 @@ import static android.content.Context.MODE_PRIVATE;
 class Network {
 
     public FirebaseDatabase database;
+    public DataSnapshot currentLobby;
 
     private static final Network ourInstance = new Network();
 
@@ -53,18 +54,6 @@ class Network {
     }*/
 
     public void addPlayer(final String key){
-        ourInstance.database.getReference(key).child("players").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<String> players = dataSnapshot.getValue(ArrayList.class);
-                players.add(Player.getLocalPlayer().getName());
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        ourInstance.database.getReference(key).child("players").child(Player.getLocalPlayer().getName()).setValue(Player.getLocalPlayer().getName());
     }
 }

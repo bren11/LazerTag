@@ -2,15 +2,18 @@ package com.android.lazertag;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -57,8 +60,6 @@ public class JoinScreen extends AppCompatActivity {
             }
         });
         setContentView(R.layout.activity_join_screen);
-        Button test = (Button)findViewById(R.id.button);
-        test.setBackgroundColor(Color.BLUE);
 
     }
     public void goToMain(View view){
@@ -67,13 +68,21 @@ public class JoinScreen extends AppCompatActivity {
     }
     public void joinLobby(int index){
         Network database = Network.getInstance();
-        DatabaseReference ref = database.getLobby(visLobbies[index].key);
-
+        database.addPlayer(visLobbies[index].key);
+    }
+    public void goToGame(View view){
+        if (android.os.Build.VERSION.SDK_INT < 23) {
+            Toast.makeText(this, "Your operating system is not compatible with our proprietary BLASTING technology", Toast.LENGTH_SHORT).show();
+        } else if (checkSelfPermission(android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "The app needs certain permissions to run. To give permissions, go to settings>apps>laser tag>permissions.", Toast.LENGTH_SHORT).show();
+        } else{
+            Intent intent = new Intent(this, Screen2.class);
+            startActivity(intent);
+        }
     }
     public void joinLobby1(View view) {
         joinLobby(0);
     }
-
     public void joinLobby2(View view) {
         joinLobby(1);
     }

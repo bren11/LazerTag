@@ -11,6 +11,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
+import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -50,14 +51,13 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     private BFImage imageRec = new BFImage(FeatureDetector.ORB, DescriptorExtractor.ORB, DescriptorMatcher.BRUTEFORCE_HAMMINGLUT);
     private Network network;
 
+
     CameraControllerV2WithPreview ccv2WithPreview;
 
     AutoFitTextureView textureView;
 
     public File mCurrentPhotoPath = null;
     boolean newPic = false;
-
-    public static final int MY_PERMISSIONS_REQUEST_ACCESS_CODE = 1;
 
     public File createImageFile(){
         // Create an image file name
@@ -102,7 +102,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
                 if(newPic && file.length() > 1000){
                     TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
-                    //network.getTarget().setValue(match.name());
                     newPic = false;
                 }
             }
@@ -111,12 +110,12 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
         network = Network.getInstance();
         String key = Player.getLocalPlayer().getCurrentLobby();
-        network.getLobby(key).child("hitReg").addValueEventListener(new ValueEventListener() {
+        network.getLobby(key).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                ArrayList<Hit> value = dataSnapshot.getValue(new GenericTypeIndicator<ArrayList<Hit>>(){});
+                network.currentLobby = dataSnapshot;
+
+                ArrayList<Hit> value = dataSnapshot.child("hitReg").getValue(new GenericTypeIndicator<ArrayList<Hit>>(){});
                 Hit currentHit = value.get(value.size() - 1);
                 if(currentHit.getReceiver().equals(getLocalPlayer())) {
                     showToast("You got Blasted!");
@@ -127,8 +126,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                //Log.w(TAG, "Failed to read value.", error.toException());
+                Log.d("ScreenError", "Failed to read value.", error.toException());
             }
         });
 
@@ -157,8 +155,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             }
         });
 
-        getPermissions();
-
         imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/pentacle.jpg", 1);
         imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/tryangle.jpg", 1);
         imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/zelda.jpg", 1);
@@ -168,7 +164,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         final ImageView crossHair = (ImageView) findViewById(R.id.CrosshairView);
         SharedPreferences crossType = this.getSharedPreferences("Hair", MODE_PRIVATE);
         String Hair = crossType.getString("Hair", "nope");
-        //Toast.makeText(getBaseContext(), Hair ,Toast.LENGTH_SHORT).show();
         if (Hair.equals("GLogo")) {
             crossHair.setImageDrawable(getResources().getDrawable(R.drawable.gisforgitgud, getTheme()));
         } else if (Hair.equals("Pentacle")) {
@@ -177,31 +172,35 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             crossHair.setImageDrawable(getResources().getDrawable(R.drawable.tryangle, getTheme()));
         } else if (Hair.equals("Zelda")) {
             crossHair.setImageDrawable(getResources().getDrawable(R.drawable.zelda, getTheme()));
+        } else if (Hair.equals("Spin")) {
+            crossHair.setImageDrawable(getResources().getDrawable(R.drawable.spin, getTheme()));
         } else if (Hair.equals("nope")) {
             crossHair.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_info, getTheme()));
         }
 
-        crossHair.setRotation(270);
-        /*SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         final float[] timestamp = new float[1];
 
-        SensorEventListener gyroscopeSensorListener = new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent sensorEvent) {
-                if ((Math.abs(sensorEvent.values[2]) > 0.5f) && (timestamp[0] != 0)) {
-                    float rot = (float) (crossHair.getRotation() + ((Math.toDegrees(sensorEvent.values[2]) * ((sensorEvent.timestamp - timestamp[0]) / 1000000000f))));
-                    crossHair.setRotation(rot);
+        if (Hair.equals("Spin")) {
+            SensorEventListener gyroscopeSensorListener = new SensorEventListener() {
+                @Override
+                public void onSensorChanged(SensorEvent sensorEvent) {
+                    if ((Math.abs(sensorEvent.values[2]) > 0.5f) && (timestamp[0] != 0)) {
+                        float rot = (float) (crossHair.getRotation() + ((Math.toDegrees(sensorEvent.values[2]) * ((sensorEvent.timestamp - timestamp[0]) / 100000000f))));
+                        crossHair.setRotation(rot);
+                    }
+                    timestamp[0] = sensorEvent.timestamp;
                 }
-                timestamp[0] = sensorEvent.timestamp;
-            }
 
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int i) {
-            }
-        };
+                @Override
+                public void onAccuracyChanged(Sensor sensor, int i) {
+                }
+            };
 
-        sensorManager.registerListener(gyroscopeSensorListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);*/
+
+            sensorManager.registerListener(gyroscopeSensorListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
 
     }
 
@@ -230,27 +229,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 //        }
     }
 
-    private void getPermissions(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if(checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-                //Requesting permission.
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            }
-        }
-    }
-
-    @Override //Override from ActivityCompat.OnRequestPermissionsResultCallback Interface
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission granted
-                }
-                return;
-            }
-        }
-    }
     /**
      * Shows a {@link Toast} on the UI thread.
      *
@@ -263,5 +241,10 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void goback(View view){
+        Intent intent = new Intent(this, MainMenu.class);
+        startActivity(intent);
     }
 }
