@@ -13,5 +13,6 @@ public class Lobby {
         Player player = Player.getLocalPlayer();
         players.put(name, player);
         key = Player.getLocalPlayer().getName();
+
     }
 }

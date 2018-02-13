@@ -69,6 +69,8 @@ public class JoinScreen extends AppCompatActivity {
     public void joinLobby(int index){
         Network database = Network.getInstance();
         database.addPlayer(visLobbies[index].key);
+        Intent intent = new Intent(this, InLobby.class);
+        startActivity(intent);
     }
     public void goToGame(View view){
         if (android.os.Build.VERSION.SDK_INT < 23) {
@@ -80,6 +82,7 @@ public class JoinScreen extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
     public void joinLobby1(View view) {
         joinLobby(0);
     }
