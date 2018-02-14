@@ -80,6 +80,9 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
 
+        SharedPreferences userPref = this.getSharedPreferences("nameData", MODE_PRIVATE);
+        SharedPreferences.Editor userEdit = userPref.edit();
+
         final Intent intent = getIntent();
 
         textureView = (AutoFitTextureView)findViewById(R.id.textureview);
@@ -118,11 +121,13 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 network.currentLobby = dataSnapshot;
 
                 ArrayList<Hit> value = dataSnapshot.child("hitReg").getValue(new GenericTypeIndicator<ArrayList<Hit>>(){});
-                Hit currentHit = value.get(value.size() - 1);
-                if(currentHit.getReceiver().equals(getLocalPlayer())) {
-                    showToast("You got Blasted!");
-                } else if(currentHit.getSender().equals(getLocalPlayer())) {
-                    showToast("You Blasted " + currentHit.getReceiver().getName() + " !");
+                if(value != null) {
+                    Hit currentHit = value.get(value.size() - 1);
+                    if (currentHit.getReceiver().equals(getLocalPlayer())) {
+                        showToast("You got Blasted!");
+                    } else if (currentHit.getSender().equals(getLocalPlayer())) {
+                        showToast("You Blasted " + currentHit.getReceiver().getName() + " !");
+                    }
                 }
             }
 
@@ -163,14 +168,14 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
         final ImageView crossHair = (ImageView) findViewById(R.id.CrosshairView);
         int[] crossHairs = genPref.getCrosshairs();
-        int crossHairPosition = genPref.getCrosshair();
+        int crossHairPosition = userPref.getInt("Crosshair", 0);
         crossHair.setImageResource(crossHairs[crossHairPosition]);
 
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         final float[] timestamp = new float[1];
         boolean isSpinner;
-        if (genPref.getCrosshair() == 4) {
+        if (userPref.getInt("Crosshair", 0) == 4) {
             isSpinner = true;
         } else {
             isSpinner = false;
@@ -241,3 +246,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         startActivity(intent);
     }
 }
+
+
+//Bingis says hello

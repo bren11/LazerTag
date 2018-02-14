@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -30,6 +31,16 @@ public class Settings extends AppCompatActivity {
         crosshairs = genPref.getCrosshairs();
         setImageView();
         setImageView2();
+
+       /* nameSpace.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View view, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && ((keyCode == KeyEvent.KEYCODE_PERIOD)) || (keyCode == KeyEvent.KEYCODE_POUND) || (keyCode == KeyEvent.KEYCODE_4)) {
+                    // Perform action on key press
+                    return true;
+                }
+                return false;
+            }
+        });*/
     }
 
     public void goToMain(View view){
