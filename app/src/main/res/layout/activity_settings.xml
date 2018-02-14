@@ -42,7 +42,6 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
         android:text="@string/playerName"
         android:maxLength="10"
         app:layout_constraintBottom_toBottomOf="parent"
