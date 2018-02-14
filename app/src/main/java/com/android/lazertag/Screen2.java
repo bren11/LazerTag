@@ -120,11 +120,13 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 network.currentLobby = dataSnapshot;
 
                 ArrayList<Hit> value = dataSnapshot.child("hitReg").getValue(new GenericTypeIndicator<ArrayList<Hit>>(){});
-                Hit currentHit = value.get(value.size() - 1);
-                if(currentHit.getReceiver().equals(getLocalPlayer())) {
-                    showToast("You got Blasted!");
-                } else if(currentHit.getSender().equals(getLocalPlayer())) {
-                    showToast("You Blasted " + currentHit.getReceiver().getName() + " !");
+                if (value != null) {
+                    Hit currentHit = value.get(value.size() - 1);
+                    if (currentHit.getReceiver().equals(getLocalPlayer())) {
+                        showToast("You got Blasted!");
+                    } else if (currentHit.getSender().equals(getLocalPlayer())) {
+                        showToast("You Blasted " + currentHit.getReceiver().getName() + " !");
+                    }
                 }
             }
 
