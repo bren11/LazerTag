@@ -11,6 +11,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
+import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -41,12 +42,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static com.android.lazertag.Player.getLocalPlayer;
+
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class Screen2 extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     static{ System.loadLibrary("opencv_java3"); }
     private BFImage imageRec = new BFImage(FeatureDetector.ORB, DescriptorExtractor.ORB, DescriptorMatcher.BRUTEFORCE_HAMMINGLUT);
     private Network network;
+
 
     CameraControllerV2WithPreview ccv2WithPreview;
 
@@ -100,7 +104,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
                 if(newPic && file.length() > 1000){
                     TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
-                    network.getTarget().setValue(match.name());
                     newPic = false;
                 }
             }
@@ -108,25 +111,24 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         handler.post(new MyRunnable(handler, imageRec, mCurrentPhotoPath));
 
         network = Network.getInstance();
-        Player.getLocalPlayer().getLobby();
-        network.getTarget().addValueEventListener(new ValueEventListener() {
+        String key = Player.getLocalPlayer().getCurrentLobby();
+        network.getLobby(key).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                /*ArrayList<Hit> value = dataSnapshot.getValue(new GenericTypeIndicator<ArrayList<Hit>>());
+                network.currentLobby = dataSnapshot;
+
+                ArrayList<Hit> value = dataSnapshot.child("hitReg").getValue(new GenericTypeIndicator<ArrayList<Hit>>(){});
                 Hit currentHit = value.get(value.size() - 1);
-                if(currentHit.getReceiver().equals(Player.getLocalPlayer())) {
+                if(currentHit.getReceiver().equals(getLocalPlayer())) {
                     showToast("You got Blasted!");
-                } else if(currentHit.getSender().equals(Player.getLocalPlayer())) {
+                } else if(currentHit.getSender().equals(getLocalPlayer())) {
                     showToast("You Blasted " + currentHit.getReceiver().getName() + " !");
-                }*/
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                //Log.w(TAG, "Failed to read value.", error.toException());
+                Log.d("ScreenError", "Failed to read value.", error.toException());
             }
         });
 

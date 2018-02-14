@@ -1,24 +1,20 @@
 package com.android.lazertag;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.inputmethodservice.Keyboard;
-import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 public class Settings extends AppCompatActivity {
 
     GeneralPreferences genPref = GeneralPreferences.getInstance();
+    int crosshair;
+    int target;
+    int[] targets;
+    int[] crosshairs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -28,16 +24,21 @@ public class Settings extends AppCompatActivity {
         nameSpace = (EditText)findViewById(R.id.editText);
         final SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
         nameSpace.setText(prefs.getString("Name", "Player"));
+        crosshair = prefs.getInt("Crosshair", 0);
+        target = prefs.getInt("Target", 0);
+        targets = genPref.getTargets();
+        crosshairs = genPref.getCrosshairs();
         setImageView();
         setImageView2();
     }
 
     public void goToMain(View view){
-        EditText nameSpace;
-        nameSpace = (EditText)findViewById(R.id.editText);
+        EditText nameSpace = (EditText)findViewById(R.id.editText);
         SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("Name", nameSpace.getText().toString());
+        editor.putInt("Crosshair", crosshair);
+        editor.putInt("Target", target);
         editor.apply();
         Player self = Player.getLocalPlayer();
         self.setName(nameSpace.getText().toString());
@@ -61,48 +62,46 @@ public class Settings extends AppCompatActivity {
 
     public void setImageView() {
         ImageView Preview = (ImageView) findViewById(R.id.hairPreview);
-        int[] crosshairs = genPref.getCrosshairs();
-        Preview.setImageResource(crosshairs[genPref.getCrosshair()]);
+        Preview.setImageResource(crosshairs[crosshair]);
     }
 
     public void setImageView2() {
-        ImageView Preview = (ImageView) findViewById(R.id.imageView);
-        int[] targets = genPref.getTargets();
-        Preview.setImageResource(targets[genPref.getTarget()]);
+        ImageView Preview = (ImageView) findViewById(R.id.targPreview);
+        Preview.setImageResource(targets[target]);
     }
 
     public void left1(View view) {
-        if (genPref.getCrosshair() != 0) {
-            genPref.setCrosshair(genPref.getCrosshair() - 1);
+        if (crosshair != 0) {
+            crosshair -= 1;
         } else {
-           genPref.setCrosshair(genPref.getCrosshairs().length - 1);
+           crosshair = crosshairs.length - 1;
         }
         setImageView();
     }
 
     public void right1(View view) {
-        if (genPref.getCrosshair() != genPref.getCrosshairs().length - 1) {
-           genPref.setCrosshair(genPref.getCrosshair() + 1);
+        if (crosshair != crosshairs.length - 1) {
+           crosshair += 1;
         } else {
-            genPref.setCrosshair(0);
+            crosshair = 0;
         }
         setImageView();
     }
 
     public void left2(View view) {
-        if (genPref.getTarget() != 0) {
-            genPref.setTarget(genPref.getTarget() - 1);
+        if (target != 0) {
+            target -= 1;
         } else {
-            genPref.setTarget(genPref.getTargets().length - 1);
+            target = targets.length - 1;
         }
         setImageView2();
     }
 
     public void right2(View view) {
-        if (genPref.getTarget() != genPref.getTargets().length - 1) {
-            genPref.setTarget(genPref.getTarget() + 1);
+        if (target != targets.length - 1) {
+            target += 1;
         } else {
-            genPref.setTarget(0);
+            target = 0;
         }
         setImageView2();
     }
