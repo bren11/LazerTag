@@ -19,9 +19,9 @@ public class InLobby extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_screen);
         ( findViewById(R.id.button2)).setVisibility(View.GONE);
-        final int[] ids = new int[]{R.id.n0, R.id.n1, R.id.n2, R.id.n3, R.id.n4, R.id.n5, R.id.n6, R.id.n7};
+        final int[] ids = new int[]{R.id.n0, R.id.n1 , R.id.n2, R.id.n3, R.id.n4, R.id.n5, R.id.n6, R.id.n7};
         Network database = Network.getInstance();
-        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).addValueEventListener(new ValueEventListener() {
+        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("Players").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int i = 0;
