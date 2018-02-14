@@ -13,6 +13,8 @@ public class Settings extends AppCompatActivity {
     GeneralPreferences genPref = GeneralPreferences.getInstance();
     int crosshair;
     int target;
+    int[] targets;
+    int[] crosshairs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -24,13 +26,14 @@ public class Settings extends AppCompatActivity {
         nameSpace.setText(prefs.getString("Name", "Player"));
         crosshair = prefs.getInt("Crosshair", 0);
         target = prefs.getInt("Target", 0);
+        targets = genPref.getTargets();
+        crosshairs = genPref.getCrosshairs();
         setImageView();
         setImageView2();
     }
 
     public void goToMain(View view){
-        EditText nameSpace;
-        nameSpace = (EditText)findViewById(R.id.editText);
+        EditText nameSpace = (EditText)findViewById(R.id.editText);
         SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("Name", nameSpace.getText().toString());
@@ -59,13 +62,11 @@ public class Settings extends AppCompatActivity {
 
     public void setImageView() {
         ImageView Preview = (ImageView) findViewById(R.id.hairPreview);
-        int[] crosshairs = genPref.getCrosshairs();
         Preview.setImageResource(crosshairs[crosshair]);
     }
 
     public void setImageView2() {
-        ImageView Preview = (ImageView) findViewById(R.id.imageView);
-        int[] targets = genPref.getTargets();
+        ImageView Preview = (ImageView) findViewById(R.id.targPreview);
         Preview.setImageResource(targets[target]);
     }
 
@@ -73,13 +74,13 @@ public class Settings extends AppCompatActivity {
         if (crosshair != 0) {
             crosshair -= 1;
         } else {
-           crosshair = genPref.getCrosshairs().length - 1;
+           crosshair = crosshairs.length - 1;
         }
         setImageView();
     }
 
     public void right1(View view) {
-        if (crosshair != genPref.getCrosshairs().length - 1) {
+        if (crosshair != crosshairs.length - 1) {
            crosshair += 1;
         } else {
             crosshair = 0;
@@ -91,13 +92,13 @@ public class Settings extends AppCompatActivity {
         if (target != 0) {
             target -= 1;
         } else {
-            target = genPref.getTargets().length - 1;
+            target = targets.length - 1;
         }
         setImageView2();
     }
 
     public void right2(View view) {
-        if (target != genPref.getTargets().length - 1) {
+        if (target != targets.length - 1) {
             target += 1;
         } else {
             target = 0;

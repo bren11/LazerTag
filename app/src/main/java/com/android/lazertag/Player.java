@@ -101,7 +101,4 @@ public class Player {
     public void setimages(Drawable[] images) {
         this.images = images;
     }
-
-    public String getCurrentLobby() { return currentLobby; }
-
 }
