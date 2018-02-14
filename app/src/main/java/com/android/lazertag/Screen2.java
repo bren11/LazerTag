@@ -82,6 +82,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
         final Intent intent = getIntent();
 
+        SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
+
         textureView = (AutoFitTextureView)findViewById(R.id.textureview);
         textureView.setAspectRatio(9,16);
 
@@ -163,14 +165,14 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
         final ImageView crossHair = (ImageView) findViewById(R.id.CrosshairView);
         int[] crossHairs = genPref.getCrosshairs();
-        int crossHairPosition = genPref.getCrosshair();
+        int crossHairPosition = prefs.getInt("Crosshair", 0);
         crossHair.setImageResource(crossHairs[crossHairPosition]);
 
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         final float[] timestamp = new float[1];
         boolean isSpinner;
-        if (genPref.getCrosshair() == 4) {
+        if (prefs.getInt("Crosshair", 0) == 4) {
             isSpinner = true;
         } else {
             isSpinner = false;

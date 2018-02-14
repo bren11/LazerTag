@@ -30,6 +30,8 @@ public class Settings extends AppCompatActivity {
         crosshairs = genPref.getCrosshairs();
         setImageView();
         setImageView2();
+
+
     }
 
     public void goToMain(View view){
@@ -71,12 +73,7 @@ public class Settings extends AppCompatActivity {
     }
 
     public void left1(View view) {
-        if (crosshair != 0) {
-            crosshair -= 1;
-        } else {
-           crosshair = crosshairs.length - 1;
-        }
-        setImageView();
+        //changeImage();
     }
 
     public void right1(View view) {
@@ -104,5 +101,22 @@ public class Settings extends AppCompatActivity {
             target = 0;
         }
         setImageView2();
+    }
+
+    public void changeImage(int change, int pos, int[] draw, int image) {
+        ImageView Preview = null;
+        pos += change;
+        if (pos == draw.length) {
+            pos = 0;
+        } else if (pos < 0) {
+            pos = draw.length - 1;
+        }
+        if (image == 0) {
+            Preview = (ImageView) findViewById(R.id.hairPreview);
+            //crosshair =
+        } else if (image == 1) {
+            Preview = (ImageView) findViewById(R.id.targPreview);
+        }
+        Preview.setImageResource(draw[pos]);
     }
 }
