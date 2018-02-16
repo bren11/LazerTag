@@ -14,6 +14,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import org.opencv.dnn.Net;
+
 import java.util.ArrayList;
 
 public class CreateScreen extends Activity {
@@ -63,6 +65,8 @@ public class CreateScreen extends Activity {
         } else if (checkSelfPermission(android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this, "The app needs certain permissions to run. To give permissions, go to settings>apps>laser tag>permissions.", Toast.LENGTH_SHORT).show();
         } else {
+            Network database = Network.getInstance();
+            database.getLobby(Player.getLocalPlayer().getName()).child("state").setValue(1);
             Intent intent = new Intent(this, Screen2.class);
             startActivity(intent);
         }
