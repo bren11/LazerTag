@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -51,6 +52,10 @@ public class InLobby extends AppCompatActivity {
     }
 
     public void goToScreen(View view){
+        Toast.makeText(this, "You aren't hosting this lobby, only the host can start the game", Toast.LENGTH_SHORT).show();
+    }
+
+    public void managePlayer(View view){
 
     }
 }

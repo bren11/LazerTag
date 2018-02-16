@@ -56,6 +56,7 @@ public class CreateScreen extends Activity {
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
     }
+
     public void goToScreen(View view){
         if (android.os.Build.VERSION.SDK_INT < 23){
             Toast.makeText(this, "Your operating system is not compatible with our proprietary BLASTING technology", Toast.LENGTH_SHORT).show();
@@ -65,5 +66,9 @@ public class CreateScreen extends Activity {
             Intent intent = new Intent(this, Screen2.class);
             startActivity(intent);
         }
+    }
+
+    public void managePlayer(View view){
+
     }
 }

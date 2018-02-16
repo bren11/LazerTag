@@ -67,10 +67,12 @@ public class JoinScreen extends AppCompatActivity {
         startActivity(intent);
     }
     public void joinLobby(int index){
-        Network database = Network.getInstance();
-        database.addPlayer(visLobbies[index].key);
-        Intent intent = new Intent(this, InLobby.class);
-        startActivity(intent);
+        if(!visLobbies[index].key.equals("none")) {
+            Network database = Network.getInstance();
+            database.addPlayer(visLobbies[index].key);
+            Intent intent = new Intent(this, InLobby.class);
+            startActivity(intent);
+        }
     }
     public void goToGame(View view){
         if (android.os.Build.VERSION.SDK_INT < 23) {
