@@ -4,7 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,6 +26,19 @@ public class Settings extends AppCompatActivity {
         nameSpace = (EditText)findViewById(R.id.editText);
         final SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
         nameSpace.setText(prefs.getString("Name", "Player"));
+        final String blocked = "/h.#$[]";
+        InputFilter filter = new InputFilter() {
+
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+
+                if (source != null && blocked.contains(("" + source))) {
+                    return "";
+                }
+                return null;
+            }
+        };
+        nameSpace.setFilters(new InputFilter[] { filter });
         crosshair = prefs.getInt("Crosshair", 0);
         target = prefs.getInt("Target", 0);
         targets = genPref.getTargets();
@@ -32,15 +46,7 @@ public class Settings extends AppCompatActivity {
         setImageView();
         setImageView2();
 
-       /* nameSpace.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View view, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) && ((keyCode == KeyEvent.KEYCODE_PERIOD)) || (keyCode == KeyEvent.KEYCODE_POUND) || (keyCode == KeyEvent.KEYCODE_4)) {
-                    // Perform action on key press
-                    return true;
-                }
-                return false;
-            }
-        });*/
+
     }
 
     public void goToMain(View view){
@@ -82,12 +88,7 @@ public class Settings extends AppCompatActivity {
     }
 
     public void left1(View view) {
-        if (crosshair != 0) {
-            crosshair -= 1;
-        } else {
-           crosshair = crosshairs.length - 1;
-        }
-        setImageView();
+        //changeImage();
     }
 
     public void right1(View view) {
@@ -115,5 +116,22 @@ public class Settings extends AppCompatActivity {
             target = 0;
         }
         setImageView2();
+    }
+
+    public void changeImage(int change, int pos, int[] draw, int image) {
+        ImageView Preview = null;
+        pos += change;
+        if (pos == draw.length) {
+            pos = 0;
+        } else if (pos < 0) {
+            pos = draw.length - 1;
+        }
+        if (image == 0) {
+            Preview = (ImageView) findViewById(R.id.hairPreview);
+            //crosshair =
+        } else if (image == 1) {
+            Preview = (ImageView) findViewById(R.id.targPreview);
+        }
+        Preview.setImageResource(draw[pos]);
     }
 }

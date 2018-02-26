@@ -12,6 +12,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import org.opencv.dnn.Net;
+
 import java.util.ArrayList;
 
 public class CreateScreen extends Activity {
@@ -54,14 +56,21 @@ public class CreateScreen extends Activity {
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
     }
+
     public void goToScreen(View view){
         if (android.os.Build.VERSION.SDK_INT < 23){
             Toast.makeText(this, "Your operating system is not compatible with our proprietary BLASTING technology", Toast.LENGTH_SHORT).show();
         } else if (checkSelfPermission(android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this, "The app needs certain permissions to run. To give permissions, go to settings>apps>laser tag>permissions.", Toast.LENGTH_SHORT).show();
         } else {
+            Network database = Network.getInstance();
+            database.getLobby(Player.getLocalPlayer().getName()).child("state").setValue(1);
             Intent intent = new Intent(this, Screen2.class);
             startActivity(intent);
         }
+    }
+
+    public void managePlayer(View view){
+
     }
 }

@@ -1,10 +1,12 @@
 package com.android.lazertag;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,6 +44,29 @@ public class InLobby extends AppCompatActivity {
 
             }
         });
+        final InLobby thisLobby = this;
+        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("state").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int value = dataSnapshot.getValue(int.class);
+                if(value == 1){
+                    if (android.os.Build.VERSION.SDK_INT < 23){
+                        Toast.makeText(thisLobby, "Your operating system is not compatible with our proprietary BLASTING technology", Toast.LENGTH_SHORT).show();
+                    } else if (checkSelfPermission(android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        Toast.makeText(thisLobby, "The app needs certain permissions to run. To give permissions, go to settings>apps>laser tag>permissions.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Intent intent = new Intent(thisLobby, Screen2.class);
+                        startActivity(intent);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
     public void goToMain(View view){
         Network database = Network.getInstance();
@@ -51,6 +76,10 @@ public class InLobby extends AppCompatActivity {
     }
 
     public void goToScreen(View view){
+        Toast.makeText(this, "You aren't hosting this lobby, only the host can start the game", Toast.LENGTH_SHORT).show();
+    }
+
+    public void managePlayer(View view){
 
     }
 }

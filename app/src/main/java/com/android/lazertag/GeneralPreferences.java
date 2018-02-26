@@ -1,10 +1,5 @@
 package com.android.lazertag;
 
-import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
-
-import java.util.prefs.Preferences;
-
 /**
  * Created by gar_ndsherbakov on 2/9/2018.
  */
