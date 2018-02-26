@@ -28,7 +28,6 @@ public class Settings extends AppCompatActivity {
         nameSpace.setText(prefs.getString("Name", "Player"));
         final String blocked = "/h.#$[]";
         InputFilter filter = new InputFilter() {
-
             @Override
             public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
 
@@ -45,8 +44,6 @@ public class Settings extends AppCompatActivity {
         crosshairs = genPref.getCrosshairs();
         setImageView();
         setImageView2();
-
-
     }
 
     public void goToMain(View view){
@@ -88,7 +85,12 @@ public class Settings extends AppCompatActivity {
     }
 
     public void left1(View view) {
-        //changeImage();
+        if (crosshair != 0) {
+            crosshair -= 1;
+        } else {
+            crosshair = crosshairs.length - 1;
+        }
+        setImageView();
     }
 
     public void right1(View view) {

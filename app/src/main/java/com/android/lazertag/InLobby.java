@@ -23,7 +23,7 @@ public class InLobby extends AppCompatActivity {
         ( findViewById(R.id.button2)).setVisibility(View.GONE);
         final int[] ids = new int[]{R.id.n0, R.id.n1 , R.id.n2, R.id.n3, R.id.n4, R.id.n5, R.id.n6, R.id.n7};
         Network database = Network.getInstance();
-        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("Players").addValueEventListener(new ValueEventListener() {
+        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("players").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int i = 0;
@@ -48,7 +48,10 @@ public class InLobby extends AppCompatActivity {
         database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("state").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                int value = dataSnapshot.getValue(int.class);
+                int value = 0;
+                if (dataSnapshot.getValue(int.class) != null) {
+                    value = dataSnapshot.getValue(int.class);
+                }
                 if(value == 1){
                     if (android.os.Build.VERSION.SDK_INT < 23){
                         Toast.makeText(thisLobby, "Your operating system is not compatible with our proprietary BLASTING technology", Toast.LENGTH_SHORT).show();
