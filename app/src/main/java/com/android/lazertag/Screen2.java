@@ -226,7 +226,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 //            ccv2WithPreview.closeCamera();
 //        }
 //        if(ccv2WithoutPreview != null) {
-//            ccv2WithoutPreview.closeCamera();
+//            ccv2WithoutPreview.closeCamera();b
 //        }
     }
 
@@ -250,15 +250,26 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     }
 
     public void onPause(View view) {
-        ImageButton pauseButton = (ImageButton) findViewById(R.id.pauseButton);
+        //ImageButton pauseButton = (ImageButton) findViewById(R.id.pauseButton);
         ImageView crossHairView = (ImageView) findViewById(R.id.CrosshairView);
         Button leaveAndEnd = (Button) findViewById(R.id.leaveAndEnd);
         TextView pauseView = (TextView) findViewById(R.id.pauseView);
+        Button getPicture = (Button) findViewById(R.id.getpicture);
 
         if (isPaused == false) {
-            pauseButton.setVisibility(View.VISIBLE);
-        } else if (isPaused == true) {
-
+            crossHairView.setVisibility(View.INVISIBLE);
+            leaveAndEnd.setVisibility(View.VISIBLE);
+            pauseView.setVisibility(View.VISIBLE);
+            //getPicture.setClickable(false);
+            getPicture.setVisibility(View.GONE);
+            isPaused = true;
+        } else {
+            crossHairView.setVisibility(View.VISIBLE);
+            leaveAndEnd.setVisibility(View.INVISIBLE);
+            pauseView.setVisibility(View.INVISIBLE);
+            //getPicture.setClickable(true);
+            getPicture.setVisibility(View.VISIBLE);
+            isPaused = false;
         }
     }
 }

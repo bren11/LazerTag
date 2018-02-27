@@ -119,21 +119,4 @@ public class Settings extends AppCompatActivity {
         }
         setImageView2();
     }
-
-    public void changeImage(int change, int pos, int[] draw, int image) {
-        ImageView Preview = null;
-        pos += change;
-        if (pos == draw.length) {
-            pos = 0;
-        } else if (pos < 0) {
-            pos = draw.length - 1;
-        }
-        if (image == 0) {
-            Preview = (ImageView) findViewById(R.id.hairPreview);
-            //crosshair =
-        } else if (image == 1) {
-            Preview = (ImageView) findViewById(R.id.targPreview);
-        }
-        Preview.setImageResource(draw[pos]);
-    }
 }

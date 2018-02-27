@@ -30,30 +30,35 @@
         android:layout_centerVertical="true"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="140dp"
         android:layout_marginTop="8dp"
         android:background="@android:color/transparent"
         android:rotation="-90"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/getpicture"
+        app:layout_constraintEnd_toEndOf="@+id/textureview"
+        app:layout_constraintHorizontal_bias="0.308"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.497"
         app:srcCompat="@drawable/gisforgitgud" />
 
     <Button
         android:id="@+id/getpicture"
-        android:layout_width="match_parent"
-        android:layout_height="372dp"
+        android:layout_width="526dp"
+        android:layout_height="299dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:background="@android:color/transparent"
         android:backgroundTint="@android:color/transparent"
         android:contextClickable="false"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textureview" />
+        app:layout_constraintStart_toEndOf="@+id/pauseButton"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/pauseView"
@@ -67,9 +72,8 @@
         android:text="Paused"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/textureview"
-        app:layout_constraintHorizontal_bias="0.084"
-        app:layout_constraintStart_toStartOf="@+id/getpicture"
+        app:layout_constraintEnd_toStartOf="@+id/CrosshairView"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
@@ -80,15 +84,15 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:onClick="goback"
         android:rotation="-90"
         android:text="Leave Game"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.941"
-        app:layout_constraintStart_toEndOf="@+id/pauseView"
+        app:layout_constraintStart_toEndOf="@+id/CrosshairView"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.498" />
+        app:layout_constraintVertical_bias="0.497" />
 
     <ImageButton
         android:id="@+id/pauseButton"
@@ -102,7 +106,7 @@
         android:rotation="-90"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.027"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
