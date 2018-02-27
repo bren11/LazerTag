@@ -1,10 +1,7 @@
 package com.android.lazertag;
 
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by dphip on 13/12/2017.
@@ -16,11 +13,11 @@ public class Player {
     private Lobby lobby;
     private int hitsSent = 0;
     private int hitsRecieved = 0;
-    private Drawable image;
+    private String image;
     private Drawable crossHair;
     private Location location;
     private Drawable[] crossHairs;
-    private Drawable[] images;
+    private String[] images;
     private String currentLobby;
 
     private static Player localPlayer;
@@ -70,7 +67,7 @@ public class Player {
 
     public void onHitRecieved() { hitsRecieved++; }
 
-    public Drawable getImage() {
+    public String getImage() {
         return image;
     }
 
@@ -98,7 +95,7 @@ public class Player {
         this.crossHairs = crossHairs;
     }
 
-    public void setimages(Drawable[] images) {
+    public void setimages(String[] images) {
         this.images = images;
     }
 }

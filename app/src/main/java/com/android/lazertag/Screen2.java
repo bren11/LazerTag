@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
@@ -106,6 +107,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
                 if(newPic && file.length() > 1000){
                     TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
+                    String target = "";
+                    compareImage(match.name());
                     newPic = false;
                 }
             }
@@ -243,5 +246,28 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     public void goback(View view){
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
+    }
+
+    public void compareImage(final String image){
+        final DatabaseReference lobby = network.getLobby(Player.getLocalPlayer().getCurrentLobby());
+        lobby.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for( DataSnapshot x : dataSnapshot.child("players").getChildren()){
+                    Player player = (Player)x.getValue();
+                    if(player.getImage().equals(image)){
+                        ArrayList<Hit> value = dataSnapshot.child("hitReg").getValue(new GenericTypeIndicator<ArrayList<Hit>>(){});
+                        value.add(new Hit(player,Player.getLocalPlayer()));
+                        lobby.child("hitreg").setValue(value);
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                showToast("Image Comparison Error");
+            }
+        });
     }
 }
