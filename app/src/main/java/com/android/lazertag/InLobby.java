@@ -48,18 +48,17 @@ public class InLobby extends AppCompatActivity {
         database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("state").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                int value = 0;
-                if (dataSnapshot.getValue(int.class) != null) {
-                    value = dataSnapshot.getValue(int.class);
-                }
-                if(value == 1){
-                    if (android.os.Build.VERSION.SDK_INT < 23){
-                        Toast.makeText(thisLobby, "Your operating system is not compatible with our proprietary BLASTING technology", Toast.LENGTH_SHORT).show();
-                    } else if (checkSelfPermission(android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                        Toast.makeText(thisLobby, "The app needs certain permissions to run. To give permissions, go to settings>apps>laser tag>permissions.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Intent intent = new Intent(thisLobby, Screen2.class);
-                        startActivity(intent);
+                if(dataSnapshot != null){
+                    int value = dataSnapshot.getValue(int.class);
+                    if(value == 1){
+                        if (android.os.Build.VERSION.SDK_INT < 23){
+                            Toast.makeText(thisLobby, "Your operating system is not compatible with our proprietary BLASTING technology", Toast.LENGTH_SHORT).show();
+                        } else if (checkSelfPermission(android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            Toast.makeText(thisLobby, "The app needs certain permissions to run. To give permissions, go to settings>apps>laser tag>permissions.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Intent intent = new Intent(thisLobby, Screen2.class);
+                            startActivity(intent);
+                        }
                     }
                 }
 
