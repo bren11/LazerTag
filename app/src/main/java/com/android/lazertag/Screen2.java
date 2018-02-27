@@ -1,6 +1,7 @@
 package com.android.lazertag;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,13 +25,14 @@ import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
@@ -52,6 +54,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     private BFImage imageRec = new BFImage(FeatureDetector.ORB, DescriptorExtractor.ORB, DescriptorMatcher.BRUTEFORCE_HAMMINGLUT);
     private Network network;
 
+    boolean isPaused = false;
 
     CameraControllerV2WithPreview ccv2WithPreview;
 
@@ -107,8 +110,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
                 if(newPic && file.length() > 1000){
                     TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
-                    String target = "";
-                    compareImage(match.name());
                     newPic = false;
                 }
             }
@@ -248,26 +249,16 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         startActivity(intent);
     }
 
-    public void compareImage(final String image){
-        final DatabaseReference lobby = network.getLobby(Player.getLocalPlayer().getCurrentLobby());
-        lobby.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for( DataSnapshot x : dataSnapshot.child("players").getChildren()){
-                    Player player = (Player)x.getValue();
-                    if(player.getImage().equals(image)){
-                        ArrayList<Hit> value = dataSnapshot.child("hitReg").getValue(new GenericTypeIndicator<ArrayList<Hit>>(){});
-                        value.add(new Hit(player,Player.getLocalPlayer()));
-                        lobby.child("hitreg").setValue(value);
-                        return;
-                    }
-                }
-            }
+    public void onPause(View view) {
+        ImageButton pauseButton = (ImageButton) findViewById(R.id.pauseButton);
+        ImageView crossHairView = (ImageView) findViewById(R.id.CrosshairView);
+        Button leaveAndEnd = (Button) findViewById(R.id.leaveAndEnd);
+        TextView pauseView = (TextView) findViewById(R.id.pauseView);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                showToast("Image Comparison Error");
-            }
-        });
+        if (isPaused == false) {
+            pauseButton.setVisibility(View.VISIBLE);
+        } else if (isPaused == true) {
+
+        }
     }
 }
