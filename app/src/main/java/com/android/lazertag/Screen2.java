@@ -36,9 +36,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
+import org.opencv.core.Mat;
 import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
+import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -97,12 +99,12 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         final Handler handler = new Handler();
         class MyRunnable implements Runnable {
             private Handler handler;
-            //private BFImage imageRec;
+            private BFImage imageRec;
             private File file;
 
             public MyRunnable(Handler handler, BFImage imageRec, File file) {
                 this.handler = handler;
-                //this.imageRec = imageRec;
+                this.imageRec = imageRec;
                 this.file = file;
             }
             @Override
@@ -111,12 +113,25 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
                 if(newPic && file.length() > 1000){
 
-                    /*TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
-                    if (match != null) {
-                        network.getTarget().setValue(match.name());
-                    }*/
-
-                    //TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
+                    //String default_file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/orig2.png";
+                    //Log.d("filetogoto", default_file);
+                    Mat src = Imgcodecs.imread(file.getAbsolutePath(), Imgcodecs.IMREAD_COLOR);
+                    //recrec.saveFile(src, "my thingy");
+                    if( src.empty() ) {
+                        System.out.println("Error opening image!");
+                        System.out.println("Program Arguments: [image_name -- "
+                                + file.getAbsolutePath() +"] \n");
+                        System.exit(-1);
+                    }
+                    recrec.FindRect(src);
+                    int i = 0;
+                    File newFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/test/img num: " + i);
+                    while (newFile.exists()){
+                        TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
+                        if (match != null) {
+                            network.getTarget().setValue(match.name());
+                        }
+                    }
 
                     newPic = false;
                 }

@@ -198,6 +198,7 @@ public class RectangleFindr {
         }
         Log.d("progress", "sorting");
         Log.d("progress", corners.size() + "");
+        int j = 0;
         for(int i=0; i < corners.size(); i++){
             Log.d("corner amt", i + "" + corners.get(i).size());
             if(corners.get(i).size() < 4)continue;
@@ -240,7 +241,8 @@ public class RectangleFindr {
             Imgproc.warpPerspective(img3, quad, perspectiveTransformation, quad.size());
 
             if (r.contains(new Point(img.size().width / 2, img.size().height / 2))){
-                saveFile(quad, "img num: " + i);
+                saveFile(quad, "img num: " + j);
+                j++;
             }
         }
     }
