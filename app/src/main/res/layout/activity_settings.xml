@@ -13,7 +13,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
 
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.662"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
@@ -23,33 +23,34 @@
         android:id="@+id/nameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:text="@string/namePrompt"
         android:textAppearance="@style/TextAppearance.AppCompat"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias=".2"
+        app:layout_constraintBottom_toBottomOf="@+id/editText"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias=".3" />
+        app:layout_constraintTop_toTopOf="@+id/editText" />
 
     <EditText
         android:id="@+id/editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias=".8"
+        android:layout_marginBottom="276dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="@string/playerName"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="230dp"
-        app:layout_constraintVertical_bias=".29"/>
+        android:maxLength="14"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/nameText"
+        app:layout_constraintTop_toBottomOf="@+id/back"
+        app:layout_constraintVertical_bias="0.495" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/crosshair"
         android:layout_width="wrap_content"
         android:layout_height="23dp"
         android:layout_marginBottom="8dp"
@@ -58,27 +59,11 @@
         android:layout_marginTop="8dp"
         android:text="Crosshair"
         android:textAppearance="@style/TextAppearance.AppCompat"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/left1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.13"
+        app:layout_constraintHorizontal_bias="0.025"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.588" />
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="216dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.835"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.593" />
+        app:layout_constraintTop_toTopOf="@+id/left1" />
 
     <ImageView
         android:id="@+id/hairPreview"
@@ -87,61 +72,47 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.39"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.431"
+        app:layout_constraintTop_toBottomOf="@+id/editText"
+        app:layout_constraintVertical_bias="0.004"
         app:srcCompat="@android:color/transparent" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/target"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="19dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Target"
         android:textAppearance="@style/TextAppearance.AppCompat"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/left2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.184"
+        app:layout_constraintHorizontal_bias="0.024"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.876" />
+        app:layout_constraintTop_toTopOf="@+id/left2" />
 
-    <Spinner
-        android:id="@+id/spinner2"
-        android:layout_width="214dp"
-        android:layout_height="40dp"
+    <ImageView
+        android:id="@+id/targPreview"
+        android:layout_width="72dp"
+        android:layout_height="69dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.823"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.885" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="72dp"
-        android:layout_height="64dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.393"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.763"
+        app:layout_constraintTop_toBottomOf="@+id/hairPreview"
+        app:layout_constraintVertical_bias="0.138"
         app:srcCompat="@android:color/transparent" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -158,5 +129,73 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@android:drawable/ic_menu_revert" />
+
+    <ImageButton
+        android:id="@+id/left1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@android:color/holo_green_light"
+        android:onClick="left1"
+        app:layout_constraintBottom_toBottomOf="@+id/hairPreview"
+        app:layout_constraintEnd_toStartOf="@+id/hairPreview"
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintStart_toEndOf="@+id/crosshair"
+        app:layout_constraintTop_toTopOf="@+id/hairPreview"
+        app:srcCompat="@android:drawable/ic_media_previous" />
+
+    <ImageButton
+        android:id="@+id/left2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@android:color/holo_green_light"
+        android:onClick="left2"
+        app:layout_constraintBottom_toBottomOf="@+id/targPreview"
+        app:layout_constraintEnd_toStartOf="@+id/targPreview"
+        app:layout_constraintHorizontal_bias="0.74"
+        app:layout_constraintStart_toEndOf="@+id/target"
+        app:layout_constraintTop_toTopOf="@+id/targPreview"
+        app:srcCompat="@android:drawable/ic_media_previous" />
+
+    <ImageButton
+        android:id="@+id/right1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@android:color/holo_green_light"
+        android:onClick="right1"
+        app:layout_constraintBottom_toBottomOf="@+id/hairPreview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.061"
+        app:layout_constraintStart_toEndOf="@+id/hairPreview"
+        app:layout_constraintTop_toTopOf="@+id/hairPreview"
+        app:srcCompat="@android:drawable/ic_media_next" />
+
+    <ImageButton
+        android:id="@+id/right2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@android:color/holo_green_light"
+        android:onClick="right2"
+        app:layout_constraintBottom_toBottomOf="@+id/targPreview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.095"
+        app:layout_constraintStart_toEndOf="@+id/targPreview"
+        app:layout_constraintTop_toTopOf="@+id/targPreview"
+        app:srcCompat="@android:drawable/ic_media_next" />
 
 </android.support.constraint.ConstraintLayout>

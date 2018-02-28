@@ -1,6 +1,7 @@
 package com.android.lazertag;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
+import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,8 +25,10 @@ import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -41,6 +45,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static com.android.lazertag.Player.getLocalPlayer;
+
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class Screen2 extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -49,6 +55,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     private RectangleFindr recrec;
     private Network network;
 
+    boolean isPaused = false;
+
     CameraControllerV2WithPreview ccv2WithPreview;
 
     AutoFitTextureView textureView;
@@ -56,7 +64,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     public File mCurrentPhoto = null;
     boolean newPic = false;
 
-    public static final int MY_PERMISSIONS_REQUEST_ACCESS_CODE = 1;
+    GeneralPreferences genPref = GeneralPreferences.getInstance();
 
     public File createImageFile(){
         // Create an image file name
@@ -79,6 +87,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
         final Intent intent = getIntent();
 
+        SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
+
         textureView = (AutoFitTextureView)findViewById(R.id.textureview);
         textureView.setAspectRatio(9,16);
 
@@ -100,10 +110,13 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 this.handler.postDelayed(this, 500);
 
                 if(newPic && file.length() > 1000){
+
                     /*TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
                     if (match != null) {
                         network.getTarget().setValue(match.name());
                     }*/
+
+                    //TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
 
                     newPic = false;
                 }
@@ -112,24 +125,26 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         //handler.post(new MyRunnable(handler, imageRec, mCurrentPhoto));
 
         network = Network.getInstance();
-        network.getTarget().addValueEventListener(new ValueEventListener() {
+        String key = Player.getLocalPlayer().getCurrentLobby();
+        network.getLobby(key).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                /*ArrayList<Hit> value = dataSnapshot.getValue(new GenericTypeIndicator<ArrayList<Hit>>());
-                Hit currentHit = value.get(value.size() - 1);
-                if(currentHit.getReceiver().equals(Player.getLocalPlayer())) {
-                    showToast("You got Blasted!");
-                } else if(currentHit.getSender().equals(Player.getLocalPlayer())) {
-                    showToast("You Blasted " + currentHit.getReceiver().getName() + " !");
-                }*/
+                network.currentLobby = dataSnapshot;
+
+                ArrayList<Hit> value = dataSnapshot.child("hitReg").getValue(new GenericTypeIndicator<ArrayList<Hit>>(){});
+                if (value != null) {
+                    Hit currentHit = value.get(value.size() - 1);
+                    if (currentHit.getReceiver().equals(getLocalPlayer())) {
+                        showToast("You got Blasted!");
+                    } else if (currentHit.getSender().equals(getLocalPlayer())) {
+                        showToast("You Blasted " + currentHit.getReceiver().getName() + " !");
+                    }
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                //Log.w(TAG, "Failed to read value.", error.toException());
+                Log.d("ScreenError", "Failed to read value.", error.toException());
             }
         });
 
@@ -160,51 +175,45 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             }
         });
 
-        getPermissions();
+        //getPermissions();
 
         //imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/pentacle.jpg", 1);
         //imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/tryangle.jpg", 1);
         //imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/zelda.jpg", 1);
 
-
-        //Nick was here. code is bad. sry.
         final ImageView crossHair = (ImageView) findViewById(R.id.CrosshairView);
-        SharedPreferences crossType = this.getSharedPreferences("Hair", MODE_PRIVATE);
-        String Hair = crossType.getString("Hair", "nope");
-        //Toast.makeText(getBaseContext(), Hair ,Toast.LENGTH_SHORT).show();
-        if (Hair.equals("GLogo")) {
-            crossHair.setImageDrawable(getResources().getDrawable(R.drawable.gisforgitgud, getTheme()));
-        } else if (Hair.equals("Pentacle")) {
-            crossHair.setImageDrawable(getResources().getDrawable(R.drawable.pentacle, getTheme()));
-        } else if (Hair.equals("Tryangle")) {
-            crossHair.setImageDrawable(getResources().getDrawable(R.drawable.tryangle, getTheme()));
-        } else if (Hair.equals("Zelda")) {
-            crossHair.setImageDrawable(getResources().getDrawable(R.drawable.zelda, getTheme()));
-        } else if (Hair.equals("nope")) {
-            crossHair.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_info, getTheme()));
-        }
+        int[] crossHairs = genPref.getCrosshairs();
+        int crossHairPosition = prefs.getInt("Crosshair", 0);
+        crossHair.setImageResource(crossHairs[crossHairPosition]);
 
-        crossHair.setRotation(270);
-        /*SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         final float[] timestamp = new float[1];
-
-        SensorEventListener gyroscopeSensorListener = new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent sensorEvent) {
-                if ((Math.abs(sensorEvent.values[2]) > 0.5f) && (timestamp[0] != 0)) {
-                    float rot = (float) (crossHair.getRotation() + ((Math.toDegrees(sensorEvent.values[2]) * ((sensorEvent.timestamp - timestamp[0]) / 1000000000f))));
-                    crossHair.setRotation(rot);
+        boolean isSpinner;
+        if (prefs.getInt("Crosshair", 0) == 4) {
+            isSpinner = true;
+        } else {
+            isSpinner = false;
+        }
+        if (isSpinner == true) {
+            SensorEventListener gyroscopeSensorListener = new SensorEventListener() {
+                @Override
+                public void onSensorChanged(SensorEvent sensorEvent) {
+                    if ((Math.abs(sensorEvent.values[2]) > 0.5f) && (timestamp[0] != 0)) {
+                        float rot = (float) (crossHair.getRotation() + ((Math.toDegrees(sensorEvent.values[2]) * ((sensorEvent.timestamp - timestamp[0]) / 100000000f))));
+                        crossHair.setRotation(rot);
+                    }
+                    timestamp[0] = sensorEvent.timestamp;
                 }
-                timestamp[0] = sensorEvent.timestamp;
-            }
 
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int i) {
-            }
-        };
+                @Override
+                public void onAccuracyChanged(Sensor sensor, int i) {
+                }
+            };
 
-        sensorManager.registerListener(gyroscopeSensorListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);*/
+
+            sensorManager.registerListener(gyroscopeSensorListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
 
     }
 
@@ -229,31 +238,10 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 //            ccv2WithPreview.closeCamera();
 //        }
 //        if(ccv2WithoutPreview != null) {
-//            ccv2WithoutPreview.closeCamera();
+//            ccv2WithoutPreview.closeCamera();b
 //        }
     }
 
-    private void getPermissions(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if(checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-                //Requesting permission.
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            }
-        }
-    }
-
-    @Override //Override from ActivityCompat.OnRequestPermissionsResultCallback Interface
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission granted
-                }
-                return;
-            }
-        }
-    }
     /**
      * Shows a {@link Toast} on the UI thread.
      *
@@ -266,5 +254,34 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void goback(View view){
+        Intent intent = new Intent(this, MainMenu.class);
+        startActivity(intent);
+    }
+
+    public void onPause(View view) {
+        //ImageButton pauseButton = (ImageButton) findViewById(R.id.pauseButton);
+        ImageView crossHairView = (ImageView) findViewById(R.id.CrosshairView);
+        Button leaveAndEnd = (Button) findViewById(R.id.leaveAndEnd);
+        TextView pauseView = (TextView) findViewById(R.id.pauseView);
+        Button getPicture = (Button) findViewById(R.id.getpicture);
+
+        if (isPaused == false) {
+            crossHairView.setVisibility(View.INVISIBLE);
+            leaveAndEnd.setVisibility(View.VISIBLE);
+            pauseView.setVisibility(View.VISIBLE);
+            //getPicture.setClickable(false);
+            getPicture.setVisibility(View.GONE);
+            isPaused = true;
+        } else {
+            crossHairView.setVisibility(View.VISIBLE);
+            leaveAndEnd.setVisibility(View.INVISIBLE);
+            pauseView.setVisibility(View.INVISIBLE);
+            //getPicture.setClickable(true);
+            getPicture.setVisibility(View.VISIBLE);
+            isPaused = false;
+        }
     }
 }

@@ -6,40 +6,40 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.android.lazertag.JoinScreen">
+
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:onClick="goToMain"
         android:text="@string/backText"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias=".1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias=".05"
-        app:layout_constraintHorizontal_bias=".1"
-        />
+        app:layout_constraintVertical_bias=".05" />
 
     <Button
         android:id="@+id/n0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="goToMain"
+        android:onClick="joinLobby1"
         android:text=""
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias=".3"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias=".2"
-        app:layout_constraintHorizontal_bias=".3"
-        android:textAllCaps="false"
-        />
+        app:layout_constraintVertical_bias=".2" />
 
     <Button
         android:id="@+id/n1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="goToMain"
+        android:onClick="joinLobby2"
         android:text=""
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -54,7 +54,7 @@
         android:id="@+id/n2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="goToMain"
+        android:onClick="joinLobby3"
         android:text=""
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -68,7 +68,7 @@
         android:id="@+id/n3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="goToMain"
+        android:onClick="joinLobby4"
         android:text=""
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -82,7 +82,7 @@
         android:id="@+id/n4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="goToMain"
+        android:onClick="joinLobby5"
         android:text=""
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -96,7 +96,7 @@
         android:id="@+id/n5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="goToMain"
+        android:onClick="joinLobby6"
         android:text=""
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -110,7 +110,7 @@
         android:id="@+id/n6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="goToMain"
+        android:onClick="joinLobby7"
         android:text=""
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -124,7 +124,7 @@
         android:id="@+id/n7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="goToMain"
+        android:onClick="joinLobby8"
         android:text=""
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -133,5 +133,21 @@
         android:textAllCaps="false"
         app:layout_constraintHorizontal_bias=".7"
         />
+
+    <Button
+        android:id="@+id/Startgame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:onClick="goToGame"
+        android:text="Play"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.984" />
 
 </android.support.constraint.ConstraintLayout>

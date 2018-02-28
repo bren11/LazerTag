@@ -18,21 +18,33 @@ public class Player {
     private Lobby lobby;
     private int hitsSent = 0;
     private int hitsRecieved = 0;
-    private Drawable image;
+    private String image;
     private Drawable crossHair;
     private Location location;
+    private Drawable[] crossHairs;
+    private String[] images;
+    private String currentLobby;
 
     private static Player localPlayer;
 
     public static Player getLocalPlayer() {
         if(localPlayer == null) {
             localPlayer = new Player();
-            //localPlayer.image = Settings.datPicBro;
         }
         return  localPlayer;
     }
 
-    public Player(){}
+    public Player(){
+        name = "player";
+    }
+
+    public String getCurrentLobby() {
+        return currentLobby;
+    }
+
+    public void setCurrentLobby(String currentLobby) {
+        this.currentLobby = currentLobby;
+    }
 
     public Lobby getLobby() { return lobby; }
 
@@ -66,20 +78,20 @@ public class Player {
 
     public void onHitRecieved() { hitsRecieved++; }
 
-    public Drawable getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(Drawable image) {
-        this.image = image;
+    public void setImage(int imageLocation) {
+            this.image = this.images[imageLocation];
     }
 
     public Drawable getCrossHair() {
         return crossHair;
     }
 
-    public void setCrossHair(Drawable image) {
-        this.crossHair = image;
+    public void setCrossHair(int hairLocation) {
+        this.crossHair = this.crossHairs[hairLocation];
     }
 
     public Location getLocation() {
@@ -90,4 +102,11 @@ public class Player {
         this.location = whereareyou;
     }
 
+    public void setcrossHairs(Drawable[] crossHairs) {
+        this.crossHairs = crossHairs;
+    }
+
+    public void setimages(String[] images) {
+        this.images = images;
+    }
 }

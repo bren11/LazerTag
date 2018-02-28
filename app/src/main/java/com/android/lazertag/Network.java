@@ -2,10 +2,14 @@ package com.android.lazertag;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -18,6 +22,7 @@ import static android.content.Context.MODE_PRIVATE;
 class Network {
 
     public FirebaseDatabase database;
+    public DataSnapshot currentLobby;
 
     private static final Network ourInstance = new Network();
 
@@ -29,18 +34,27 @@ class Network {
 
     public void addGame(Activity activity){
         SharedPreferences prefs = activity.getSharedPreferences("nameData", MODE_PRIVATE);
-        DatabaseReference gameRef = database.getReference(prefs.getString("Name", "Guest"));
+        String name = prefs.getString("Name", "Guest");
+        DatabaseReference gameRef = database.getReference(name);
         gameRef.setValue(new Lobby());
-
+        DatabaseReference lobbyList = database.getReference("Lobby");
+        lobbyList.child(name).setValue(name);
     }
 
     public DatabaseReference getTarget(){
         return database.getReference("target");
     }
 
+    public DatabaseReference getLobbies(){ return database.getReference("Lobby");}
+    public DatabaseReference getLobby(String key){return database.getReference(key);}
     /*public ArrayList<Player> getPlayersInLobby(String name) {
         DatabaseReference remoteLobby = database.getReference(name);
 
 
     }*/
+
+    public void addPlayer(String key){
+        ourInstance.database.getReference(key).child("players").child(Player.getLocalPlayer().getName()).setValue(Player.getLocalPlayer());
+        Player.getLocalPlayer().setCurrentLobby(key);
+    }
 }

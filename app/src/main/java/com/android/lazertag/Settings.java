@@ -1,19 +1,22 @@
 package com.android.lazertag;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 public class Settings extends AppCompatActivity {
+
+    GeneralPreferences genPref = GeneralPreferences.getInstance();
+    int crosshair;
+    int target;
+    int[] targets;
+    int[] crosshairs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -23,86 +26,38 @@ public class Settings extends AppCompatActivity {
         nameSpace = (EditText)findViewById(R.id.editText);
         final SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
         nameSpace.setText(prefs.getString("Name", "Player"));
-
-        final SharedPreferences crossType = this.getSharedPreferences("Hair", MODE_PRIVATE);
-        final SharedPreferences.Editor crossEditor = crossType.edit();
-        final SharedPreferences Target = this.getSharedPreferences("Target", MODE_PRIVATE);
-        final SharedPreferences.Editor targetEdit = Target.edit();
-
-        //Spinner Stuff
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.crosshairarray, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        final String blocked = "/h.#$[]";
+        InputFilter filter = new InputFilter() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                crossEditor.putString("Hair", parent.getItemAtPosition(position) + "");
-                crossEditor.apply();
-                setImageView(crossType.getString("Hair", "nope"));
-                //Toast.makeText(getBaseContext(), crossType.getString("Hair", "nope") ,Toast.LENGTH_SHORT).show();
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+
+                if (source != null && blocked.contains(("" + source))) {
+                    return "";
+                }
+                return null;
             }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        Spinner spinner2 = (Spinner) findViewById(R.id.spinner2);
-        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.targetArray, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner2.setAdapter(adapter2);
-        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                targetEdit.putString("Target", parent.getItemAtPosition(position) + "");
-                targetEdit.apply();
-                setImageView2(Target.getString("Target", "nope"));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        };
+        nameSpace.setFilters(new InputFilter[] { filter });
+        crosshair = prefs.getInt("Crosshair", 0);
+        target = prefs.getInt("Target", 0);
+        targets = genPref.getTargets();
+        crosshairs = genPref.getCrosshairs();
+        setImageView();
+        setImageView2();
     }
 
     public void goToMain(View view){
-        EditText nameSpace;
-        nameSpace = (EditText)findViewById(R.id.editText);
+        EditText nameSpace = (EditText)findViewById(R.id.editText);
         SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("Name", nameSpace.getText().toString());
+        editor.putInt("Crosshair", crosshair);
+        editor.putInt("Target", target);
         editor.apply();
+        Player self = Player.getLocalPlayer();
+        self.setName(nameSpace.getText().toString());
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
-    }
-
-    public void setImageView(String Hair) {
-        ImageView Preview = (ImageView) findViewById(R.id.hairPreview);
-        if (Hair.equals("GLogo")) {
-            Preview.setImageDrawable(getResources().getDrawable(R.drawable.gisforgitgud, getTheme()));
-        } else if (Hair.equals("Pentacle")) {
-            Preview.setImageDrawable(getResources().getDrawable(R.drawable.pentacle, getTheme()));
-        } else if (Hair.equals("Tryangle")) {
-            Preview.setImageDrawable(getResources().getDrawable(R.drawable.tryangle, getTheme()));
-        } else if (Hair.equals("Zelda")) {
-            Preview.setImageDrawable(getResources().getDrawable(R.drawable.zelda, getTheme()));
-        } else {
-            Preview.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_info, getTheme()));
-        }
-    }
-
-    public void setImageView2(String Target) {
-        ImageView Preview = (ImageView) findViewById(R.id.imageView);
-        if (Target.equals("Pentacle")) {
-            Preview.setImageDrawable(getResources().getDrawable(R.drawable.pentacle, getTheme()));
-        } else if (Target.equals("Tryangle")) {
-            Preview.setImageDrawable(getResources().getDrawable(R.drawable.tryangle, getTheme()));
-        } else if (Target.equals("Zelda")) {
-            Preview.setImageDrawable(getResources().getDrawable(R.drawable.zelda, getTheme()));
-        }
     }
 
     @Override
@@ -117,5 +72,51 @@ public class Settings extends AppCompatActivity {
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
+    }
+
+    public void setImageView() {
+        ImageView Preview = (ImageView) findViewById(R.id.hairPreview);
+        Preview.setImageResource(crosshairs[crosshair]);
+    }
+
+    public void setImageView2() {
+        ImageView Preview = (ImageView) findViewById(R.id.targPreview);
+        Preview.setImageResource(targets[target]);
+    }
+
+    public void left1(View view) {
+        if (crosshair != 0) {
+            crosshair -= 1;
+        } else {
+            crosshair = crosshairs.length - 1;
+        }
+        setImageView();
+    }
+
+    public void right1(View view) {
+        if (crosshair != crosshairs.length - 1) {
+           crosshair += 1;
+        } else {
+            crosshair = 0;
+        }
+        setImageView();
+    }
+
+    public void left2(View view) {
+        if (target != 0) {
+            target -= 1;
+        } else {
+            target = targets.length - 1;
+        }
+        setImageView2();
+    }
+
+    public void right2(View view) {
+        if (target != targets.length - 1) {
+            target += 1;
+        } else {
+            target = 0;
+        }
+        setImageView2();
     }
 }

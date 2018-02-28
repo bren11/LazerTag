@@ -1,32 +1,21 @@
 package com.android.lazertag;
 
-import java.util.ArrayList;
-
-/**
- * Created by dphip on 13/12/2017.
- */
+import java.util.HashMap;
 
 public class Lobby {
-    public ArrayList<Player> getPlayers() {
-        return players;
-    }
 
-    public void setPlayers(ArrayList<Player> players) {
-        this.players = players;
-    }
+    HashMap<String, Player> players;
 
-    public boolean isPrivate() {
-        return isPrivate;
-    }
-
-    public void setPrivate(boolean aPrivate) {
-        isPrivate = aPrivate;
-    }
-
-    ArrayList<Player> players;
     boolean isPrivate;
+    String key;
+    int state;
     public Lobby(){
-        players = new ArrayList<>();
+        players = new HashMap<>();
         isPrivate = false;
+        String name = Player.getLocalPlayer().getName();
+        Player player = Player.getLocalPlayer();
+        players.put(name, player);
+        key = Player.getLocalPlayer().getName();
+        state = 0;
     }
 }
