@@ -47,7 +47,7 @@ import static com.android.lazertag.Player.getLocalPlayer;
 public class Screen2 extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     static{ System.loadLibrary("opencv_java3"); }
-    //private BFImage imageRec = new BFImage(FeatureDetector.ORB, DescriptorExtractor.ORB, DescriptorMatcher.BRUTEFORCE_HAMMINGLUT);
+    private BFImage imageRec = new BFImage(FeatureDetector.ORB, DescriptorExtractor.ORB, DescriptorMatcher.BRUTEFORCE_HAMMINGLUT);
     private RectangleFindr recrec;
     private Network network;
 
@@ -129,7 +129,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 }
             }
         }
-        //handler.post(new MyRunnable(handler, imageRec, mCurrentPhoto));
+        handler.post(new MyRunnable(handler, imageRec, mCurrentPhoto));
 
         network = Network.getInstance();
         String key = Player.getLocalPlayer().getCurrentLobby();
@@ -168,7 +168,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                     newPic = true;
 
                     //Toast.makeText(getApplicationContext(), mCurrentPhotoPath.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-                    //handler.post(new MyRunnable(handler, imageRec, mCurrentPhotoPath));
+                    handler.post(new MyRunnable(handler, imageRec, mCurrentPhoto));
                     view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                     blastNoise.start();
                 }
@@ -186,9 +186,9 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
         //getPermissions();
 
-        //imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/pentacle.jpg", 1);
-        //imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/tryangle.jpg", 1);
-        //imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/zelda.jpg", 1);
+        imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/pentacle.jpg", 1);
+        imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/tryangle.jpg", 1);
+        imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/zelda.jpg", 1);
 
         final ImageView crossHair = (ImageView) findViewById(R.id.CrosshairView);
         int[] crossHairs = genPref.getCrosshairs();
