@@ -24,4 +24,9 @@
         <item>Tryangle</item>
         <item>Zelda</item>
     </string-array>
+    <string-array name="targetArray">
+        <item>Pentacle</item>
+        <item>Tryangle</item>
+        <item>Zelda</item>
+    </string-array>
 </resources>

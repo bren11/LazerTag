@@ -7,6 +7,22 @@ import java.util.ArrayList;
  */
 
 public class Lobby {
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(ArrayList<Player> players) {
+        this.players = players;
+    }
+
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(boolean aPrivate) {
+        isPrivate = aPrivate;
+    }
+
     ArrayList<Player> players;
     boolean isPrivate;
     public Lobby(){

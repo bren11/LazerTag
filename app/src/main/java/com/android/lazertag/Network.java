@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import static android.content.Context.MODE_PRIVATE;
 
 /**
- * Created by meme on 12/11/2017.
+ * Created by Ryan Whiting on 12/11/2017.
  */
 
 class Network {
@@ -25,9 +25,7 @@ class Network {
         return ourInstance;
     }
 
-    private Network() {
-        database = FirebaseDatabase.getInstance();
-    }
+    private Network() { database = FirebaseDatabase.getInstance(); }
 
     public void addGame(Activity activity){
         SharedPreferences prefs = activity.getSharedPreferences("nameData", MODE_PRIVATE);
