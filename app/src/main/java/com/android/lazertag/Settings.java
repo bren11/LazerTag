@@ -56,6 +56,7 @@ public class Settings extends AppCompatActivity {
         editor.apply();
         Player self = Player.getLocalPlayer();
         self.setName(nameSpace.getText().toString());
+        self.setImage(target);
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
     }

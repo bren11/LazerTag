@@ -1,17 +1,12 @@
 package com.android.lazertag;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
-import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,13 +14,10 @@ import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -107,7 +99,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
                 if(newPic && file.length() > 1000){
                     TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
-                    String target = "";
                     compareImage(match.name());
                     newPic = false;
                 }
@@ -126,9 +117,11 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 if (value != null) {
                     Hit currentHit = value.get(value.size() - 1);
                     if (currentHit.getReceiver().equals(getLocalPlayer())) {
-                        showToast("You got Blasted!");
+                        showToast("You got Blasted by " + currentHit.getSender().getName() + "!");
                     } else if (currentHit.getSender().equals(getLocalPlayer())) {
-                        showToast("You Blasted " + currentHit.getReceiver().getName() + " !");
+                        showToast("You Blasted " + currentHit.getReceiver().getName() + "!");
+                    } else {
+                        showToast(currentHit.getSender().getName() + " Blasted " + currentHit.getReceiver().getName() + "!");
                     }
                 }
             }
@@ -259,7 +252,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                         ArrayList<Hit> value = dataSnapshot.child("hitReg").getValue(new GenericTypeIndicator<ArrayList<Hit>>(){});
                         value.add(new Hit(player,Player.getLocalPlayer()));
                         lobby.child("hitreg").setValue(value);
-                        return;
+                        break;
                     }
                 }
             }

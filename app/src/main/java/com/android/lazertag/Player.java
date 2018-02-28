@@ -30,7 +30,9 @@ public class Player {
     }
 
     public Player(){
-        name = "player";
+        this.setName("player");
+        String[] images = {"pentacle.jpg", "tryangle.jpg", "zelda.jpg"};
+        this.setimages(images);
     }
 
     public String getCurrentLobby() {
