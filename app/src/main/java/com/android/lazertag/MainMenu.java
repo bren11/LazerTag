@@ -35,7 +35,7 @@ public class MainMenu extends AppCompatActivity {
         getPermissions();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        String default_file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/orig2.png";
+        /*String default_file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/orig2.png";
         //Log.d("filetogoto", default_file);
         Mat src = Imgcodecs.imread(default_file, Imgcodecs.IMREAD_COLOR);
         //recrec.saveFile(src, "my thingy");
