@@ -585,7 +585,6 @@ public class CameraControllerV2WithPreview {
     }
 
     private static class ImageSaver implements Runnable {
-
         /**
          * The JPEG image
          */
@@ -602,27 +601,17 @@ public class CameraControllerV2WithPreview {
 
         @Override
         public void run() {
+            System.out.println("MORNIN");
             ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
-            byte[] bytes = new byte[buffer.remaining()];
+            byte[] bytes = new byte[buffer.capacity()];
             buffer.get(bytes);
-            FileOutputStream output = null;
-            try {
-                output = new FileOutputStream(mFile);
+            try (final OutputStream output = new FileOutputStream(mFile)) {
                 output.write(bytes);
-            } catch (IOException e) {
+            } catch (final IOException e) {
+                Log.e(TAG, "Exception occurred while saving picture to external storage ", e);
                 e.printStackTrace();
-            } finally {
-                mImage.close();
-                if (null != output) {
-                    try {
-                        output.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
             }
-
+            mImage.close();
         }
 
     }

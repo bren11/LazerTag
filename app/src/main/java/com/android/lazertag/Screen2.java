@@ -17,7 +17,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -26,9 +30,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
+import org.opencv.core.Mat;
 import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
+import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -41,15 +47,17 @@ import static com.android.lazertag.Player.getLocalPlayer;
 public class Screen2 extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     static{ System.loadLibrary("opencv_java3"); }
-    private BFImage imageRec = new BFImage(FeatureDetector.ORB, DescriptorExtractor.ORB, DescriptorMatcher.BRUTEFORCE_HAMMINGLUT);
+    //private BFImage imageRec = new BFImage(FeatureDetector.ORB, DescriptorExtractor.ORB, DescriptorMatcher.BRUTEFORCE_HAMMINGLUT);
+    private RectangleFindr recrec;
     private Network network;
 
+    boolean isPaused = false;
 
     CameraControllerV2WithPreview ccv2WithPreview;
 
     AutoFitTextureView textureView;
 
-    public File mCurrentPhotoPath = null;
+    public File mCurrentPhoto = null;
     boolean newPic = false;
 
     GeneralPreferences genPref = GeneralPreferences.getInstance();
@@ -62,7 +70,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         File image = new File(storageDir + imageFileName + ".jpg");
 
         // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image;
+        mCurrentPhoto = image;
         return image;
     }
 
@@ -98,13 +106,30 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 this.handler.postDelayed(this, 500);
 
                 if(newPic && file.length() > 1000){
-                    TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
-                    compareImage(match.name());
+                    //String default_file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/orig2.png";
+                    //Log.d("filetogoto", default_file);
+                    Mat src = Imgcodecs.imread(file.getAbsolutePath(), Imgcodecs.IMREAD_COLOR);
+                    //recrec.saveFile(src, "my thingy");
+                    if( src.empty() ) {
+                        System.out.println("Error opening image!");
+                        System.out.println("Program Arguments: [image_name -- "
+                                + file.getAbsolutePath() +"] \n");
+                        System.exit(-1);
+                    }
+                    recrec.FindRect(src);
+                    int i = 0;
+                    File newFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/test/img num: " + i);
+                    while (newFile.exists()){
+                        TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
+                        if (match != null) {
+                            compareImage(match.name());
+                        }
+                    }
                     newPic = false;
                 }
             }
         }
-        handler.post(new MyRunnable(handler, imageRec, mCurrentPhotoPath));
+        //handler.post(new MyRunnable(handler, imageRec, mCurrentPhoto));
 
         network = Network.getInstance();
         String key = Player.getLocalPlayer().getCurrentLobby();
@@ -138,10 +163,12 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             @Override
             public void onClick(View view) {
                 if(ccv2WithPreview != null) {
-                    ccv2WithPreview.takePicture(createImageFile());
+                    createImageFile();
+                    ccv2WithPreview.takePicture(mCurrentPhoto);
                     newPic = true;
+
                     //Toast.makeText(getApplicationContext(), mCurrentPhotoPath.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-                    handler.post(new MyRunnable(handler, imageRec, mCurrentPhotoPath));
+                    //handler.post(new MyRunnable(handler, imageRec, mCurrentPhotoPath));
                     view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                     blastNoise.start();
                 }
@@ -157,9 +184,11 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             }
         });
 
-        imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/pentacle.jpg", 1);
-        imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/tryangle.jpg", 1);
-        imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/zelda.jpg", 1);
+        //getPermissions();
+
+        //imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/pentacle.jpg", 1);
+        //imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/tryangle.jpg", 1);
+        //imageRec.addToLibrary(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera/zelda.jpg", 1);
 
         final ImageView crossHair = (ImageView) findViewById(R.id.CrosshairView);
         int[] crossHairs = genPref.getCrosshairs();
@@ -218,7 +247,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 //            ccv2WithPreview.closeCamera();
 //        }
 //        if(ccv2WithoutPreview != null) {
-//            ccv2WithoutPreview.closeCamera();
+//            ccv2WithoutPreview.closeCamera();b
 //        }
     }
 
@@ -241,16 +270,18 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         startActivity(intent);
     }
 
-    public void compareImage(final String image){
+
+    public void compareImage(final String image) {
         final DatabaseReference lobby = network.getLobby(Player.getLocalPlayer().getCurrentLobby());
         lobby.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for( DataSnapshot x : dataSnapshot.child("players").getChildren()){
-                    Player player = (Player)x.getValue();
-                    if(player.getImage().equals(image)){
-                        ArrayList<Hit> value = dataSnapshot.child("hitReg").getValue(new GenericTypeIndicator<ArrayList<Hit>>(){});
-                        value.add(new Hit(player,Player.getLocalPlayer()));
+                for (DataSnapshot x : dataSnapshot.child("players").getChildren()) {
+                    Player player = (Player) x.getValue();
+                    if (player.getImage().equals(image)) {
+                        ArrayList<Hit> value = dataSnapshot.child("hitReg").getValue(new GenericTypeIndicator<ArrayList<Hit>>() {
+                        });
+                        value.add(new Hit(player, Player.getLocalPlayer()));
                         lobby.child("hitreg").setValue(value);
                         break;
                     }
@@ -262,5 +293,29 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 showToast("Image Comparison Error");
             }
         });
+    }
+
+    public void onPause(View view) {
+        //ImageButton pauseButton = (ImageButton) findViewById(R.id.pauseButton);
+        ImageView crossHairView = (ImageView) findViewById(R.id.CrosshairView);
+        Button leaveAndEnd = (Button) findViewById(R.id.leaveAndEnd);
+        TextView pauseView = (TextView) findViewById(R.id.pauseView);
+        Button getPicture = (Button) findViewById(R.id.getpicture);
+
+        if (isPaused == false) {
+            crossHairView.setVisibility(View.INVISIBLE);
+            leaveAndEnd.setVisibility(View.VISIBLE);
+            pauseView.setVisibility(View.VISIBLE);
+            //getPicture.setClickable(false);
+            getPicture.setVisibility(View.GONE);
+            isPaused = true;
+        } else {
+            crossHairView.setVisibility(View.VISIBLE);
+            leaveAndEnd.setVisibility(View.INVISIBLE);
+            pauseView.setVisibility(View.INVISIBLE);
+            //getPicture.setClickable(true);
+            getPicture.setVisibility(View.VISIBLE);
+            isPaused = false;
+        }
     }
 }

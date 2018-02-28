@@ -9,6 +9,11 @@ import android.location.Location;
 
 public class Player {
 
+
+    public static void setLocalPlayer(Player localPlayer) {
+        Player.localPlayer = localPlayer;
+    }
+
     private String name;
     private Lobby lobby;
     private int hitsSent = 0;
@@ -46,7 +51,13 @@ public class Player {
     public Lobby getLobby() { return lobby; }
 
     public void setLobby(Lobby lobby) { this.lobby = lobby; }
+    public void setHitsSent(int hitsSent) {
+        this.hitsSent = hitsSent;
+    }
 
+    public void setHitsRecieved(int hitsRecieved) {
+        this.hitsRecieved = hitsRecieved;
+    }
     public String getName() {
         return name;
     }

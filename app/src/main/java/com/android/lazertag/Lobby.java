@@ -3,7 +3,9 @@ package com.android.lazertag;
 import java.util.HashMap;
 
 public class Lobby {
+
     HashMap<String, Player> players;
+
     boolean isPrivate;
     String key;
     int state;

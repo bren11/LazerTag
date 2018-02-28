@@ -3,24 +3,31 @@ package com.android.lazertag;
 import android.*;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import org.opencv.core.Mat;
 import com.google.firebase.database.DatabaseReference;
 
 import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
+import org.opencv.imgcodecs.Imgcodecs;
 
 import java.util.ArrayList;
 
 public class MainMenu extends AppCompatActivity {
 
+    RectangleFindr recrec = new RectangleFindr();
+
+    static{ System.loadLibrary("opencv_java3"); }
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_CODE = 1;
 
     @Override
@@ -28,6 +35,17 @@ public class MainMenu extends AppCompatActivity {
         getPermissions();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+        /*String default_file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/orig2.png";
+        //Log.d("filetogoto", default_file);
+        Mat src = Imgcodecs.imread(default_file, Imgcodecs.IMREAD_COLOR);
+        //recrec.saveFile(src, "my thingy");
+        if( src.empty() ) {
+            System.out.println("Error opening image!");
+            System.out.println("Program Arguments: [image_name -- "
+                    + default_file +"] \n");
+            System.exit(-1);
+        }
+        recrec.FindRect(src);
         final SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
         Player.getLocalPlayer().setName(prefs.getString("Name", "Player"));
         /*Network test = Network.getInstance();

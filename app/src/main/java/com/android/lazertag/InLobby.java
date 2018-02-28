@@ -61,7 +61,6 @@ public class InLobby extends AppCompatActivity {
                         }
                     }
                 }
-
             }
 
             @Override
