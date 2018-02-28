@@ -71,7 +71,7 @@ public class InLobby extends AppCompatActivity {
     }
     public void goToMain(View view){
         Network database = Network.getInstance();
-        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("Players").child(Player.getLocalPlayer().getName()).removeValue();
+        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("players").child(Player.getLocalPlayer().getName()).removeValue();
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
     }

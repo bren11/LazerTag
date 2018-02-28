@@ -104,7 +104,9 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             @Override
             public void run() {
                 this.handler.postDelayed(this, 500);
-
+                Player.getLocalPlayer().setTimeDisabled(Player.getLocalPlayer().getTimeDisabled() - 0.5);
+                if(Player.getLocalPlayer().getTimeDisabled() < 0)
+                    Player.getLocalPlayer().setTimeDisabled(0.0);
                 if(newPic && file.length() > 1000){
                     //String default_file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/orig2.png";
                     //Log.d("filetogoto", default_file);
@@ -143,6 +145,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                     Hit currentHit = value.get(value.size() - 1);
                     if (currentHit.getReceiver().equals(getLocalPlayer())) {
                         showToast("You got Blasted by " + currentHit.getSender().getName() + "!");
+                        if(Player.getLocalPlayer().getTimeDisabled() == 0)
+                            Player.getLocalPlayer().setTimeDisabled(3.0);
                     } else if (currentHit.getSender().equals(getLocalPlayer())) {
                         showToast("You Blasted " + currentHit.getReceiver().getName() + "!");
                     } else {
@@ -162,7 +166,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         findViewById(R.id.getpicture).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                if(ccv2WithPreview != null) {
+                if(ccv2WithPreview != null && Player.getLocalPlayer().getTimeDisabled() == 0.0) {
+
                     createImageFile();
                     ccv2WithPreview.takePicture(mCurrentPhoto);
                     newPic = true;

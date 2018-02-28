@@ -24,6 +24,7 @@ public class Player {
     private Drawable[] crossHairs;
     private String[] images;
     private String currentLobby;
+    private double timeDisabled;
 
     private static Player localPlayer;
 
@@ -38,6 +39,13 @@ public class Player {
         this.setName("player");
         String[] images = {"pentacle.jpg", "tryangle.jpg", "zelda.jpg"};
         this.setimages(images);
+    }
+    public double getTimeDisabled(){
+        return timeDisabled;
+    }
+
+    public void setTimeDisabled(double timeDisabled){
+        this.timeDisabled = timeDisabled;
     }
 
     public String getCurrentLobby() {
