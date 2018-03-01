@@ -1,4 +1,4 @@
-package com.android.lazertag;
+ package com.android.lazertag;
 
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -21,8 +21,9 @@ public class Player {
     private String image;
     private Drawable crossHair;
     private Location location;
-    private Drawable[] crossHairs;
-    private String[] images;
+
+
+
     private String currentLobby;
     private double timeDisabled;
 
@@ -37,8 +38,6 @@ public class Player {
 
     public Player(){
         this.setName("player");
-        String[] images = {"pentacle.jpg", "tryangle.jpg", "zelda.jpg"};
-        this.setimages(images);
     }
     public double getTimeDisabled(){
         return timeDisabled;
@@ -93,16 +92,9 @@ public class Player {
     }
 
     public void setImage(int imageLocation) {
-            this.image = this.images[imageLocation];
+            this.image = GeneralPreferences.getInstance().getImages()[imageLocation];
     }
 
-    public Drawable getCrossHair() {
-        return crossHair;
-    }
-
-    public void setCrossHair(int hairLocation) {
-        this.crossHair = this.crossHairs[hairLocation];
-    }
 
     public Location getLocation() {
         return location;
@@ -112,11 +104,4 @@ public class Player {
         this.location = whereareyou;
     }
 
-    public void setcrossHairs(Drawable[] crossHairs) {
-        this.crossHairs = crossHairs;
-    }
-
-    public void setimages(String[] images) {
-        this.images = images;
-    }
 }
