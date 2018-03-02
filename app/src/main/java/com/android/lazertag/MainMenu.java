@@ -45,7 +45,7 @@ public class MainMenu extends AppCompatActivity {
                     + default_file +"] \n");
             System.exit(-1);
         }
-        recrec.FindRect(src);
+        recrec.FindRect(src);*/
         final SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
         Player.getLocalPlayer().setName(prefs.getString("Name", "Player"));
         /*Network test = Network.getInstance();
@@ -58,7 +58,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void goToJoin(View view){
-        Intent intent = new Intent(this, JoinScreen.class);
+        Intent intent = new Intent(this, Screen2.class);
         startActivity(intent);
     }
 

@@ -48,8 +48,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
     static{ System.loadLibrary("opencv_java3"); }
     private BFImage imageRec = new BFImage(FeatureDetector.ORB, DescriptorExtractor.ORB, DescriptorMatcher.BRUTEFORCE_HAMMINGLUT);
-    private RectangleFindr recrec;
-    private Network network;
+    private RectangleFindr recrec = new RectangleFindr();
+    //private Network network;
 
     boolean isPaused = false;
 
@@ -107,6 +107,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 Player.getLocalPlayer().setTimeDisabled(Player.getLocalPlayer().getTimeDisabled() - 0.5);
                 if(Player.getLocalPlayer().getTimeDisabled() < 0)
                     Player.getLocalPlayer().setTimeDisabled(0.0);
+                System.out.println(file.length());
                 if(newPic && file.length() > 1000){
                     //String default_file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/orig2.png";
                     //Log.d("filetogoto", default_file);
@@ -120,11 +121,12 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                     }
                     recrec.FindRect(src);
                     int i = 0;
-                    File newFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/test/img num: " + i);
-                    while (newFile.exists()){
+                    File newFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/test/img num: " + i + ".png");
+                    if (newFile.exists()){
                         TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
                         if (match != null) {
-                            compareImage(match.name());
+                            //compareImage(match.name());
+                            Toast.makeText(getApplicationContext(), match.name(), Toast.LENGTH_SHORT).show();
                         }
                     }
                     newPic = false;
@@ -133,7 +135,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         }
         handler.post(new MyRunnable(handler, imageRec, mCurrentPhoto));
 
-        network = Network.getInstance();
+        /*network = Network.getInstance();
         String key = Player.getLocalPlayer().getCurrentLobby();
         network.getLobby(key).addValueEventListener(new ValueEventListener() {
             @Override
@@ -159,7 +161,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             public void onCancelled(DatabaseError error) {
                 Log.d("ScreenError", "Failed to read value.", error.toException());
             }
-        });
+        });*/
 
         final MediaPlayer blastNoise = MediaPlayer.create(this, R.raw.blastnoise);
 
@@ -175,7 +177,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                     //Toast.makeText(getApplicationContext(), mCurrentPhotoPath.getAbsolutePath(), Toast.LENGTH_SHORT).show();
                     handler.post(new MyRunnable(handler, imageRec, mCurrentPhoto));
                     view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-                    blastNoise.start();
+                    //blastNoise.start();
                 }
                 //network.getTarget().setValue(match.name());
                 //Toast.makeText(getApplicationContext(), "Picture Clicked", Toast.LENGTH_SHORT).show();
@@ -276,7 +278,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     }
 
 
-    public void compareImage(final String image) {
+    /*public void compareImage(final String image) {
         final DatabaseReference lobby = network.getLobby(Player.getLocalPlayer().getCurrentLobby());
         lobby.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -298,7 +300,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 showToast("Image Comparison Error");
             }
         });
-    }
+    }*/
 
     public void onPause(View view) {
         //ImageButton pauseButton = (ImageButton) findViewById(R.id.pauseButton);
