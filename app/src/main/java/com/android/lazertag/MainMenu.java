@@ -55,6 +55,9 @@ public class MainMenu extends AppCompatActivity {
         testList.add("stop");
         testRef.setValue(testList);
         */
+
+        final SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
+        Player.getLocalPlayer().setName(prefs.getString("Name", "Player"));
     }
 
     public void goToJoin(View view){
