@@ -41,7 +41,7 @@ public class Player {
     private String name;
     private int hitsSent = 0;
     private int hitsRecieved = 0;
-    private String imageTarget;
+    private String image;
 
     public String getImageTarget() {
         return imageTarget;
@@ -65,7 +65,7 @@ public class Player {
 
     public Player(){
         this.setName("player");
-        this.imageTarget = "testing";
+        this.image = "testing";
         this.setCurrentLobby("lobby");
     }
 
@@ -115,12 +115,16 @@ public class Player {
     public void onHitRecieved() { hitsRecieved++; }
 
     public String getImage() {
-        return imageTarget;
+        return image;
     }
-/*
-    public void setImage(int imageLocation) {
-            this.imageTarget = GeneralPreferences.getInstance().getImages()[imageLocation];
+
+    public void setImage(String image){
+        this.image = image;
     }
-*/
+
+    public void changeImage(int imageLocation) {
+            this.image = GeneralPreferences.getInstance().getImages()[imageLocation];
+    }
+
 
 }
