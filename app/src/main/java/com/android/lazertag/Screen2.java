@@ -291,6 +291,10 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     }
 
     public void goback(View view){
+        Network database = Network.getInstance();
+        Player player = Player.getLocalPlayer();
+        database.getLobby(player.getName()).removeValue();
+        database.getLobbies().child(player.getName()).removeValue();
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
     }
