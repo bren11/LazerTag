@@ -12,8 +12,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import org.opencv.dnn.Net;
-
 import java.util.ArrayList;
 
 public class CreateScreen extends Activity {

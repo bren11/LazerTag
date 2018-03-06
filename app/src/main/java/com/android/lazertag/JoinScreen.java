@@ -1,27 +1,16 @@
 package com.android.lazertag;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
 
 public class JoinScreen extends AppCompatActivity {
     LobbyFrontend[] visLobbies;
@@ -31,11 +20,11 @@ public class JoinScreen extends AppCompatActivity {
         visLobbies = new LobbyFrontend[8];
         visLobbies[0] = new LobbyFrontend("none", 0, R.id.n0);
         visLobbies[1] = new LobbyFrontend("none", 0, R.id.n1);
-        visLobbies[2] = new LobbyFrontend("none", 0, R.id.n2);
-        visLobbies[3] = new LobbyFrontend("none", 0, R.id.n3);
-        visLobbies[4] = new LobbyFrontend("none", 0, R.id.n4);
-        visLobbies[5] = new LobbyFrontend("none", 0, R.id.n5);
-        visLobbies[6] = new LobbyFrontend("none", 0, R.id.n6);
+        visLobbies[2] = new LobbyFrontend("none", 0, R.id.n1);
+        visLobbies[3] = new LobbyFrontend("none", 0, R.id.n2);
+        visLobbies[4] = new LobbyFrontend("none", 0, R.id.n3);
+        visLobbies[5] = new LobbyFrontend("none", 0, R.id.n4);
+        visLobbies[6] = new LobbyFrontend("none", 0, R.id.n5);
         visLobbies[7] = new LobbyFrontend("none", 0, R.id.n7);
         Network database = Network.getInstance();
         database.getLobbies().addValueEventListener(new ValueEventListener() {

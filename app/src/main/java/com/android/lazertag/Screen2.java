@@ -18,9 +18,7 @@ import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +47,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     static{ System.loadLibrary("opencv_java3"); }
     private BFImage imageRec = new BFImage(FeatureDetector.ORB, DescriptorExtractor.ORB, DescriptorMatcher.BRUTEFORCE_HAMMINGLUT);
     private RectangleFindr recrec = new RectangleFindr();
-    //private Network network;
+    private Network network;
 
     boolean isPaused = false;
 
@@ -125,7 +123,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                     if (newFile.exists()){
                         TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
                         if (match != null) {
-                            //compareImage(match.name());
+                            compareImage(match.name());
                             Toast.makeText(getApplicationContext(), match.name(), Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -135,7 +133,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         }
         handler.post(new MyRunnable(handler, imageRec, mCurrentPhoto));
 
-        /*network = Network.getInstance();
+        network = Network.getInstance();
         String key = Player.getLocalPlayer().getCurrentLobby();
         network.getLobby(key).addValueEventListener(new ValueEventListener() {
             @Override
@@ -161,7 +159,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             public void onCancelled(DatabaseError error) {
                 Log.d("ScreenError", "Failed to read value.", error.toException());
             }
-        });*/
+        });
 
         final MediaPlayer blastNoise = MediaPlayer.create(this, R.raw.blastnoise);
 
@@ -230,7 +228,29 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
             sensorManager.registerListener(gyroscopeSensorListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
+        final int[] ids = new int[]{R.id.n0, R.id.n1 , R.id.n1, R.id.n2, R.id.n3, R.id.n4, R.id.n5, R.id.n7};
+        Network database = Network.getInstance();
+        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("players").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int i = 0;
+                ArrayList<String> names = new ArrayList<>();
+                for(DataSnapshot data : dataSnapshot.getChildren()){
+                    Player player = data.getValue(Player.class);
+                    names.add(player.getName());
+                    i++;
+                }
+                for(int j = 0; j < i && j < 8; j++){
+                    TextView button = (TextView) findViewById(ids[j]);
+                    button.setText(names.get(j));
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -278,7 +298,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     }
 
 
-    /*public void compareImage(final String image) {
+    public void compareImage(final String image) {
         final DatabaseReference lobby = network.getLobby(Player.getLocalPlayer().getCurrentLobby());
         lobby.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -300,13 +320,21 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 showToast("Image Comparison Error");
             }
         });
-    }*/
+    }
 
     public void onPause(View view) {
         //ImageButton pauseButton = (ImageButton) findViewById(R.id.pauseButton);
         ImageView crossHairView = (ImageView) findViewById(R.id.CrosshairView);
         Button leaveAndEnd = (Button) findViewById(R.id.leaveAndEnd);
         TextView pauseView = (TextView) findViewById(R.id.pauseView);
+        TextView n0 = (TextView) findViewById(R.id.n0);
+        TextView n1 = (TextView) findViewById(R.id.n1);
+        TextView n2 = (TextView) findViewById(R.id.n1);
+        TextView n3 = (TextView) findViewById(R.id.n2);
+        TextView n4 = (TextView) findViewById(R.id.n3);
+        TextView n5 = (TextView) findViewById(R.id.n4);
+        TextView n6 = (TextView) findViewById(R.id.n5);
+        TextView n7 = (TextView) findViewById(R.id.n7);
         Button getPicture = (Button) findViewById(R.id.getpicture);
 
         if (isPaused == false) {
@@ -315,6 +343,14 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             pauseView.setVisibility(View.VISIBLE);
             //getPicture.setClickable(false);
             getPicture.setVisibility(View.GONE);
+            n0.setVisibility(View.VISIBLE);
+            n1.setVisibility(View.VISIBLE);
+            n2.setVisibility(View.VISIBLE);
+            n3.setVisibility(View.VISIBLE);
+            n4.setVisibility(View.VISIBLE);
+            n5.setVisibility(View.VISIBLE);
+            n6.setVisibility(View.VISIBLE);
+            n7.setVisibility(View.VISIBLE);
             isPaused = true;
         } else {
             crossHairView.setVisibility(View.VISIBLE);
@@ -322,6 +358,14 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             pauseView.setVisibility(View.INVISIBLE);
             //getPicture.setClickable(true);
             getPicture.setVisibility(View.VISIBLE);
+            n0.setVisibility(View.INVISIBLE);
+            n1.setVisibility(View.INVISIBLE);
+            n2.setVisibility(View.INVISIBLE);
+            n3.setVisibility(View.INVISIBLE);
+            n4.setVisibility(View.INVISIBLE);
+            n5.setVisibility(View.INVISIBLE);
+            n6.setVisibility(View.INVISIBLE);
+            n7.setVisibility(View.INVISIBLE);
             isPaused = false;
         }
     }

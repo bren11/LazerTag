@@ -55,15 +55,18 @@ public class MainMenu extends AppCompatActivity {
         testList.add("stop");
         testRef.setValue(testList);
         */
+
+        //final SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
+        //Player.getLocalPlayer().setName(prefs.getString("Name", "Player"));
     }
 
     public void goToJoin(View view){
-        Intent intent = new Intent(this, Screen2.class);
+        Intent intent = new Intent(this, JoinScreen.class);
         startActivity(intent);
     }
 
     public void goToCreate(View view){
-        Intent intent = new Intent(this, CreateScreen.class);
+        Intent intent = new Intent(this, Screen2.class);
         startActivity(intent);
     }
 
