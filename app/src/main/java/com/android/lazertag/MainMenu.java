@@ -45,7 +45,7 @@ public class MainMenu extends AppCompatActivity {
                     + default_file +"] \n");
             System.exit(-1);
         }
-        recrec.FindRect(src);
+        recrec.FindRect(src);*/
         final SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
         Player.getLocalPlayer().setName(prefs.getString("Name", "Player"));
         /*Network test = Network.getInstance();
@@ -56,8 +56,8 @@ public class MainMenu extends AppCompatActivity {
         testRef.setValue(testList);
         */
 
-        final SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
-        Player.getLocalPlayer().setName(prefs.getString("Name", "Player"));
+        //final SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
+        //Player.getLocalPlayer().setName(prefs.getString("Name", "Player"));
     }
 
     public void goToJoin(View view){

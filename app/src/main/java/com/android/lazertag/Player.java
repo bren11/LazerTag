@@ -13,10 +13,35 @@ public class Player {
     public static void setLocalPlayer(Player localPlayer) {
         Player.localPlayer = localPlayer;
     }
+
+    /*public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setCrossHair(Drawable crossHair) {
+        this.crossHair = crossHair;
+    }
+
+    public Drawable[] getCrossHairs() {
+        return crossHairs;
+    }
+
+    public void setCrossHairs(Drawable[] crossHairs) {
+        this.crossHairs = crossHairs;
+    }
+
+    public String[] getImages() {
+        return images;
+    }
+
+    public void setImages(String[] images) {
+        this.images = images;
+    }*/
+
     private String name;
     private int hitsSent = 0;
     private int hitsRecieved = 0;
-    private String imageTarget;
+    private String image;
 
     private String currentLobby;
 
@@ -33,8 +58,9 @@ public class Player {
 
     public Player(){
         this.setName("player");
-        this.imageTarget = "testingtest";
+        this.image = "testing";
         this.setCurrentLobby("lobby");
+        this.setTimeDisabled(0.0);
     }
 
     public double getTimeDisabled(){
@@ -82,17 +108,15 @@ public class Player {
 
     public void onHitRecieved() { hitsRecieved++; }
 
-    public String getImageTarget() {
-        return imageTarget;
+    public String getImage() {
+        return image;
     }
 
-    public void setImageTarget(int imageLocation) {
-            this.imageTarget = GeneralPreferences.getInstance().getImages()[imageLocation];
+    public void setImage(String image){
+        this.image = image;
     }
 
-    public void setImageTarget(String imageTarget) {
-        this.imageTarget = imageTarget;
+    public void changeImage(int imageLocation) {
+            this.image = GeneralPreferences.getInstance().getImages()[imageLocation];
     }
-
-
 }

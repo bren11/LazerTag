@@ -13,7 +13,9 @@ public class Hit {
 
     private Player receiver;
     private Player sender;
-
+    private Hit(){
+        
+    }
     public Player getReceiver() {
         return receiver;
     }

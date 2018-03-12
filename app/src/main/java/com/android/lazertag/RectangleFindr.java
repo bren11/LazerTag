@@ -25,13 +25,17 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static org.opencv.core.CvType.CV_32FC2;
 import static org.opencv.core.CvType.CV_8UC3;
+import static org.opencv.imgproc.Imgproc.INTER_AREA;
 import static org.opencv.imgproc.Imgproc.adaptiveThreshold;
 import static org.opencv.imgproc.Imgproc.cvtColor;
 
 public class RectangleFindr {
 
-    private Mat findLines(Mat src) {
+    private Mat findLines(Mat src1) {
         // Declare the output variables
+        Mat src = new Mat();
+        Size size = src1.size();
+        Imgproc.resize(src1, src, new Size(640, 480), 0, 0, INTER_AREA);
         Mat dst = new Mat(), cdst = new Mat(), cdstP;
         // Load an image
         //Mat src = Imgcodecs.imread(default_file, Imgcodecs.IMREAD_COLOR);
@@ -64,7 +68,7 @@ public class RectangleFindr {
         saveFile(src, "new 3");
         // Probabilistic Line Transform
         Mat linesP = new Mat(); // will hold the results of the detection
-        Imgproc.HoughLinesP(dst, linesP, 1, Math.PI/180, 80, 100, 40); // runs the actual detection
+        Imgproc.HoughLinesP(dst, linesP, 1, Math.PI/180, 80, 150, 20); // runs the actual detection
         // Draw the lines
         Log.d("progress1", linesP.rows() + "");
         for (int x = 0; x < linesP.rows(); x++) {
@@ -139,6 +143,7 @@ public class RectangleFindr {
             for (int j = i + 1; j < lines.length; j++) {
 
                 Point2 pt = computeIntersect(lines[i], lines[j]);
+                pt = new Point2(pt.x * img.size().width / 640, pt.y * img.size().height / 480);
                 //System.out.println(pt.toString());
                 //System.out.println(img.size().width + "  " + img.size().height);
                 if (pt.x >= 0 && pt.y >= 0 && pt.x < img.size().width && pt.y < img.size().height) {
