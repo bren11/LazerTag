@@ -303,7 +303,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot x : dataSnapshot.child("players").getChildren()) {
                     Player player = (Player) x.getValue();
-                    if (player.getImage().equals(image)) {
+                    if (player.getImageTarget().equals(image)) {
                         ArrayList<Hit> value = dataSnapshot.child("hitReg").getValue(new GenericTypeIndicator<ArrayList<Hit>>() {
                         });
                         value.add(new Hit(player, Player.getLocalPlayer()));

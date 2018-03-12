@@ -8,6 +8,39 @@ public class Lobby {
 
     boolean isPrivate;
     String key;
+
+    public HashMap<String, Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(HashMap<String, Player> players) {
+        this.players = players;
+    }
+
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(boolean aPrivate) {
+        isPrivate = aPrivate;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
     int state;
     public Lobby(){
         players = new HashMap<>();

@@ -18,9 +18,8 @@ public class Player {
     private int hitsRecieved = 0;
     private String imageTarget;
 
-
-
     private String currentLobby;
+
     private double timeDisabled;
 
     private static Player localPlayer;
@@ -34,7 +33,7 @@ public class Player {
 
     public Player(){
         this.setName("player");
-        this.imageTarget = "testing";
+        this.imageTarget = "testingtest";
         this.setCurrentLobby("lobby");
     }
 
@@ -83,13 +82,17 @@ public class Player {
 
     public void onHitRecieved() { hitsRecieved++; }
 
-    public String getImage() {
+    public String getImageTarget() {
         return imageTarget;
     }
-/*
-    public void setImage(int imageLocation) {
+
+    public void setImageTarget(int imageLocation) {
             this.imageTarget = GeneralPreferences.getInstance().getImages()[imageLocation];
     }
-*/
+
+    public void setImageTarget(String imageTarget) {
+        this.imageTarget = imageTarget;
+    }
+
 
 }
