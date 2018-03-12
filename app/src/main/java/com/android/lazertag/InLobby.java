@@ -49,7 +49,7 @@ public class InLobby extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot != null){
-                    int value = dataSnapshot.getValue(int.class);
+                    int value = dataSnapshot.getValue(Integer.class);
                     if(value == 1){
                         if (android.os.Build.VERSION.SDK_INT < 23){
                             Toast.makeText(thisLobby, "Your operating system is not compatible with our proprietary BLASTING technology", Toast.LENGTH_SHORT).show();

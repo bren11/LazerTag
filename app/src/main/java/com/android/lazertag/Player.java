@@ -43,13 +43,6 @@ public class Player {
     private int hitsRecieved = 0;
     private String image;
 
-    public String getImageTarget() {
-        return imageTarget;
-    }
-
-    public void setImageTarget(String imageTarget) {
-        this.imageTarget = imageTarget;
-    }
 
     private String currentLobby;
     private double timeDisabled;
@@ -67,6 +60,7 @@ public class Player {
         this.setName("player");
         this.image = "testing";
         this.setCurrentLobby("lobby");
+        this.setTimeDisabled(0.0);
     }
 
     public double getTimeDisabled(){
