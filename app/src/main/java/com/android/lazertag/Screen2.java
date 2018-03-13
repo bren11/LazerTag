@@ -32,6 +32,7 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import org.opencv.core.Mat;
+import org.opencv.dnn.Net;
 import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
@@ -105,13 +106,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             @Override
             public void run() {
                 this.handler.postDelayed(this, 500);
-                if(Player.getLocalPlayer().getTimeDisabled() > 0){
-                    Toast.makeText(thisThing, "You have " + Player.getLocalPlayer().getTimeDisabled() + " seconds remaining until you can shoot again", Toast.LENGTH_SHORT);
 
-                    Player.getLocalPlayer().setTimeDisabled(Player.getLocalPlayer().getTimeDisabled() - 0.5);
-                    if(Player.getLocalPlayer().getTimeDisabled() < 0)
-                        Player.getLocalPlayer().setTimeDisabled(0.0);
-                }
                 System.out.println(file.length());
                 if(newPic && file.length() > 1000){
                     //String default_file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/orig2.png";
@@ -131,7 +126,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                         TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
                         if (match != null) {
                             compareImage(match.name());
-                            //Toast.makeText(getApplicationContext(), match.name(), Toast.LENGTH_SHORT).show();
                         }
                     }
                     newPic = false;
@@ -139,25 +133,29 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             }
         }
         handler.post(new MyRunnable(handler, imageRec, mCurrentPhoto));
-        class TimerRunnable implements Runnable{
-            private Handler handler;
 
-            public TimerRunnable(Handler handler){
-                this.handler = handler;
-            }
+
+        Thread thread = new Thread(){
             @Override
-            public void run() {
-                this.handler.postDelayed(this, 500);
-                if(Player.getLocalPlayer().getTimeDisabled() > 0){
-                    Toast.makeText(thisThing, "You have " + Player.getLocalPlayer().getTimeDisabled() + " seconds remaining until you can shoot again", Toast.LENGTH_SHORT);
+            public void run(){
+                try{
+                        while(true) {
+                    sleep(1000);
+                            if(Player.getLocalPlayer().getTimeDisabled() > 0){
 
-                    Player.getLocalPlayer().setTimeDisabled(Player.getLocalPlayer().getTimeDisabled() - 0.5);
-                    if(Player.getLocalPlayer().getTimeDisabled() < 0)
-                        Player.getLocalPlayer().setTimeDisabled(0.0);
+                                Player.getLocalPlayer().setTimeDisabled(Player.getLocalPlayer().getTimeDisabled() - 0.5);
+                                System.out.println(Player.getLocalPlayer().getTimeDisabled() + "Seconds");
+                                if(Player.getLocalPlayer().getTimeDisabled() < 0)
+                                    Player.getLocalPlayer().setTimeDisabled(0.0);
+                            }
+                }
+                     }
+            catch(InterruptedException e){
+                    e.printStackTrace();
                 }
             }
-        }
-        handler.post(new TimerRunnable(handler));
+        };
+        thread.start();
         network = Network.getInstance();
         String key = Player.getLocalPlayer().getCurrentLobby();
         network.getLobby(key).child("hitreg").addChildEventListener(new ChildEventListener() {
@@ -305,13 +303,21 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Network database = Network.getInstance();
+        Player player = Player.getLocalPlayer();
+        if (player.getCurrentLobby().equals(player.getName())) {
+            database.getLobby(player.getName()).removeValue();
+            database.getLobbies().child(player.getName()).removeValue();
+        } else {
+            database.getLobby(player.getCurrentLobby()).child("plsyers").child(player.getName());
+        }
+    }
 //        if(ccv2WithPreview != null) {
 //            ccv2WithPreview.closeCamera();
 //        }
 //        if(ccv2WithoutPreview != null) {
 //            ccv2WithoutPreview.closeCamera();b
-//        }
-    }
+//
 
     /**
      * Shows a {@link Toast} on the UI thread.
@@ -330,8 +336,13 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     public void goback(View view){
         Network database = Network.getInstance();
         Player player = Player.getLocalPlayer();
-        database.getLobby(player.getName()).removeValue();
-        database.getLobbies().child(player.getName()).removeValue();
+        if(player.getCurrentLobby().equals(player.getName())) {
+            database.getLobby(player.getName()).removeValue();
+            database.getLobbies().child(player.getName()).removeValue();
+        }
+        else{
+            database.getLobby(player.getCurrentLobby()).child("plsyers").child(player.getName());
+        }
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
     }
