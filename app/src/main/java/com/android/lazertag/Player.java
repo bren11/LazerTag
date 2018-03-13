@@ -43,8 +43,8 @@ public class Player {
     private int hitsRecieved = 0;
     private String image;
 
-
     private String currentLobby;
+
     private double timeDisabled;
 
     private static Player localPlayer;
@@ -119,6 +119,4 @@ public class Player {
     public void changeImage(int imageLocation) {
             this.image = GeneralPreferences.getInstance().getImages()[imageLocation];
     }
-
-
 }
