@@ -204,7 +204,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             @Override
             public void onClick(View view) {
                 if(ccv2WithPreview != null && (int)Player.getLocalPlayer().getTimeDisabled() == 0) {
-                    thisThing.compareImage("tryangle.jpg");
+                    //thisThing.compareImage("tryangle.jpg");
                     createImageFile();
                     ccv2WithPreview.takePicture(mCurrentPhoto);
                     newPic = true;
