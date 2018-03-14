@@ -108,7 +108,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 this.handler.postDelayed(this, 500);
 
                 System.out.println(file.length());
-                if(newPic && file.length() > 1000){
+                if(newPic && file.length() > 1000 && Player.getLocalPlayer().getTimeDisabled() == 0){
                     //String default_file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/orig2.png";
                     //Log.d("filetogoto", default_file);
                     Mat src = Imgcodecs.imread(file.getAbsolutePath(), Imgcodecs.IMREAD_COLOR);
@@ -144,7 +144,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                             if(Player.getLocalPlayer().getTimeDisabled() > 0){
 
                                 Player.getLocalPlayer().setTimeDisabled(Player.getLocalPlayer().getTimeDisabled() - 0.5);
-                                System.out.println(Player.getLocalPlayer().getTimeDisabled() + "Seconds");
+                                System.out.println(Player.getLocalPlayer().getTimeDisabled() + " Seconds");
                                 if(Player.getLocalPlayer().getTimeDisabled() < 0)
                                     Player.getLocalPlayer().setTimeDisabled(0.0);
                             }
@@ -199,7 +199,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         findViewById(R.id.getpicture).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                if(ccv2WithPreview != null && Player.getLocalPlayer().getTimeDisabled() == 0) {
+                if(ccv2WithPreview != null && (int)Player.getLocalPlayer().getTimeDisabled() == 0) {
                     thisThing.compareImage("tryangle.jpg");
                     createImageFile();
                     ccv2WithPreview.takePicture(mCurrentPhoto);
@@ -356,11 +356,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 for (DataSnapshot x : dataSnapshot.child("players").getChildren()) {
                     Player player = x.getValue(Player.class);
                     if (player.getImage().equals(image)) {
-                        /*ArrayList<Hit> value = dataSnapshot.child("hitReg").getValue(new GenericTypeIndicator<ArrayList<Hit>>() {
-                        });
-                        if(value == null) { value = new ArrayList<>(); }
-                        value.add(new Hit(player, Player.getLocalPlayer()));
-                        */
                         DatabaseReference ref = lobby.child("hitreg").push();
                         ref.setValue(new Hit(player, Player.getLocalPlayer()));
                         break;
