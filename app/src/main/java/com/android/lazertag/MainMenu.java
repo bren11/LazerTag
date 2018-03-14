@@ -66,7 +66,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void goToCreate(View view){
-        Intent intent = new Intent(this, Screen2.class);
+        Intent intent = new Intent(this, CreateScreen.class);
         startActivity(intent);
     }
 
