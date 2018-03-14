@@ -21,6 +21,7 @@ public class Player {
     private String image;
 
     private String currentLobby;
+
     private double timeDisabled;
 
     private static Player localPlayer;
@@ -36,6 +37,7 @@ public class Player {
         this.setName("player");
         this.image = "testing";
         this.setCurrentLobby("lobby");
+        this.setTimeDisabled(0.0);
     }
 
     public double getTimeDisabled(){
@@ -94,6 +96,4 @@ public class Player {
     public void changeImage(int imageLocation) {
             this.image = GeneralPreferences.getInstance().getImages()[imageLocation];
     }
-
-
 }

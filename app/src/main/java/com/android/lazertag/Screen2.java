@@ -11,9 +11,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
@@ -22,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,6 +32,7 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import org.opencv.core.Mat;
+import org.opencv.dnn.Net;
 import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
@@ -59,7 +63,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     boolean newPic = false;
 
     GeneralPreferences genPref = GeneralPreferences.getInstance();
-
+    final Screen2 thisThing = this;
     public File createImageFile(){
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -102,11 +106,9 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             @Override
             public void run() {
                 this.handler.postDelayed(this, 500);
-                Player.getLocalPlayer().setTimeDisabled(Player.getLocalPlayer().getTimeDisabled() - 0.5);
-                if(Player.getLocalPlayer().getTimeDisabled() < 0)
-                    Player.getLocalPlayer().setTimeDisabled(0.0);
+
                 System.out.println(file.length());
-                if(newPic && file.length() > 1000){
+                if(newPic && file.length() > 1000 && Player.getLocalPlayer().getTimeDisabled() == 0){
                     //String default_file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/orig2.png";
                     //Log.d("filetogoto", default_file);
                     Mat src = Imgcodecs.imread(file.getAbsolutePath(), Imgcodecs.IMREAD_COLOR);
@@ -124,7 +126,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                         TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
                         if (match != null) {
                             compareImage(match.name());
-                            Toast.makeText(getApplicationContext(), match.name(), Toast.LENGTH_SHORT).show();
                         }
                     }
                     newPic = false;
@@ -133,31 +134,67 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         }
         handler.post(new MyRunnable(handler, imageRec, mCurrentPhoto));
 
+
+
         network = Network.getInstance();
         String key = Player.getLocalPlayer().getCurrentLobby();
-        network.getLobby(key).addValueEventListener(new ValueEventListener() {
+        network.getLobby(key).child("hitreg").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
                 network.currentLobby = dataSnapshot;
 
-                ArrayList<Hit> value = dataSnapshot.child("hitReg").getValue(new GenericTypeIndicator<ArrayList<Hit>>(){});
-                if (value != null) {
-                    Hit currentHit = value.get(value.size() - 1);
-                    if (currentHit.getReceiver().equals(getLocalPlayer())) {
+                if (dataSnapshot != null) {
+                    Hit currentHit = dataSnapshot.getValue(Hit.class);
+                    if (currentHit.getReceiver().getName().equals(getLocalPlayer().getName())) {
                         showToast("You got Blasted by " + currentHit.getSender().getName() + "!");
-                        if(Player.getLocalPlayer().getTimeDisabled() == 0)
+                        if(Player.getLocalPlayer().getTimeDisabled() == 0) {
                             Player.getLocalPlayer().setTimeDisabled(3.0);
-                    } else if (currentHit.getSender().equals(getLocalPlayer())) {
+                            Thread thread = new Thread(){
+                                @Override
+                                public void run(){
+                                    try{
+                                        while(true) {
+                                            sleep(1000);
+                                            if(Player.getLocalPlayer().getTimeDisabled() > 0){
+
+                                                Player.getLocalPlayer().setTimeDisabled(Player.getLocalPlayer().getTimeDisabled() - 0.5);
+                                                System.out.println(Player.getLocalPlayer().getTimeDisabled() + " Seconds");
+                                                if(Player.getLocalPlayer().getTimeDisabled() < 0) {
+                                                    Player.getLocalPlayer().setTimeDisabled(0.0);
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    catch(InterruptedException e){
+                                        e.printStackTrace();
+                                    }
+                                }
+                            };
+                            thread.start();
+                        }
+                    } else if (currentHit.getSender().getName().equals(getLocalPlayer().getName())) {
                         showToast("You Blasted " + currentHit.getReceiver().getName() + "!");
                     } else {
                         showToast(currentHit.getSender().getName() + " Blasted " + currentHit.getReceiver().getName() + "!");
                     }
                 }
             }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot){
 
+            }
             @Override
             public void onCancelled(DatabaseError error) {
                 Log.d("ScreenError", "Failed to read value.", error.toException());
+            }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName){
+
+            }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName){
+
             }
         });
 
@@ -166,13 +203,13 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         findViewById(R.id.getpicture).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                if(ccv2WithPreview != null && Player.getLocalPlayer().getTimeDisabled() == 0.0) {
-
+                if(ccv2WithPreview != null && (int)Player.getLocalPlayer().getTimeDisabled() == 0) {
+                    thisThing.compareImage("tryangle.jpg");
                     createImageFile();
                     ccv2WithPreview.takePicture(mCurrentPhoto);
                     newPic = true;
 
-                    //Toast.makeText(getApplicationContext(), mCurrentPhotoPath.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), mCurrentPhoto.getAbsolutePath(), Toast.LENGTH_SHORT).show();
                     handler.post(new MyRunnable(handler, imageRec, mCurrentPhoto));
                     view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                     //blastNoise.start();
@@ -270,13 +307,21 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Network database = Network.getInstance();
+        Player player = Player.getLocalPlayer();
+        if (player.getCurrentLobby().equals(player.getName())) {
+            database.getLobby(player.getName()).removeValue();
+            database.getLobbies().child(player.getName()).removeValue();
+        } else {
+            database.getLobby(player.getCurrentLobby()).child("players").child(player.getName());
+        }
+    }
 //        if(ccv2WithPreview != null) {
 //            ccv2WithPreview.closeCamera();
 //        }
 //        if(ccv2WithoutPreview != null) {
 //            ccv2WithoutPreview.closeCamera();b
-//        }
-    }
+//
 
     /**
      * Shows a {@link Toast} on the UI thread.
@@ -295,8 +340,13 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     public void goback(View view){
         Network database = Network.getInstance();
         Player player = Player.getLocalPlayer();
-        database.getLobby(player.getName()).removeValue();
-        database.getLobbies().child(player.getName()).removeValue();
+        if(player.getCurrentLobby().equals(player.getName())) {
+            database.getLobby(player.getName()).removeValue();
+            database.getLobbies().child(player.getName()).removeValue();
+        }
+        else{
+            database.getLobby(player.getCurrentLobby()).child("players").child(player.getName());
+        }
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
     }
@@ -308,12 +358,10 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot x : dataSnapshot.child("players").getChildren()) {
-                    Player player = (Player) x.getValue();
+                    Player player = x.getValue(Player.class);
                     if (player.getImage().equals(image)) {
-                        ArrayList<Hit> value = dataSnapshot.child("hitReg").getValue(new GenericTypeIndicator<ArrayList<Hit>>() {
-                        });
-                        value.add(new Hit(player, Player.getLocalPlayer()));
-                        lobby.child("hitreg").setValue(value);
+                        DatabaseReference ref = lobby.child("hitreg").push();
+                        ref.setValue(new Hit(player, Player.getLocalPlayer()));
                         break;
                     }
                 }

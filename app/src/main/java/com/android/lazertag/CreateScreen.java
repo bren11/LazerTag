@@ -56,6 +56,18 @@ public class CreateScreen extends Activity {
         startActivity(intent);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Network database = Network.getInstance();
+        Player player = Player.getLocalPlayer();
+        if (player.getCurrentLobby().equals(player.getName())) {
+            database.getLobby(player.getName()).removeValue();
+            database.getLobbies().child(player.getName()).removeValue();
+        } else {
+            database.getLobby(player.getCurrentLobby()).child("plsyers").child(player.getName());
+        }
+    }
     public void goToScreen(View view){
         if (android.os.Build.VERSION.SDK_INT < 23){
             Toast.makeText(this, "Your operating system is not compatible with our proprietary BLASTING technology", Toast.LENGTH_SHORT).show();

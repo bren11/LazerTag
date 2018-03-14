@@ -69,7 +69,7 @@ public class RectangleFindr {
         saveFile(src, "new 3");
         // Probabilistic Line Transform
         Mat linesP = new Mat(); // will hold the results of the detection
-        Imgproc.HoughLinesP(dst, linesP, 1, Math.PI/180, 80, 150, 30); // runs the actual detection
+        Imgproc.HoughLinesP(dst, linesP, 1, Math.PI/180, 80, 150, 20); // runs the actual detection
         // Draw the lines
         Log.d("progress1", linesP.rows() + "");
         for (int x = 0; x < linesP.rows(); x++) {
