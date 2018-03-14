@@ -32,9 +32,8 @@ class Network {
 
     private Network() { database = FirebaseDatabase.getInstance(); }
 
-    public void addGame(Activity activity){
-        SharedPreferences prefs = activity.getSharedPreferences("nameData", MODE_PRIVATE);
-        String name = prefs.getString("Name", "Guest");
+    public void addGame(){
+        String name = Player.getLocalPlayer().getName();
         DatabaseReference gameRef = database.getReference(name);
         gameRef.setValue(new Lobby());
         DatabaseReference lobbyList = database.getReference("Lobby");
