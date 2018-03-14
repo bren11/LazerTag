@@ -135,27 +135,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         handler.post(new MyRunnable(handler, imageRec, mCurrentPhoto));
 
 
-        Thread thread = new Thread(){
-            @Override
-            public void run(){
-                try{
-                        while(true) {
-                    sleep(1000);
-                            if(Player.getLocalPlayer().getTimeDisabled() > 0){
 
-                                Player.getLocalPlayer().setTimeDisabled(Player.getLocalPlayer().getTimeDisabled() - 0.5);
-                                System.out.println(Player.getLocalPlayer().getTimeDisabled() + " Seconds");
-                                if(Player.getLocalPlayer().getTimeDisabled() < 0)
-                                    Player.getLocalPlayer().setTimeDisabled(0.0);
-                            }
-                }
-                     }
-            catch(InterruptedException e){
-                    e.printStackTrace();
-                }
-            }
-        };
-        thread.start();
         network = Network.getInstance();
         String key = Player.getLocalPlayer().getCurrentLobby();
         network.getLobby(key).child("hitreg").addChildEventListener(new ChildEventListener() {
@@ -167,8 +147,32 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                     Hit currentHit = dataSnapshot.getValue(Hit.class);
                     if (currentHit.getReceiver().getName().equals(getLocalPlayer().getName())) {
                         showToast("You got Blasted by " + currentHit.getSender().getName() + "!");
-                        if(Player.getLocalPlayer().getTimeDisabled() == 0)
+                        if(Player.getLocalPlayer().getTimeDisabled() == 0) {
                             Player.getLocalPlayer().setTimeDisabled(3.0);
+                            Thread thread = new Thread(){
+                                @Override
+                                public void run(){
+                                    try{
+                                        while(true) {
+                                            sleep(1000);
+                                            if(Player.getLocalPlayer().getTimeDisabled() > 0){
+
+                                                Player.getLocalPlayer().setTimeDisabled(Player.getLocalPlayer().getTimeDisabled() - 0.5);
+                                                System.out.println(Player.getLocalPlayer().getTimeDisabled() + " Seconds");
+                                                if(Player.getLocalPlayer().getTimeDisabled() < 0) {
+                                                    Player.getLocalPlayer().setTimeDisabled(0.0);
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    catch(InterruptedException e){
+                                        e.printStackTrace();
+                                    }
+                                }
+                            };
+                            thread.start();
+                        }
                     } else if (currentHit.getSender().getName().equals(getLocalPlayer().getName())) {
                         showToast("You Blasted " + currentHit.getReceiver().getName() + "!");
                     } else {
