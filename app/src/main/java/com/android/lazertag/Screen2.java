@@ -130,6 +130,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                     }
                     newPic = false;
                 }
+                Button getPicture = (Button) findViewById(R.id.getpicture);
+                getPicture.setVisibility(View.VISIBLE);
             }
         }
         handler.post(new MyRunnable(handler, imageRec, mCurrentPhoto));
@@ -199,6 +201,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         findViewById(R.id.getpicture).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                Button getPicture = (Button) findViewById(R.id.getpicture);
+                getPicture.setVisibility(View.GONE);
                 if(ccv2WithPreview != null && Player.getLocalPlayer().getTimeDisabled() == 0) {
                     thisThing.compareImage("tryangle.jpg");
                     createImageFile();
@@ -257,8 +261,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 public void onAccuracyChanged(Sensor sensor, int i) {
                 }
             };
-
-
             sensorManager.registerListener(gyroscopeSensorListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
         final int[] ids = new int[]{R.id.n0, R.id.n1 , R.id.n1, R.id.n2, R.id.n3, R.id.n4, R.id.n5, R.id.n7};
@@ -309,7 +311,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             database.getLobby(player.getName()).removeValue();
             database.getLobbies().child(player.getName()).removeValue();
         } else {
-            database.getLobby(player.getCurrentLobby()).child("plsyers").child(player.getName());
+            database.getLobby(player.getCurrentLobby()).child("players").child(player.getName());
         }
     }
 //        if(ccv2WithPreview != null) {
@@ -341,7 +343,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             database.getLobbies().child(player.getName()).removeValue();
         }
         else{
-            database.getLobby(player.getCurrentLobby()).child("plsyers").child(player.getName());
+            database.getLobby(player.getCurrentLobby()).child("players").child(player.getName());
         }
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
