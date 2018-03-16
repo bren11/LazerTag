@@ -36,7 +36,7 @@ public class RectangleFindr {
         Mat src = new Mat();
         Size size = src1.size();
         Imgproc.resize(src1, src, new Size(640, 480), 0, 0, INTER_AREA);
-        Mat dst = new Mat(), cdst = new Mat(), cdstP;
+        Mat dst = new Mat(), cdst = new Mat(), cdstP, mrs = new Mat();
         // Load an image
         //Mat src = Imgcodecs.imread(default_file, Imgcodecs.IMREAD_COLOR);
         // Check if image is loaded fine
@@ -49,6 +49,7 @@ public class RectangleFindr {
         // Edge detection
         Imgproc.Canny(src, dst, 50, 200, 3, false);
         // Copy edges to the images that will display the results in BGR
+        Imgproc.resize(src1, src, new Size(320, 240), 0, 0, INTER_AREA);
         Imgproc.cvtColor(dst, cdst, Imgproc.COLOR_GRAY2BGR);
         cdstP = cdst.clone();
         // Standard Hough Line Transform
@@ -143,7 +144,7 @@ public class RectangleFindr {
             for (int j = i + 1; j < lines.length; j++) {
 
                 Point2 pt = computeIntersect(lines[i], lines[j]);
-                pt = new Point2(pt.x * img.size().width / 640, pt.y * img.size().height / 480);
+                pt = new Point2(pt.x * img.size().width / 320, pt.y * img.size().height / 240);
                 //System.out.println(pt.toString());
                 //System.out.println(img.size().width + "  " + img.size().height);
                 if (pt.x >= 0 && pt.y >= 0 && pt.x < img.size().width && pt.y < img.size().height) {
