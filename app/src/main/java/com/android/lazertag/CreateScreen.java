@@ -22,7 +22,6 @@ public class CreateScreen extends Activity {
         Network network = Network.getInstance();
         network.addGame();
         setContentView(R.layout.activity_create_screen);
-        Player.getLocalPlayer().setCurrentLobby(Player.getLocalPlayer().getName());
         final int[] ids = new int[]{R.id.n0, R.id.n1, R.id.n2, R.id.n3, R.id.n4, R.id.n5, R.id.n6, R.id.n7};
         Network database = Network.getInstance();
         playerListner = new ValueEventListener() {

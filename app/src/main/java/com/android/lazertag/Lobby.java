@@ -47,6 +47,7 @@ public class Lobby {
         players = new HashMap<>();
         isPrivate = false;
         String name = Player.getLocalPlayer().getName();
+        Player.getLocalPlayer().setCurrentLobby(Player.getLocalPlayer().getName());
         Player player = Player.getLocalPlayer();
         players.put(name, player);
         key = Player.getLocalPlayer().getName();
