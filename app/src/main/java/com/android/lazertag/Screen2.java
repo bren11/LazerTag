@@ -61,6 +61,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
     public File mCurrentPhoto = null;
     boolean newPic = false;
+    ChildEventListener hitlogListner;
+    ValueEventListener pauseListner;
 
     GeneralPreferences genPref = GeneralPreferences.getInstance();
     final Screen2 thisThing = this;
@@ -84,7 +86,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         //setSupportActionBar(toolbar);
 
         final Intent intent = getIntent();
-
         SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
 
         textureView = (AutoFitTextureView)findViewById(R.id.textureview);
@@ -138,7 +139,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
         network = Network.getInstance();
         String key = Player.getLocalPlayer().getCurrentLobby();
-        network.getLobby(key).child("hitreg").addChildEventListener(new ChildEventListener() {
+        hitlogListner = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
                 network.currentLobby = dataSnapshot;
@@ -196,7 +197,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName){
 
             }
-        });
+        };
+        network.getLobby(key).child("hitreg").addChildEventListener(hitlogListner);
 
         final MediaPlayer blastNoise = MediaPlayer.create(this, R.raw.blastnoise);
 
@@ -267,7 +269,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         }
         final int[] ids = new int[]{R.id.n0, R.id.n1 , R.id.n1, R.id.n2, R.id.n3, R.id.n4, R.id.n5, R.id.n7};
         Network database = Network.getInstance();
-        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("players").addValueEventListener(new ValueEventListener() {
+        pauseListner = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int i = 0;
@@ -280,6 +282,23 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 for(int j = 0; j < i && j < 8; j++){
                     TextView button = (TextView) findViewById(ids[j]);
                     button.setText(names.get(j));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("players").addValueEventListener(pauseListner);
+
+        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("toDelete").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue(Boolean.class)){
+                    network.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("players").removeEventListener(pauseListner);
+                    network.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("hitreg").removeEventListener(hitlogListner);
+                    network.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("toDelete").removeEventListener(this);
                 }
             }
 
@@ -310,6 +329,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         Network database = Network.getInstance();
         Player player = Player.getLocalPlayer();
         if (player.getCurrentLobby().equals(player.getName())) {
+            database.getLobby(player.getCurrentLobby()).child("toDelete").setValue(true);
             database.getLobby(player.getName()).removeValue();
             database.getLobbies().child(player.getName()).removeValue();
         } else {

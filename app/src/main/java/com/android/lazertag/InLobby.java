@@ -15,7 +15,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class InLobby extends AppCompatActivity {
-
+    ValueEventListener playerListner;
+    ValueEventListener startListner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +24,7 @@ public class InLobby extends AppCompatActivity {
         (findViewById(R.id.button2)).setVisibility(View.GONE);
         final int[] ids = new int[]{R.id.n0, R.id.n1 , R.id.n2, R.id.n3, R.id.n4, R.id.n5, R.id.n6, R.id.n7};
         Network database = Network.getInstance();
-        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("players").addValueEventListener(new ValueEventListener() {
+        playerListner = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int i = 0;
@@ -43,9 +44,10 @@ public class InLobby extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        };
+        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("players").addValueEventListener(playerListner);
         final InLobby thisLobby = this;
-        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("state").addValueEventListener(new ValueEventListener() {
+        startListner = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot != null){
@@ -67,9 +69,39 @@ public class InLobby extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
+        };
+        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("state").addValueEventListener(startListner);
+
+        final InLobby _this = this;
+        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("toDelete").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue(Boolean.class)){
+                    _this.goToMainTrue();
+                    Network database = Network.getInstance();
+                    database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("state").removeEventListener(startListner);
+                    database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("players").removeEventListener(playerListner);
+                    database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("toDelete").removeEventListener(this);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
         });
     }
     public void goToMain(View view){
+        /*
+        Network database = Network.getInstance();
+        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("players").child(Player.getLocalPlayer().getName()).removeValue();
+        Intent intent = new Intent(this, MainMenu.class);
+        startActivity(intent);
+        */
+        goToMainTrue();
+    }
+
+    public void goToMainTrue(){
         Network database = Network.getInstance();
         database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("players").child(Player.getLocalPlayer().getName()).removeValue();
         Intent intent = new Intent(this, MainMenu.class);
