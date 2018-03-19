@@ -109,7 +109,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 this.handler.postDelayed(this, 500);
 
                 System.out.println(file.length());
-                if(newPic && file.length() > 1000 && Player.getLocalPlayer().getTimeDisabled() == 0){
+                if(newPic && file.length() > 1000){
                     //String default_file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/orig2.png";
                     //Log.d("filetogoto", default_file);
                     Mat src = Imgcodecs.imread(file.getAbsolutePath(), Imgcodecs.IMREAD_COLOR);
@@ -131,12 +131,34 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                     }
                     newPic = false;
                 }
+                Button getPicture = (Button) findViewById(R.id.getpicture);
+                getPicture.setVisibility(View.VISIBLE);
             }
         }
         handler.post(new MyRunnable(handler, imageRec, mCurrentPhoto));
 
 
+        Thread thread = new Thread(){
+            @Override
+            public void run(){
+                try{
+                        while(true) {
+                    sleep(1000);
+                            if(Player.getLocalPlayer().getTimeDisabled() > 0){
 
+                                Player.getLocalPlayer().setTimeDisabled(Player.getLocalPlayer().getTimeDisabled() - 0.5);
+                                System.out.println(Player.getLocalPlayer().getTimeDisabled() + "Seconds");
+                                if(Player.getLocalPlayer().getTimeDisabled() < 0)
+                                    Player.getLocalPlayer().setTimeDisabled(0.0);
+                            }
+                }
+                     }
+            catch(InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
         network = Network.getInstance();
         String key = Player.getLocalPlayer().getCurrentLobby();
         hitlogListner = new ChildEventListener() {
@@ -148,32 +170,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                     Hit currentHit = dataSnapshot.getValue(Hit.class);
                     if (currentHit.getReceiver().getName().equals(getLocalPlayer().getName())) {
                         showToast("You got Blasted by " + currentHit.getSender().getName() + "!");
-                        if(Player.getLocalPlayer().getTimeDisabled() == 0) {
+                        if(Player.getLocalPlayer().getTimeDisabled() == 0)
                             Player.getLocalPlayer().setTimeDisabled(3.0);
-                            Thread thread = new Thread(){
-                                @Override
-                                public void run(){
-                                    try{
-                                        while(true) {
-                                            sleep(1000);
-                                            if(Player.getLocalPlayer().getTimeDisabled() > 0){
-
-                                                Player.getLocalPlayer().setTimeDisabled(Player.getLocalPlayer().getTimeDisabled() - 0.5);
-                                                System.out.println(Player.getLocalPlayer().getTimeDisabled() + " Seconds");
-                                                if(Player.getLocalPlayer().getTimeDisabled() < 0) {
-                                                    Player.getLocalPlayer().setTimeDisabled(0.0);
-                                                    return;
-                                                }
-                                            }
-                                        }
-                                    }
-                                    catch(InterruptedException e){
-                                        e.printStackTrace();
-                                    }
-                                }
-                            };
-                            thread.start();
-                        }
                     } else if (currentHit.getSender().getName().equals(getLocalPlayer().getName())) {
                         showToast("You Blasted " + currentHit.getReceiver().getName() + "!");
                     } else {
@@ -205,8 +203,10 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         findViewById(R.id.getpicture).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                if(ccv2WithPreview != null && (int)Player.getLocalPlayer().getTimeDisabled() == 0) {
-                    //thisThing.compareImage("tryangle.jpg");
+                Button getPicture = (Button) findViewById(R.id.getpicture);
+                getPicture.setVisibility(View.GONE);
+                if(ccv2WithPreview != null && Player.getLocalPlayer().getTimeDisabled() == 0) {
+                    thisThing.compareImage("tryangle.jpg");
                     createImageFile();
                     ccv2WithPreview.takePicture(mCurrentPhoto);
                     newPic = true;
@@ -263,8 +263,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 public void onAccuracyChanged(Sensor sensor, int i) {
                 }
             };
-
-
             sensorManager.registerListener(gyroscopeSensorListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
         final int[] ids = new int[]{R.id.n0, R.id.n1 , R.id.n1, R.id.n2, R.id.n3, R.id.n4, R.id.n5, R.id.n7};
@@ -380,6 +378,11 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 for (DataSnapshot x : dataSnapshot.child("players").getChildren()) {
                     Player player = x.getValue(Player.class);
                     if (player.getImage().equals(image)) {
+                        /*ArrayList<Hit> value = dataSnapshot.child("hitReg").getValue(new GenericTypeIndicator<ArrayList<Hit>>() {
+                        });
+                        if(value == null) { value = new ArrayList<>(); }
+                        value.add(new Hit(player, Player.getLocalPlayer()));
+                        */
                         DatabaseReference ref = lobby.child("hitreg").push();
                         ref.setValue(new Hit(player, Player.getLocalPlayer()));
                         break;

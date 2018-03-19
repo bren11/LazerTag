@@ -14,29 +14,6 @@ public class Player {
         Player.localPlayer = localPlayer;
     }
 
-    /*public void setImage(String image) {
-        this.image = image;
-    }
-
-    public void setCrossHair(Drawable crossHair) {
-        this.crossHair = crossHair;
-    }
-
-    public Drawable[] getCrossHairs() {
-        return crossHairs;
-    }
-
-    public void setCrossHairs(Drawable[] crossHairs) {
-        this.crossHairs = crossHairs;
-    }
-
-    public String[] getImages() {
-        return images;
-    }
-
-    public void setImages(String[] images) {
-        this.images = images;
-    }*/
 
     private String name;
     private int hitsSent = 0;
