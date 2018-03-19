@@ -41,6 +41,14 @@ public class Lobby {
         this.state = state;
     }
 
+    public boolean isToDelete() {
+        return toDelete;
+    }
+
+    public void setToDelete(boolean toDelete) {
+        this.toDelete = toDelete;
+    }
+
     int state;
     boolean toDelete;
     public Lobby(){
