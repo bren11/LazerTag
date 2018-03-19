@@ -15,7 +15,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class CreateScreen extends Activity {
-
+    ValueEventListener playerListner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +25,7 @@ public class CreateScreen extends Activity {
         Player.getLocalPlayer().setCurrentLobby(Player.getLocalPlayer().getName());
         final int[] ids = new int[]{R.id.n0, R.id.n1, R.id.n2, R.id.n3, R.id.n4, R.id.n5, R.id.n6, R.id.n7};
         Network database = Network.getInstance();
-        database.getLobby(Player.getLocalPlayer().getName()).child("players").addValueEventListener(new ValueEventListener() {
+        playerListner = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int i = 0;
@@ -45,11 +45,14 @@ public class CreateScreen extends Activity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        };
+        database.getLobby(Player.getLocalPlayer().getName()).child("players").addValueEventListener(playerListner);
     }
     public void goToMain(View view){
         Network database = Network.getInstance();
         Player player = Player.getLocalPlayer();
+        database.getLobby(player.getCurrentLobby()).child("toDelete").setValue(true);
+        database.getLobby(player.getCurrentLobby()).child("players").removeEventListener(playerListner);
         database.getLobby(player.getName()).removeValue();
         database.getLobbies().child(player.getName()).removeValue();
         Intent intent = new Intent(this, MainMenu.class);
@@ -61,12 +64,11 @@ public class CreateScreen extends Activity {
         super.onDestroy();
         Network database = Network.getInstance();
         Player player = Player.getLocalPlayer();
-        if (player.getCurrentLobby().equals(player.getName())) {
-            database.getLobby(player.getName()).removeValue();
-            database.getLobbies().child(player.getName()).removeValue();
-        } else {
-            database.getLobby(player.getCurrentLobby()).child("plsyers").child(player.getName());
-        }
+        database.getLobby(player.getCurrentLobby()).child("toDelete").setValue(true);
+        database.getLobby(player.getCurrentLobby()).child("players").removeEventListener(playerListner);
+        database.getLobby(player.getName()).removeValue();
+        database.getLobbies().child(player.getName()).removeValue();
+
     }
     public void goToScreen(View view){
         if (android.os.Build.VERSION.SDK_INT < 23){

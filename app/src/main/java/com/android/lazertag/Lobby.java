@@ -42,6 +42,7 @@ public class Lobby {
     }
 
     int state;
+    boolean toDelete;
     public Lobby(){
         players = new HashMap<>();
         isPrivate = false;
@@ -50,5 +51,6 @@ public class Lobby {
         players.put(name, player);
         key = Player.getLocalPlayer().getName();
         state = 0;
+        toDelete = false;
     }
 }

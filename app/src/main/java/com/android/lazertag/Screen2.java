@@ -61,6 +61,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
     public File mCurrentPhoto = null;
     boolean newPic = false;
+    ChildEventListener hitlogListner;
+    ValueEventListener pauseListner;
 
     GeneralPreferences genPref = GeneralPreferences.getInstance();
     final Screen2 thisThing = this;
@@ -84,7 +86,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         //setSupportActionBar(toolbar);
 
         final Intent intent = getIntent();
-
         SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
 
         textureView = (AutoFitTextureView)findViewById(R.id.textureview);
@@ -108,7 +109,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 this.handler.postDelayed(this, 500);
 
                 System.out.println(file.length());
-                if(newPic && file.length() > 1000 && Player.getLocalPlayer().getTimeDisabled() == 0){
+                if(newPic && file.length() > 1000){
                     //String default_file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/orig2.png";
                     //Log.d("filetogoto", default_file);
                     Mat src = Imgcodecs.imread(file.getAbsolutePath(), Imgcodecs.IMREAD_COLOR);
@@ -130,15 +131,37 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                     }
                     newPic = false;
                 }
+                Button getPicture = (Button) findViewById(R.id.getpicture);
+                getPicture.setVisibility(View.VISIBLE);
             }
         }
         handler.post(new MyRunnable(handler, imageRec, mCurrentPhoto));
 
 
+        Thread thread = new Thread(){
+            @Override
+            public void run(){
+                try{
+                        while(true) {
+                    sleep(1000);
+                            if(Player.getLocalPlayer().getTimeDisabled() > 0){
 
+                                Player.getLocalPlayer().setTimeDisabled(Player.getLocalPlayer().getTimeDisabled() - 0.5);
+                                System.out.println(Player.getLocalPlayer().getTimeDisabled() + "Seconds");
+                                if(Player.getLocalPlayer().getTimeDisabled() < 0)
+                                    Player.getLocalPlayer().setTimeDisabled(0.0);
+                            }
+                }
+                     }
+            catch(InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
         network = Network.getInstance();
         String key = Player.getLocalPlayer().getCurrentLobby();
-        network.getLobby(key).child("hitreg").addChildEventListener(new ChildEventListener() {
+        hitlogListner = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
                 network.currentLobby = dataSnapshot;
@@ -147,32 +170,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                     Hit currentHit = dataSnapshot.getValue(Hit.class);
                     if (currentHit.getReceiver().getName().equals(getLocalPlayer().getName())) {
                         showToast("You got Blasted by " + currentHit.getSender().getName() + "!");
-                        if(Player.getLocalPlayer().getTimeDisabled() == 0) {
+                        if(Player.getLocalPlayer().getTimeDisabled() == 0)
                             Player.getLocalPlayer().setTimeDisabled(3.0);
-                            Thread thread = new Thread(){
-                                @Override
-                                public void run(){
-                                    try{
-                                        while(true) {
-                                            sleep(1000);
-                                            if(Player.getLocalPlayer().getTimeDisabled() > 0){
-
-                                                Player.getLocalPlayer().setTimeDisabled(Player.getLocalPlayer().getTimeDisabled() - 0.5);
-                                                System.out.println(Player.getLocalPlayer().getTimeDisabled() + " Seconds");
-                                                if(Player.getLocalPlayer().getTimeDisabled() < 0) {
-                                                    Player.getLocalPlayer().setTimeDisabled(0.0);
-                                                    return;
-                                                }
-                                            }
-                                        }
-                                    }
-                                    catch(InterruptedException e){
-                                        e.printStackTrace();
-                                    }
-                                }
-                            };
-                            thread.start();
-                        }
                     } else if (currentHit.getSender().getName().equals(getLocalPlayer().getName())) {
                         showToast("You Blasted " + currentHit.getReceiver().getName() + "!");
                     } else {
@@ -196,15 +195,18 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName){
 
             }
-        });
+        };
+        network.getLobby(key).child("hitreg").addChildEventListener(hitlogListner);
 
         final MediaPlayer blastNoise = MediaPlayer.create(this, R.raw.blastnoise);
 
         findViewById(R.id.getpicture).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                if(ccv2WithPreview != null && (int)Player.getLocalPlayer().getTimeDisabled() == 0) {
-                    //thisThing.compareImage("tryangle.jpg");
+                Button getPicture = (Button) findViewById(R.id.getpicture);
+                getPicture.setVisibility(View.GONE);
+                if(ccv2WithPreview != null && Player.getLocalPlayer().getTimeDisabled() == 0) {
+                    thisThing.compareImage("tryangle.jpg");
                     createImageFile();
                     ccv2WithPreview.takePicture(mCurrentPhoto);
                     newPic = true;
@@ -261,13 +263,11 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 public void onAccuracyChanged(Sensor sensor, int i) {
                 }
             };
-
-
             sensorManager.registerListener(gyroscopeSensorListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
         final int[] ids = new int[]{R.id.n0, R.id.n1 , R.id.n1, R.id.n2, R.id.n3, R.id.n4, R.id.n5, R.id.n7};
         Network database = Network.getInstance();
-        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("players").addValueEventListener(new ValueEventListener() {
+        pauseListner = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int i = 0;
@@ -280,6 +280,23 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 for(int j = 0; j < i && j < 8; j++){
                     TextView button = (TextView) findViewById(ids[j]);
                     button.setText(names.get(j));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("players").addValueEventListener(pauseListner);
+
+        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("toDelete").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue(Boolean.class)){
+                    network.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("players").removeEventListener(pauseListner);
+                    network.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("hitreg").removeEventListener(hitlogListner);
+                    network.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("toDelete").removeEventListener(this);
                 }
             }
 
@@ -310,6 +327,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         Network database = Network.getInstance();
         Player player = Player.getLocalPlayer();
         if (player.getCurrentLobby().equals(player.getName())) {
+            database.getLobby(player.getCurrentLobby()).child("toDelete").setValue(true);
             database.getLobby(player.getName()).removeValue();
             database.getLobbies().child(player.getName()).removeValue();
         } else {
@@ -360,6 +378,11 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 for (DataSnapshot x : dataSnapshot.child("players").getChildren()) {
                     Player player = x.getValue(Player.class);
                     if (player.getImage().equals(image)) {
+                        /*ArrayList<Hit> value = dataSnapshot.child("hitReg").getValue(new GenericTypeIndicator<ArrayList<Hit>>() {
+                        });
+                        if(value == null) { value = new ArrayList<>(); }
+                        value.add(new Hit(player, Player.getLocalPlayer()));
+                        */
                         DatabaseReference ref = lobby.child("hitreg").push();
                         ref.setValue(new Hit(player, Player.getLocalPlayer()));
                         break;
