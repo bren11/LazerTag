@@ -35,7 +35,7 @@ public class RectangleFindr {
         // Declare the output variables
         Mat src = new Mat();
         Size size = src1.size();
-        Imgproc.resize(src1, src, new Size(640, 480), 0, 0, INTER_AREA);
+        //Imgproc.resize(src1, src, new Size(640, 480), 0, 0, INTER_AREA);
         Mat dst = new Mat(), cdst = new Mat(), cdstP, mrs = new Mat();
         // Load an image
         //Mat src = Imgcodecs.imread(default_file, Imgcodecs.IMREAD_COLOR);
@@ -47,9 +47,9 @@ public class RectangleFindr {
             System.exit(-1);
         }*/
         // Edge detection
-        Imgproc.Canny(src, dst, 50, 200, 3, false);
+        Imgproc.Canny(src1, dst, 50, 200, 3, false);
         // Copy edges to the images that will display the results in BGR
-        Imgproc.resize(src1, src, new Size(320, 240), 0, 0, INTER_AREA);
+        Imgproc.resize(src1, src, new Size(640, 480), 0, 0, INTER_AREA);
         Imgproc.cvtColor(dst, cdst, Imgproc.COLOR_GRAY2BGR);
         cdstP = cdst.clone();
         // Standard Hough Line Transform
@@ -66,10 +66,10 @@ public class RectangleFindr {
             Point pt2 = new Point(Math.round(x0 - 1000*(-b)), Math.round(y0 - 1000*(a)));
             Imgproc.line(cdst, pt1, pt2, new Scalar(0, 0, 255), 3, Imgproc.LINE_AA, 0);
         }*/
-        saveFile(src, "new 3");
+        //saveFile(src, "new 22");
         // Probabilistic Line Transform
         Mat linesP = new Mat(); // will hold the results of the detection
-        Imgproc.HoughLinesP(dst, linesP, 1, Math.PI/180, 80, 150, 20); // runs the actual detection
+        Imgproc.HoughLinesP(dst, linesP, 1, Math.PI/180, 50, 100, 10); // runs the actual detection
         // Draw the lines
         Log.d("progress1", linesP.rows() + "");
         for (int x = 0; x < linesP.rows(); x++) {
@@ -77,8 +77,8 @@ public class RectangleFindr {
             Imgproc.line(cdstP, new Point(l[0], l[1]), new Point(l[2], l[3]), new Scalar(0, 0, 255), 3, Imgproc.LINE_AA, 0);
         }
         // Show results
-        Imgcodecs.imwrite(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/test/new 3.png", src);
-        Imgcodecs.imwrite(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/test/new 3.png", cdstP);
+        Imgcodecs.imwrite(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/test/new 22.png", src);
+        Imgcodecs.imwrite(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/test/new 22.png", cdstP);
         //Imgcodecs.imwrite(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/test/new 6.png", cdstP);
 
         // Wait and Exit
@@ -144,7 +144,7 @@ public class RectangleFindr {
             for (int j = i + 1; j < lines.length; j++) {
 
                 Point2 pt = computeIntersect(lines[i], lines[j]);
-                pt = new Point2(pt.x * img.size().width / 320, pt.y * img.size().height / 240);
+                pt = new Point2(pt.x * img.size().width / 640, pt.y * img.size().height / 480);
                 //System.out.println(pt.toString());
                 //System.out.println(img.size().width + "  " + img.size().height);
                 if (pt.x >= 0 && pt.y >= 0 && pt.x < img.size().width && pt.y < img.size().height) {
@@ -186,7 +186,8 @@ public class RectangleFindr {
             }
         }
 
-        Log.d("progress", "corners");
+        ArrayList<ArrayList<Point2>> sortedCorners = new ArrayList<>();
+        Log.d("progress", "sortedCorner");
         for (int i = 0; i < corners.size(); i++) {
             Point2 center = new Point2(0, 0);
             if (corners.get(i).size() < 4) continue;
@@ -197,22 +198,22 @@ public class RectangleFindr {
             center.x *= (1. / corners.get(i).size());
             center.y *= (1. / corners.get(i).size());
             System.out.println(center.toString());
-            sortCorners(corners.get(i), center);
+            sortedCorners.add(sortCorners(corners.get(i), center));
         }
-        for (int k = 0; k < corners.size(); k++){
-            System.out.println(corners.get(k));
+        for (int k = 0; k < sortedCorners.size(); k++){
+            System.out.println(sortedCorners.get(k));
         }
         Log.d("progress", "sorting");
-        Log.d("progress", corners.size() + "");
+        Log.d("progress", sortedCorners.size() + "");
         int j = 0;
-        for(int i=0; i < corners.size(); i++){
-            Log.d("corner amt", i + "" + corners.get(i).size());
-            if(corners.get(i).size() < 4)continue;
+        for(int i=0; i < sortedCorners.size(); i++){
+            Log.d("corner amt", i + "" + sortedCorners.get(i).size());
+            if(sortedCorners.get(i).size() < 4)continue;
             ArrayList<Point> rec = new ArrayList<>();
             Mat matOfPoints = new MatOfPoint();
-            for (int c = 0; c < corners.get(i).size(); c++){
-                rec.add(corners.get(i).get(c));
-                matOfPoints.push_back(new MatOfPoint(corners.get(i).get(c)));
+            for (int c = 0; c < sortedCorners.get(i).size(); c++){
+                rec.add(sortedCorners.get(i).get(c));
+                matOfPoints.push_back(new MatOfPoint(sortedCorners.get(i).get(c)));
             }
 
             //matOfPoints.create(0,0, CV_32FC2);
@@ -252,8 +253,11 @@ public class RectangleFindr {
             }
         }
     }
-    private void sortCorners(ArrayList<Point2> corners, Point2 center)
+    private ArrayList<Point2> sortCorners(ArrayList<Point2> corners, Point2 center)
     {
+        if (corners.size() < 1) {
+            return corners;
+        }
         ArrayList<Point2> top = new ArrayList<>(), bot = new ArrayList<>();
         for (int i = 0; i < corners.size(); i++)
         {
@@ -279,6 +283,7 @@ public class RectangleFindr {
         corners.add(tr);
         corners.add(br);
         corners.add(bl);
+        return corners;
     }
     public void saveFile(Mat img, String fileName) {
         Bitmap bmp = null;
