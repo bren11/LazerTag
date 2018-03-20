@@ -77,7 +77,7 @@ public class InLobby extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot != null){
-                    if(dataSnapshot.getValue(Boolean.class)){
+                    if(dataSnapshot.getValue(boolean.class)){
                         _this.goToMainTrue();
                         Network database = Network.getInstance();
                         database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("state").removeEventListener(startListner);

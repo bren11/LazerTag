@@ -8,6 +8,8 @@ public class Lobby {
 
     boolean isPrivate;
     String key;
+    int state;
+    Boolean toDeleteSoon;
 
     public HashMap<String, Player> getPlayers() {
         return players;
@@ -41,16 +43,15 @@ public class Lobby {
         this.state = state;
     }
 
-    public boolean isToDelete() {
-        return toDelete;
+    public Boolean isToDeleteSoon() {
+        return toDeleteSoon;
     }
 
-    public void setToDelete(boolean toDelete) {
-        this.toDelete = toDelete;
+    public void setToDeleteSoon(Boolean toDeleteSoon) {
+        this.toDeleteSoon = toDeleteSoon;
     }
 
-    int state;
-    boolean toDelete;
+
     public Lobby(){
         players = new HashMap<>();
         isPrivate = false;
@@ -60,6 +61,6 @@ public class Lobby {
         players.put(name, player);
         key = Player.getLocalPlayer().getName();
         state = 0;
-        toDelete = false;
+        toDeleteSoon = false;
     }
 }
