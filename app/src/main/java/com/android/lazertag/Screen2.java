@@ -293,10 +293,12 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("toDelete").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue(Boolean.class)){
-                    network.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("players").removeEventListener(pauseListner);
-                    network.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("hitreg").removeEventListener(hitlogListner);
-                    network.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("toDelete").removeEventListener(this);
+                if(dataSnapshot.getValue() != null) {
+                    if (dataSnapshot.getValue(boolean.class)) {
+                        network.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("players").removeEventListener(pauseListner);
+                        network.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("hitreg").removeEventListener(hitlogListner);
+                        network.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("toDelete").removeEventListener(this);
+                    }
                 }
             }
 
