@@ -39,6 +39,7 @@ import org.opencv.features2d.FeatureDetector;
 import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -122,7 +123,13 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                     }
                     recrec.FindRect(src);*/
                     TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
-                    file.delete();
+                    try {
+                        PrintWriter writer = new PrintWriter(file);
+                        writer.print("");
+                        writer.close();
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
                     if (match != null) {
                         compareImage(match.name());
                     }
@@ -209,7 +216,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                     newPic = true;
 
                     //Toast.makeText(getApplicationContext(), mCurrentPhoto.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-                    handler.post(new MyRunnable(handler, imageRec, mCurrentPhoto));
                     view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                     //blastNoise.start();
                 }
