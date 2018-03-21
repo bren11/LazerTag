@@ -364,11 +364,12 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         Network database = Network.getInstance();
         Player player = Player.getLocalPlayer();
         if(player.getCurrentLobby().equals(player.getName())) {
+            database.getLobby(player.getCurrentLobby()).child("toDelete").setValue(true);
             database.getLobby(player.getName()).removeValue();
             database.getLobbies().child(player.getName()).removeValue();
         }
         else{
-            database.getLobby(player.getCurrentLobby()).child("players").child(player.getName());
+            database.getLobby(player.getCurrentLobby()).child("players").child(player.getName()).removeValue();
         }
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);

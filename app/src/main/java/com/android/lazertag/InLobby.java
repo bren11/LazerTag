@@ -76,7 +76,7 @@ public class InLobby extends AppCompatActivity {
         database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("toDelete").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot != null){
+                if(dataSnapshot.getValue() != null){
                     if(dataSnapshot.getValue(boolean.class)){
                         _this.goToMainTrue();
                         Network database = Network.getInstance();
