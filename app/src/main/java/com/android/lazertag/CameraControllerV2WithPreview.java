@@ -36,6 +36,10 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.widget.Toast;
 
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfByte;
+import org.opencv.imgcodecs.Imgcodecs;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -94,7 +98,6 @@ public class CameraControllerV2WithPreview {
     private HandlerThread backgroundThread;
     private Handler backgroundHandler;
     private ImageReader imageReader;
-    private File file;
 
     private CaptureRequest.Builder mPreviewRequestBuilder;
     private CaptureRequest mPreviewRequest;
@@ -104,11 +107,10 @@ public class CameraControllerV2WithPreview {
     private int mSensorOrientation;
 
 
-    public CameraControllerV2WithPreview(Activity activity, AutoFitTextureView textureView, File file) {
+    public CameraControllerV2WithPreview(Activity activity, AutoFitTextureView textureView) {
         this.activity = activity;
         this.textureView = textureView;
         this.textureView.setSurfaceTextureListener(mSurfaceTextureListener);
-        this.file = file;
     }
 
     private final TextureView.SurfaceTextureListener mSurfaceTextureListener = new TextureView.SurfaceTextureListener() {
@@ -168,7 +170,7 @@ public class CameraControllerV2WithPreview {
         @Override
         public void onImageAvailable(ImageReader reader) {
             Log.d(TAG, "ImageAvailable");
-            backgroundHandler.post(new ImageSaver(reader.acquireNextImage(), file));
+            backgroundHandler.post(new ImageSaver(reader.acquireNextImage()));
         }
 
     };
@@ -499,8 +501,7 @@ public class CameraControllerV2WithPreview {
         textureView.setTransform(matrix);
     }
 
-    public void takePicture(File newFile) {
-        file = newFile;
+    public void takePicture() {
         try {
             // This is how to tell the camera to lock focus.
             mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);
@@ -548,7 +549,6 @@ public class CameraControllerV2WithPreview {
 
                 @Override
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
-                    Log.d(TAG, file.toString());
                     try {
                         // Reset the auto-focus trigger
                         mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_CANCEL);
@@ -592,25 +592,27 @@ public class CameraControllerV2WithPreview {
         /**
          * The file we save the image into.
          */
-        private final File mFile;
+        private RectangleFindr recrec;
 
-        public ImageSaver(Image image, File file) {
+        public ImageSaver(Image image) {
             mImage = image;
-            mFile = file;
+            recrec = new RectangleFindr();
         }
 
         @Override
         public void run() {
-            System.out.println("MORNIN");
+            //System.out.println("MORNIN");
             ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
             byte[] bytes = new byte[buffer.capacity()];
             buffer.get(bytes);
-            try (final OutputStream output = new FileOutputStream(mFile)) {
+            /*try (final OutputStream output = new FileOutputStream(mFile)) {
                 output.write(bytes);
             } catch (final IOException e) {
                 Log.e(TAG, "Exception occurred while saving picture to external storage ", e);
                 e.printStackTrace();
-            }
+            }*/
+            Mat mat = Imgcodecs.imdecode(new MatOfByte(bytes), Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
+            recrec.FindRect(mat);
             mImage.close();
         }
 

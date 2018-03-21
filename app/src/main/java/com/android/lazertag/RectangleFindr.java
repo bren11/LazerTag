@@ -35,7 +35,7 @@ public class RectangleFindr {
         // Declare the output variables
         Mat src = new Mat();
         Size size = src1.size();
-        //Imgproc.resize(src1, src, new Size(640, 480), 0, 0, INTER_AREA);
+        Imgproc.resize(src1, src, new Size(640, 480), 0, 0, INTER_AREA);
         Mat dst = new Mat(), cdst = new Mat(), cdstP, mrs = new Mat();
         // Load an image
         //Mat src = Imgcodecs.imread(default_file, Imgcodecs.IMREAD_COLOR);
@@ -47,9 +47,9 @@ public class RectangleFindr {
             System.exit(-1);
         }*/
         // Edge detection
-        Imgproc.Canny(src1, dst, 50, 200, 3, false);
+        Imgproc.Canny(src, dst, 50, 200, 3, false);
         // Copy edges to the images that will display the results in BGR
-        Imgproc.resize(src1, src, new Size(640, 480), 0, 0, INTER_AREA);
+        Imgproc.resize(src1, src, new Size(320, 240), 0, 0, INTER_AREA);
         Imgproc.cvtColor(dst, cdst, Imgproc.COLOR_GRAY2BGR);
         cdstP = cdst.clone();
         // Standard Hough Line Transform
@@ -69,7 +69,7 @@ public class RectangleFindr {
         //saveFile(src, "new 22");
         // Probabilistic Line Transform
         Mat linesP = new Mat(); // will hold the results of the detection
-        Imgproc.HoughLinesP(dst, linesP, 1, Math.PI/180, 50, 100, 10); // runs the actual detection
+        Imgproc.HoughLinesP(dst, linesP, 1, Math.PI/180, 40, 100, 15); // runs the actual detection
         // Draw the lines
         Log.d("progress1", linesP.rows() + "");
         for (int x = 0; x < linesP.rows(); x++) {
@@ -144,7 +144,7 @@ public class RectangleFindr {
             for (int j = i + 1; j < lines.length; j++) {
 
                 Point2 pt = computeIntersect(lines[i], lines[j]);
-                pt = new Point2(pt.x * img.size().width / 640, pt.y * img.size().height / 480);
+                pt = new Point2(pt.x * img.size().width / 320, pt.y * img.size().height / 240);
                 //System.out.println(pt.toString());
                 //System.out.println(img.size().width + "  " + img.size().height);
                 if (pt.x >= 0 && pt.y >= 0 && pt.x < img.size().width && pt.y < img.size().height) {

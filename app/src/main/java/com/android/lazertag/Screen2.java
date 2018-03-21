@@ -39,6 +39,7 @@ import org.opencv.features2d.FeatureDetector;
 import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -91,28 +92,28 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         textureView = (AutoFitTextureView)findViewById(R.id.textureview);
         textureView.setAspectRatio(9,16);
 
-        ccv2WithPreview = new CameraControllerV2WithPreview(Screen2.this, textureView, createImageFile());
+        ccv2WithPreview = new CameraControllerV2WithPreview(Screen2.this, textureView);
 
         final Handler handler = new Handler();
         class MyRunnable implements Runnable {
             private Handler handler;
             private BFImage imageRec;
-            private File file;
 
-            public MyRunnable(Handler handler, BFImage imageRec, File file) {
+            public MyRunnable(Handler handler, BFImage imageRec) {
                 this.handler = handler;
                 this.imageRec = imageRec;
-                this.file = file;
             }
             @Override
             public void run() {
                 this.handler.postDelayed(this, 500);
+                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/test/img num: 0.png");
 
-                System.out.println(file.length());
+
+                //System.out.println(file.length());
                 if(newPic && file.length() > 1000){
                     //String default_file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/orig2.png";
                     //Log.d("filetogoto", default_file);
-                    Mat src = Imgcodecs.imread(file.getAbsolutePath(), Imgcodecs.IMREAD_COLOR);
+                    /*Mat src = Imgcodecs.imread(file.getAbsolutePath(), Imgcodecs.IMREAD_COLOR);
                     //recrec.saveFile(src, "my thingy");
                     if( src.empty() ) {
                         System.out.println("Error opening image!");
@@ -120,14 +121,17 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                                 + file.getAbsolutePath() +"] \n");
                         System.exit(-1);
                     }
-                    recrec.FindRect(src);
-                    int i = 0;
-                    File newFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/test/img num: " + i + ".png");
-                    if (newFile.exists()){
-                        TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
-                        if (match != null) {
-                            compareImage(match.name());
-                        }
+                    recrec.FindRect(src);*/
+                    TrainingImage match = imageRec.detectPhoto(file.getAbsolutePath());
+                    try {
+                        PrintWriter writer = new PrintWriter(file);
+                        writer.print("");
+                        writer.close();
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+                    if (match != null) {
+                        compareImage(match.name());
                     }
                     newPic = false;
                 }
@@ -135,7 +139,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 getPicture.setVisibility(View.VISIBLE);
             }
         }
-        handler.post(new MyRunnable(handler, imageRec, mCurrentPhoto));
+        handler.post(new MyRunnable(handler, imageRec));
 
 
         Thread thread = new Thread(){
@@ -206,13 +210,12 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 Button getPicture = (Button) findViewById(R.id.getpicture);
                 getPicture.setVisibility(View.GONE);
                 if(ccv2WithPreview != null && Player.getLocalPlayer().getTimeDisabled() == 0) {
-                    thisThing.compareImage("tryangle.jpg");
-                    createImageFile();
-                    ccv2WithPreview.takePicture(mCurrentPhoto);
+                    //thisThing.compareImage("tryangle.jpg");
+                    //createImageFile();
+                    ccv2WithPreview.takePicture();
                     newPic = true;
 
                     //Toast.makeText(getApplicationContext(), mCurrentPhoto.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-                    handler.post(new MyRunnable(handler, imageRec, mCurrentPhoto));
                     view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                     //blastNoise.start();
                 }
