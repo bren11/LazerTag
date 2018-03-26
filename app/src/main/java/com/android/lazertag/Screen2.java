@@ -336,7 +336,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             database.getLobby(player.getName()).removeValue();
             database.getLobbies().child(player.getName()).removeValue();
         } else {
-            database.getLobby(player.getCurrentLobby()).child("players").child(player.getName());
+            database.getLobby(player.getCurrentLobby()).child("players").child(GeneralPreferences.getInstance().getCurrentKey()).removeValue();
+            GeneralPreferences.getInstance().setCurrentKey("");
         }
     }
 //        if(ccv2WithPreview != null) {
@@ -369,7 +370,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             database.getLobbies().child(player.getName()).removeValue();
         }
         else{
-            database.getLobby(player.getCurrentLobby()).child("players").child(player.getName()).removeValue();
+            database.getLobby(player.getCurrentLobby()).child("players").child(GeneralPreferences.getInstance().getCurrentKey()).removeValue();
+            GeneralPreferences.getInstance().setCurrentKey("");
         }
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
@@ -384,11 +386,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 for (DataSnapshot x : dataSnapshot.child("players").getChildren()) {
                     Player player = x.getValue(Player.class);
                     if (player.getImage().equals(image)) {
-                        /*ArrayList<Hit> value = dataSnapshot.child("hitReg").getValue(new GenericTypeIndicator<ArrayList<Hit>>() {
-                        });
-                        if(value == null) { value = new ArrayList<>(); }
-                        value.add(new Hit(player, Player.getLocalPlayer()));
-                        */
                         DatabaseReference ref = lobby.child("hitreg").push();
                         ref.setValue(new Hit(player, Player.getLocalPlayer()));
                         break;

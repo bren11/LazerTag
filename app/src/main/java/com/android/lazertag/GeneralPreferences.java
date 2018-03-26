@@ -10,6 +10,7 @@ class GeneralPreferences {
     private int[] targets;
     private String[] images;
     private static GeneralPreferences prefs;
+    private String currentKey;
 
     public static GeneralPreferences getInstance() {
         if(prefs == null) {
@@ -33,4 +34,8 @@ class GeneralPreferences {
     }
 
     public String[] getImages(){return images;}
+
+    public String getCurrentKey(){return currentKey;}
+
+    public void setCurrentKey(String currentKey){this.currentKey = currentKey;}
 }
