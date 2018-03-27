@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -86,8 +87,12 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
 
-        final Intent intent = getIntent();
+        Player player = Player.getLocalPlayer();
         SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
+        Button leaveAndEnd = (Button) findViewById(R.id.leaveAndEnd);
+        if (prefs.getString("Name", "Player").equals(player.getCurrentLobby())){
+            leaveAndEnd.setText("End Game");
+        }
 
         textureView = (AutoFitTextureView)findViewById(R.id.textureview);
         textureView.setAspectRatio(9,16);

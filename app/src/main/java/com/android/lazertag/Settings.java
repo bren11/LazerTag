@@ -26,7 +26,7 @@ public class Settings extends AppCompatActivity {
         nameSpace = (EditText)findViewById(R.id.editText);
         final SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
         nameSpace.setText(prefs.getString("Name", "Player"));
-        final String blocked = "/h.#$[]";
+        final String blocked = "/.#$[]";
         InputFilter filter = new InputFilter() {
             @Override
             public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
