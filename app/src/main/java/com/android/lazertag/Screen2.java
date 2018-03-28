@@ -217,7 +217,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 Button getPicture = (Button) findViewById(R.id.getpicture);
                 getPicture.setVisibility(View.GONE);
                 if(ccv2WithPreview != null && Player.getLocalPlayer().getTimeDisabled() == 0) {
-                    thisThing.compareImage("tryangle.jpg");
+                    thisThing.compareImage("zelda.jpg");
                     //createImageFile();
                     ccv2WithPreview.takePicture();
                     //newPic = true;
