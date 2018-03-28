@@ -8,9 +8,9 @@
 
     <ImageView
         android:id="@+id/Background"
-        android:layout_width="461dp"
-        android:layout_height="658dp"
-        android:background="@drawable/background"
+        android:layout_width="361dp"
+        android:layout_height="593dp"
+        android:background="?attr/colorButtonNormal"
         app:layout_constraintBottom_toBottomOf="parent"
 
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/background" />
+        app:srcCompat="@android:color/transparent" />
 
     <ImageView
         android:id="@+id/Logo"
@@ -41,7 +41,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:backgroundTint="@android:color/darker_gray"
+        android:backgroundTint="@color/colorAccent"
         android:fontFamily="serif-monospace"
         android:onClick="goToSettings"
         android:scaleType="fitCenter"
@@ -63,7 +63,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:backgroundTint="@android:color/darker_gray"
+        android:backgroundTint="@color/colorAccent"
         android:fontFamily="serif-monospace"
         android:onClick="goToCreate"
         android:scaleType="fitCenter"
@@ -85,7 +85,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:backgroundTint="@android:color/darker_gray"
+        android:backgroundTint="@color/colorAccent"
         android:fontFamily="serif-monospace"
         android:onClick="goToJoin"
         android:scaleType="fitCenter"
