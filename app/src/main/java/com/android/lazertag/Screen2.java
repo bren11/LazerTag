@@ -61,7 +61,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     AutoFitTextureView textureView;
 
     public File mCurrentPhoto = null;
-    boolean newPic = false;
+    public static boolean newPic;
     ChildEventListener hitlogListner;
     ValueEventListener pauseListner;
 
@@ -81,6 +81,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        newPic = false;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_screen2);
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -109,8 +110,9 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/test/img num: 0.png");
 
 
-                //System.out.println(file.length());
-                if(newPic && file.length() > 1000){
+                //
+                if(newPic && file.length() > 10000){
+                    System.out.println(file.length());
                     //String default_file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/orig2.png";
                     //Log.d("filetogoto", default_file);
                     /*Mat src = Imgcodecs.imread(file.getAbsolutePath(), Imgcodecs.IMREAD_COLOR);
@@ -131,7 +133,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                         System.out.println(e);
                     }
                     if (match != null) {
-                        compareImage(match.name());
+                        //compareImage(match.name());
                     }
                     newPic = false;
                 }
@@ -210,10 +212,10 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 Button getPicture = (Button) findViewById(R.id.getpicture);
                 getPicture.setVisibility(View.GONE);
                 if(ccv2WithPreview != null && Player.getLocalPlayer().getTimeDisabled() == 0) {
-                    //thisThing.compareImage("tryangle.jpg");
+                    thisThing.compareImage("tryangle.jpg");
                     //createImageFile();
                     ccv2WithPreview.takePicture();
-                    newPic = true;
+                    //newPic = true;
 
                     //Toast.makeText(getApplicationContext(), mCurrentPhoto.getAbsolutePath(), Toast.LENGTH_SHORT).show();
                     view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);

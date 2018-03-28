@@ -175,6 +175,8 @@ public class CameraControllerV2WithPreview {
 
     };
 
+    public static int focusNum = 0;
+
     private CameraCaptureSession.CaptureCallback mCaptureCallback = new CameraCaptureSession.CaptureCallback() {
 
         private void process(CaptureResult result) {
@@ -186,18 +188,26 @@ public class CameraControllerV2WithPreview {
                 }
                 case STATE_WAITING_LOCK: {
                     Integer afState = result.get(CaptureResult.CONTROL_AF_STATE);
+                    Integer aeState2 = result.get(CaptureResult.CONTROL_AE_STATE);
+                    Log.d("aStatef", afState.toString());
+                    if (aeState2 != null) {
+                        Log.d("aStatee", aeState2.toString());
+                    }
                     if (afState == null) {
                         captureStillPicture();
                     } else if (CaptureResult.CONTROL_AF_STATE_FOCUSED_LOCKED == afState ||
-                            CaptureResult.CONTROL_AF_STATE_NOT_FOCUSED_LOCKED == afState) {
+                            CaptureResult.CONTROL_AF_STATE_NOT_FOCUSED_LOCKED == afState || focusNum > 10) {
                         // CONTROL_AE_STATE can be null on some devices
                         Integer aeState = result.get(CaptureResult.CONTROL_AE_STATE);
                         if (aeState == null || aeState == CaptureResult.CONTROL_AE_STATE_CONVERGED) {
+                            focusNum = 0;
                             mState = STATE_PICTURE_TAKEN;
                             captureStillPicture();
                         } else {
                             runPrecaptureSequence();
                         }
+                    } else if (CaptureResult.CONTROL_AF_STATE_PASSIVE_FOCUSED == afState) {
+                        CameraControllerV2WithPreview.focusNum++;
                     }
                     Log.d(TAG, "STATE_WAITING_LOCK");
                     break;
@@ -614,6 +624,7 @@ public class CameraControllerV2WithPreview {
             Mat mat = Imgcodecs.imdecode(new MatOfByte(bytes), Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
             recrec.FindRect(mat);
             mImage.close();
+            Screen2.newPic = true;
         }
 
     }
