@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -87,8 +88,12 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
 
-        final Intent intent = getIntent();
+        Player player = Player.getLocalPlayer();
         SharedPreferences prefs = this.getSharedPreferences("nameData", MODE_PRIVATE);
+        Button leaveAndEnd = (Button) findViewById(R.id.leaveAndEnd);
+        if (prefs.getString("Name", "Player").equals(player.getCurrentLobby())){
+            leaveAndEnd.setText("End Game");
+        }
 
         textureView = (AutoFitTextureView)findViewById(R.id.textureview);
         textureView.setAspectRatio(9,16);
@@ -338,7 +343,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             database.getLobby(player.getName()).removeValue();
             database.getLobbies().child(player.getName()).removeValue();
         } else {
-            database.getLobby(player.getCurrentLobby()).child("players").child(player.getName());
+            database.getLobby(player.getCurrentLobby()).child("players").child(GeneralPreferences.getInstance().getCurrentKey()).removeValue();
+            GeneralPreferences.getInstance().setCurrentKey("");
         }
     }
 //        if(ccv2WithPreview != null) {
@@ -371,7 +377,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             database.getLobbies().child(player.getName()).removeValue();
         }
         else{
-            database.getLobby(player.getCurrentLobby()).child("players").child(player.getName()).removeValue();
+            database.getLobby(player.getCurrentLobby()).child("players").child(GeneralPreferences.getInstance().getCurrentKey()).removeValue();
+            GeneralPreferences.getInstance().setCurrentKey("");
         }
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
@@ -386,11 +393,6 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 for (DataSnapshot x : dataSnapshot.child("players").getChildren()) {
                     Player player = x.getValue(Player.class);
                     if (player.getImage().equals(image)) {
-                        /*ArrayList<Hit> value = dataSnapshot.child("hitReg").getValue(new GenericTypeIndicator<ArrayList<Hit>>() {
-                        });
-                        if(value == null) { value = new ArrayList<>(); }
-                        value.add(new Hit(player, Player.getLocalPlayer()));
-                        */
                         DatabaseReference ref = lobby.child("hitreg").push();
                         ref.setValue(new Hit(player, Player.getLocalPlayer()));
                         break;

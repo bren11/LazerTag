@@ -22,12 +22,13 @@ public class LobbyFrontend {
 
     public void newAssignment( String newKey){
         this.key = newKey;
-        DatabaseReference lobby = Network.getInstance().getLobby(newKey);
+        final DatabaseReference lobby = Network.getInstance().getLobby(newKey);
         lobby.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Lobby lobby  = dataSnapshot.getValue(Lobby.class);
-                numPeople = lobby.players.size();
+                if(lobby.players != null)
+                    numPeople = lobby.players.size();
             }
 
             @Override
