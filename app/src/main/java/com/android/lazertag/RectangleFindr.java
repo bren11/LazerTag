@@ -69,7 +69,7 @@ public class RectangleFindr {
         //saveFile(src, "new 22");
         // Probabilistic Line Transform
         Mat linesP = new Mat(); // will hold the results of the detection
-        Imgproc.HoughLinesP(dst, linesP, 1, Math.PI/180, 40, 100, 15); // runs the actual detection
+        Imgproc.HoughLinesP(dst, linesP, 1, Math.PI/180, 35, 60, 8); // runs the actual detection
         // Draw the lines
         Log.d("progress1", linesP.rows() + "");
         for (int x = 0; x < linesP.rows(); x++) {
@@ -225,6 +225,7 @@ public class RectangleFindr {
             //if(r.area()<50000)continue;
             // Define the destination image
             Mat quad = Mat.zeros(r.height, r.width, CV_8UC3);
+            System.out.println(r);
             // Corners of the destination image
             ArrayList<Point> quad_pts = new ArrayList<>();
             //quad_pts.create(4,0, CV_32FC2);
@@ -246,9 +247,11 @@ public class RectangleFindr {
 
             Mat img3 = img.clone();
             Imgproc.warpPerspective(img3, quad, perspectiveTransformation, quad.size());
+            System.out.println("progress: height: " + img.size().height / 2 + " width: " + img.size().width / 2);
 
             if (r.contains(new Point(img.size().width / 2, img.size().height / 2))){
                 saveFile(quad, "img num: " + j);
+                Log.d("progress", "corner: " + j);
                 j++;
             }
         }
