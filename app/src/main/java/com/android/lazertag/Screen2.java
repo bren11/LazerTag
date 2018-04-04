@@ -410,6 +410,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     public void onPause(View view) {
         //ImageButton pauseButton = (ImageButton) findViewById(R.id.pauseButton);
         ImageView crossHairView = (ImageView) findViewById(R.id.CrosshairView);
+        ImageView imageView = (ImageView) findViewById(R.id.imageView);
         Button leaveAndEnd = (Button) findViewById(R.id.leaveAndEnd);
         TextView pauseView = (TextView) findViewById(R.id.pauseView);
         TextView n0 = (TextView) findViewById(R.id.n0);
@@ -424,6 +425,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
         if (isPaused == false) {
             crossHairView.setVisibility(View.INVISIBLE);
+            imageView.setVisibility(View.VISIBLE);
             leaveAndEnd.setVisibility(View.VISIBLE);
             pauseView.setVisibility(View.VISIBLE);
             //getPicture.setClickable(false);
@@ -439,6 +441,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             isPaused = true;
         } else {
             crossHairView.setVisibility(View.VISIBLE);
+            imageView.setVisibility(View.INVISIBLE);
             leaveAndEnd.setVisibility(View.INVISIBLE);
             pauseView.setVisibility(View.INVISIBLE);
             //getPicture.setClickable(true);
