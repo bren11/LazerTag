@@ -615,15 +615,15 @@ public class CameraControllerV2WithPreview {
             ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
             byte[] bytes = new byte[buffer.capacity()];
             buffer.get(bytes);
-            /*try (final OutputStream output = new FileOutputStream(mFile)) {
+            try (final OutputStream output = new FileOutputStream(Screen2.file)) {
                 output.write(bytes);
             } catch (final IOException e) {
                 Log.e(TAG, "Exception occurred while saving picture to external storage ", e);
                 e.printStackTrace();
-            }*/
-            Mat mat = Imgcodecs.imdecode(new MatOfByte(bytes), Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
-            recrec.FindRect(mat);
-            mImage.close();
+            }
+            //Mat mat = Imgcodecs.imdecode(new MatOfByte(bytes), Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
+            ////recrec.FindRect(mat);
+            //mImage.close();
             Screen2.newPic = true;
         }
 
