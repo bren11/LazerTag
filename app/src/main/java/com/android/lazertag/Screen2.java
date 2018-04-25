@@ -140,7 +140,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                         System.out.println(e);
                     }
                     if (match != null) {
-                        //compareImage(match.name());
+                        compareImage(match.name());
                     }
                     newPic = false;
                 }
