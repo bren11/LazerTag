@@ -275,7 +275,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             };
             sensorManager.registerListener(gyroscopeSensorListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
-        final int[] ids = new int[]{R.id.n0, R.id.n1 , R.id.n1, R.id.n2, R.id.n3, R.id.n4, R.id.n5, R.id.n7};
+        final int[] ids = new int[]{R.id.n0, R.id.n1 , R.id.n2, R.id.n3, R.id.n4, R.id.n5, R.id.n6, R.id.n7};
         Network database = Network.getInstance();
         pauseListner = new ValueEventListener() {
             @Override
@@ -284,7 +284,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 ArrayList<String> names = new ArrayList<>();
                 for(DataSnapshot data : dataSnapshot.getChildren()){
                     Player player = data.getValue(Player.class);
-                    names.add(player.getName());
+                    names.add(player.getName() + " " + player.getHitsSent());
                     i++;
                 }
                 for(int j = 0; j < i && j < 8; j++){
@@ -392,11 +392,13 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot x : dataSnapshot.child("players").getChildren()) {
                     Player player = x.getValue(Player.class);
-                    if (player.getImage().equals(image)) {
+                    //if (player.getImage().equals(image)) {
                         DatabaseReference ref = lobby.child("hitreg").push();
                         ref.setValue(new Hit(player, Player.getLocalPlayer()));
+                        player.onHitSent();
+                        lobby.child("players").child(GeneralPreferences.getInstance().getCurrentKey()).child("hitsSent").setValue(player.getHitsSent());
                         break;
-                    }
+                    //}
                 }
             }
 

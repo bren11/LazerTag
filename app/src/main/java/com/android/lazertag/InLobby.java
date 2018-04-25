@@ -103,9 +103,22 @@ public class InLobby extends AppCompatActivity {
         goToMainTrue();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Network database = Network.getInstance();
+        Player player = Player.getLocalPlayer();
+        database.getLobby(player.getCurrentLobby()).child("toDelete").setValue(true);
+        database.getLobby(player.getCurrentLobby()).child("players").removeEventListener(playerListner);
+        database.getLobby(player.getName()).removeValue();
+        database.getLobbies().child(player.getName()).removeValue();
+    }
+
     public void goToMainTrue(){
         Network database = Network.getInstance();
-        database.getLobby(Player.getLocalPlayer().getCurrentLobby()).child("players").child(Player.getLocalPlayer().getName()).removeValue();
+        Player player = Player.getLocalPlayer();
+        database.getLobby(player.getCurrentLobby()).child("players").child(GeneralPreferences.getInstance().getCurrentKey()).removeValue();
+        GeneralPreferences.getInstance().setCurrentKey("");
         Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
     }
