@@ -63,6 +63,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
 
     public File mCurrentPhoto = null;
     public static boolean newPic;
+    public static File file;
     ChildEventListener hitlogListner;
     ValueEventListener pauseListner;
 
@@ -83,6 +84,7 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         newPic = false;
+        file = createImageFile();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_screen2);
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -112,12 +114,12 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
             @Override
             public void run() {
                 this.handler.postDelayed(this, 500);
-                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/test/img num: 0.png");
+                //File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/test/img num: 0.png");
 
 
                 //
-                if(newPic && file.length() > 10000){
-                    System.out.println(file.length());
+                if(newPic && file.length() > 1000){
+                    //System.out.println(file.length());
                     //String default_file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/orig2.png";
                     //Log.d("filetogoto", default_file);
                     /*Mat src = Imgcodecs.imread(file.getAbsolutePath(), Imgcodecs.IMREAD_COLOR);
@@ -217,8 +219,8 @@ public class Screen2 extends AppCompatActivity implements ActivityCompat.OnReque
                 Button getPicture = (Button) findViewById(R.id.getpicture);
                 getPicture.setVisibility(View.GONE);
                 if(ccv2WithPreview != null && Player.getLocalPlayer().getTimeDisabled() == 0) {
-                    thisThing.compareImage("zelda.jpg");
-                    //createImageFile();
+                    //thisThing.compareImage("zelda.jpg");
+                    Screen2.file = createImageFile();
                     ccv2WithPreview.takePicture();
                     //newPic = true;
 
