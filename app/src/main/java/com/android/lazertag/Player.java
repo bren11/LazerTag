@@ -19,11 +19,8 @@ public class Player {
     private int hitsSent = 0;
     private int hitsRecieved = 0;
     private String image;
-
     private String currentLobby;
-
     private double timeDisabled;
-
     private static Player localPlayer;
 
     public static Player getLocalPlayer() {

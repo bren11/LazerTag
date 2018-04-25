@@ -59,6 +59,7 @@ public class Lobby {
         Player.getLocalPlayer().setCurrentLobby(Player.getLocalPlayer().getName());
         Player player = Player.getLocalPlayer();
         players.put(name, player);
+        GeneralPreferences.getInstance().setCurrentKey(Player.getLocalPlayer().getName());
         key = Player.getLocalPlayer().getName();
         state = 0;
         toDeleteSoon = false;
